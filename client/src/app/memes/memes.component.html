@@ -1,0 +1,10 @@
+<div class="content">
+    <a routerLink="/meme-generator">New meme</a>
+    <div *ngFor="let meme of memes">
+        <hr/>
+        <h2>{{meme.title}}</h2>
+        <a routerLink="/meme/{{meme._id}}">
+            <img src="{{meme.url}}" alt="{{meme.title}}"/>
+        </a>
+    </div>
+</div>

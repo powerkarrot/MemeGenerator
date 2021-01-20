@@ -1,0 +1,66 @@
+<div style="padding: 10px; width: 600px;">
+    <a routerLink="/memes">All memes</a>
+    <hr/>
+    <h2>Meme Generator</h2>
+    <form name="generateMemeForm" [formGroup]="memeForm">
+        <input matInput formControlName="_id" hidden>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button (click)="hiddenFileInput.click()" mat-raised-button type="button" color="accent"
+                    class="text-uppercase">
+                Upload image
+            </button>
+            <input
+                #hiddenFileInput
+                formControlName="file"
+                id="file"
+                type="file"
+                class="form-control"
+                style="display: none"
+                (change)="onFileChange($event)">
+        </div>
+        <div fxLayout="row" style="margin-top: 10px">
+            <mat-form-field>
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title" required>
+                <mat-error>Title is required!</mat-error>
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <mat-form-field>
+                <mat-label>Top text</mat-label>
+                <input matInput formControlName="topText" required>
+                <mat-error>Top text is required!</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Top x</mat-label>
+                <input matInput formControlName="topX" required>
+                <mat-error>Top x is required!</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Top y</mat-label>
+                <input matInput formControlName="topY" required>
+                <mat-error>Top y is required!</mat-error>
+            </mat-form-field>
+        </div>
+        <div fxLayout="row">
+            <mat-form-field>
+                <mat-label>Bottom text</mat-label>
+                <input matInput formControlName="bottomText">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Bottom x</mat-label>
+                <input matInput formControlName="bottomX">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Bottom y</mat-label>
+                <input matInput formControlName="bottomY">
+            </mat-form-field>
+        </div>
+
+        <div fxLayout="row">
+            <button mat-button color="primary" (click)="generateMeme()">
+                Generate
+            </button>
+        </div>
+    </form>
+</div>

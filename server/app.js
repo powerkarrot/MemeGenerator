@@ -6,7 +6,6 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
 const memeLib = require('nodejs-meme-generator')
 const fs = require('fs')
-const path = require('path');
 const dbUrl = 'mongodb://localhost:27017'
 const app = express()
 const port = process.env.PORT || 3007
@@ -106,13 +105,17 @@ app.post('/meme', async function(req, res) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
             if (err) return res.status(400).json({error: err})
             meme.url = 'http://localhost:3007/memes/' + fileName
+            meme._id = new ObjectID()
             await db.collection('memes').insertOne(meme, function (err, r) {
                 if (err) return res.status(400).json({error: err})
-                res.sendStatus(200)
+                res.json({
+                    _id: meme._id,
+                    url: meme.url
+                })
+                // res.set('Content-Type', 'image/png')
+                // res.send(data)
             })
         })
-        // res.set('Content-Type', 'image/png')
-        // res.send(data)
     })
 })
 
