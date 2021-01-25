@@ -8,6 +8,7 @@ const routes: Routes = [
     {path: 'meme-generator', component: MemeGeneratorComponent},
     {path: 'meme/:id', component: MemeComponent},
     {path: 'memes', component: MemesComponent},
+    {path: '', component: MemesComponent},
 ]
 
 @NgModule({
