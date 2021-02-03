@@ -10,14 +10,17 @@ import {MatFormFieldModule} from "@angular/material/form-field"
 import {MatInputModule} from '@angular/material/input'
 import {HttpClientModule} from '@angular/common/http'
 import {MemesComponent} from './memes/memes.component'
-import {MemeComponent} from './meme/meme.component'
+import {MemeComponent} from './meme/meme.component';
+import { MemeOverviewComponent } from './meme-overview/meme-overview.component'
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
     declarations: [
         AppComponent,
         MemeGeneratorComponent,
         MemesComponent,
-        MemeComponent
+        MemeComponent,
+        MemeOverviewComponent
     ],
     imports: [
         BrowserModule,
@@ -26,7 +29,8 @@ import {MemeComponent} from './meme/meme.component'
         BrowserAnimationsModule,
         HttpClientModule,
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        InfiniteScrollModule
     ],
     providers: [],
     bootstrap: [AppComponent]
