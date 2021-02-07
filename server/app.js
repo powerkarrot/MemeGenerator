@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
-const memeLib = require('nodejs-meme-generator')
+const memeLib = require('./meme-generator')
 const fs = require('fs')
 const dbUrl = 'mongodb://localhost:27017'
 const app = express()
@@ -34,7 +34,7 @@ const memeGenerator = new memeLib({
     fontOptions: { // optional
         fontSize: 46,
         fontFamily: 'open sans',
-        lineHeight: 2
+        lineHeight: 1.3
     }
 })
 
@@ -99,7 +99,11 @@ app.post('/meme', async function(req, res) {
     }
     memeGenerator.generateMeme({
         topText: meme.topText,
+        topX: meme.topX,
+        topY: meme.topY,
         bottomText: meme.bottomText,
+        bottomX: meme.bottomX,
+        bottomY: meme.bottomY,
         url: url
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
