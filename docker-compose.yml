@@ -1,0 +1,27 @@
+version: "3"
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_URI=http://server:3007
+    ports:
+      - "4200:4200"
+    links:
+      - server
+  mongo:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+    ports:
+      - "3007:3007"
+    links:
+      - mongo
+  
