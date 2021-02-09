@@ -1,4 +1,4 @@
-FROM angular/ngcontainer as build
+FROM teracy/angular-cli as build
   WORKDIR /client
   COPY . .
   RUN npm install
