@@ -9,7 +9,7 @@ const fs = require('fs')
 const dbUrl = 'mongodb://localhost:27017'
 const app = express()
 const port = process.env.PORT || 3007
-let basePath = '/home/x/workspace/omm/server/'
+let basePath = '/home/ex3c/Dev/omm/server/'
 
 MongoClient.connect(dbUrl, {}, function (err, client) {
     if (err) throw err

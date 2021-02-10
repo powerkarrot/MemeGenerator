@@ -13,6 +13,7 @@ import {MemesComponent} from './memes/memes.component'
 import {MemeComponent} from './meme/meme.component';
 import { MemeOverviewComponent } from './meme-overview/meme-overview.component'
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MemeSingleviewComponent } from './meme-singleview/meme-singleview.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
         MemeGeneratorComponent,
         MemesComponent,
         MemeComponent,
-        MemeOverviewComponent
+        MemeOverviewComponent,
+        MemeSingleviewComponent
     ],
     imports: [
         BrowserModule,

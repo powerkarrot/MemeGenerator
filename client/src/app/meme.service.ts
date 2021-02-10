@@ -4,19 +4,18 @@ import { Meme } from './meme';
 import { MEMES } from './mock-memes';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemeService {
 
-  private imgFlipURL = 'https://api.imgflip.com/get_memes'
-
   constructor(private http: HttpClient) { }
 
-  // Todo: load memes from the backend not from imfglip...
   getMemes(): Observable<Object | Meme[]> {
-    let jsonMemes = this.http.get(this.imgFlipURL).pipe(
+    let url = environment.apiUrl + '/meme'
+    let jsonMemes = this.http.get(url).pipe(
       catchError(this.handleError<Meme[]>('getMemes', []))
     );
     return jsonMemes;

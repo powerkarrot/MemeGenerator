@@ -10,6 +10,9 @@ import { Meme } from '../meme';
 export class MemeOverviewComponent implements OnInit {
 
   memes: Meme[] = [];
+  selectedMeme: Meme = null;
+  
+
   throttle = 100;
   sum = 100;
   scrollDistance = 1;
@@ -22,6 +25,10 @@ export class MemeOverviewComponent implements OnInit {
 
   constructor(private memeService: MemeService) { }
 
+  onSelect(meme: Meme): void {
+    this.selectedMeme = meme;
+  }
+
   ngOnInit(): void {
     this.getMemes();
     this.maxCols = 9;
@@ -31,9 +38,6 @@ export class MemeOverviewComponent implements OnInit {
   addMemes(startIndex, endIndex, _method) {
     let moreMemes = this.loadMoreMemes();
     for (let i = 0; i < this.sum; i++) {
-      // Not working like the example in the npm page...
-      // Todo: Find workaround.
-      //this.memes[_method]([i, ' ', this.loadMoreMemes()].join(''));
       this.memes.push(moreMemes[i])
     }
   }
@@ -61,7 +65,7 @@ export class MemeOverviewComponent implements OnInit {
 
   getMemes(): void {
     this.memeService.getMemes().subscribe((memes)=>{
-      this.memes = memes['data']['memes'];
+      this.memes = memes;
       this.memes.forEach((meme) => {
         meme.description = "";
         meme.votes = 0;

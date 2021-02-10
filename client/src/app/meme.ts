@@ -1,6 +1,12 @@
 export interface Meme {
-    id: number;
-    name: string;
+    _id: number;
+    title: string;
+    topText: string;
+    topX: number;
+    topY: number;
+    bottomText: string;
+    bottomX: number;
+    bottomY: number;
     url: string;
     width: number;
     height: number;
