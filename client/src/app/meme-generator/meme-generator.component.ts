@@ -73,6 +73,7 @@ export class MemeGeneratorComponent implements OnInit {
                     next: data => {
                         this.meme = data;
                         this.id = JSON.parse(data.toString())._id;
+                        console.log(data);
                     }
                 });
             });

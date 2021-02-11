@@ -58,6 +58,8 @@
             </mat-form-field>
         </div>
 
+        <img src="{{meme.url}}" alt="{{meme.title}}" [hidden]="memeHidden"/>
+
         <div fxLayout="row">
             <button mat-button color="primary" (click)="onGenerateMemeButtonPressed()">
                 Generate
