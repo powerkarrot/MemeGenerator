@@ -10,10 +10,20 @@ services:
       - "4200:4200"
     links:
       - server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 1024M
   mongo:
     image: "mongo:latest"
     ports:
       - "27017:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 1024M
   server:
     build:
       context: ./server
@@ -24,10 +34,9 @@ services:
       - "3007:3007"
     links:
       - mongo
-  dataimport:
-    build: 
-      context: ./datagenerator
-      dockerfile: Dockerfile
-    links:
-      - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 1024M
   
