@@ -9,7 +9,7 @@ const fs = require('fs')
 const dbUrl = 'mongodb://localhost:27017'
 const app = express()
 const port = process.env.PORT || 3007
-let basePath = '/home/x/workspace/omm/server/'
+let basePath = '/Users/benediktstrodl/repos/omm/server/uploads'
 
 MongoClient.connect(dbUrl, {}, function (err, client) {
     if (err) throw err
@@ -114,6 +114,37 @@ app.post('/meme', async function(req, res) {
                 })
                 // res.set('Content-Type', 'image/png')
                 // res.send(data)
+            })
+        })
+    })
+})
+
+app.post('/meme/:id', async function(req, res) {
+    const db = req.app.get('db')
+    let meme = req.body, url, fileName
+    const uploads = await upload(req.files)
+    if (uploads.length > 0) {
+        url = uploads[0].fullPath
+        fileName = uploads[0].fileName
+    } else {
+        url = meme.url
+        fileName = url.split('/')
+        fileName = fileName[fileName.length - 1]
+    }
+    memeGenerator.generateMeme({
+        topText: meme.topText,
+        bottomText: meme.bottomText,
+        url: url
+    }).then(function (data) {
+        fs.writeFile('./memes/' + fileName, data, async function (err, result) {
+            if (err) return res.status(400).json({error: err})
+            meme.url = 'http://localhost:3007/memes/' + fileName
+            meme._id = ObjectID(req.params.id)
+            await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}).then(function (meme) {
+                if (err) return res.status(400).json({error: err})
+                // res.set('Content-Type', 'image/png')
+                // res.send(data)
+                res.send(JSON.stringify(meme, null, 4))
             })
         })
     })

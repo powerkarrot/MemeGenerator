@@ -21,7 +21,8 @@
         <div fxLayout="row" style="margin-top: 10px">
             <mat-form-field>
                 <mat-label>Title</mat-label>
-                <input matInput formControlName="title" required>
+                <input
+                    matInput formControlName="title" required>
                 <mat-error>Title is required!</mat-error>
             </mat-form-field>
         </div>
@@ -58,7 +59,7 @@
         </div>
 
         <div fxLayout="row">
-            <button mat-button color="primary" (click)="generateMeme()">
+            <button mat-button color="primary" (click)="onGenerateMemeButtonPressed()">
                 Generate
             </button>
         </div>
