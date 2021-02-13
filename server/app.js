@@ -6,13 +6,12 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
 const memeLib = require('nodejs-meme-generator')
 const fs = require('fs')
-//const dbUrl = 'mongodb://localhost:27017'
 const dbUrl = process.env.MONGO_URI || "mongodb://localhost:27017"
 const app = express()
 const port = process.env.PORT || 3007
 let basePath = process.cwd();
 
-MongoClient.connect(dbUrl, {}, function (err, client) {
+MongoClient.connect(dbUrl, {useUnifiedTopology: true}, function (err, client) {
     if (err) throw err
     app.set('db', client.db('omm'))
     app.listen(port, () => {
@@ -26,6 +25,7 @@ app.use(bodyParser.json())
 app.use(fileUpload())
 // app.use(express.static('.'))
 app.use('/memes', express.static(__dirname + '/memes'))
+app.use('/uploads', express.static(__dirname + '/uploads'))
 
 const memeGenerator = new memeLib({
     canvasOptions: { // optional
@@ -120,3 +120,45 @@ app.post('/meme', async function(req, res) {
     })
 })
 
+app.get('/meme-template', async function(req, res) {
+    const db = req.app.get('db')
+    await db.collection('meme-templates').find({}).toArray(function (err, templates) {
+        res.send(JSON.stringify(templates, null, 4))
+    })
+})
+
+app.get('/meme-template/:id', async function(req, res) {
+    const db = req.app.get('db')
+    await db.collection('meme-templates').findOne({_id: ObjectID(req.params.id)}).then(function (template) {
+        res.send(JSON.stringify(template, null, 4))
+    })
+})
+
+app.post('/meme-template', async function(req, res) {
+    console.log("Test")
+    const db = req.app.get('db')
+    let template = req.body, url, fileName
+    const uploads = await upload(req.files)
+    if (uploads.length > 0) {
+        url = uploads[0].fullPath
+        fileName = uploads[0].fileName
+    } else {
+        url = template.url
+        fileName = url.split('/')
+        fileName = fileName[fileName.length - 1]
+    }
+    fs.readFile( req.files.fullPath, function (err, data) { 
+        fs.writeFile('./uploads/' + fileName, data, async function (err, result) {
+            if (err) return res.status(400).json({error: err})
+            template.url = 'http://localhost:3007/uploads/' + fileName
+            template._id = new ObjectID()
+            await db.collection('meme-templates').insertOne(template, function (err, r) {
+                if (err) return res.status(400).json({error: err})
+                res.json({
+                    _id: template._id,
+                    url: template.url
+                })
+            })
+        })
+    })
+})

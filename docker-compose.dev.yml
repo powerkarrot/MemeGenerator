@@ -12,6 +12,10 @@ services:
     build: 
       context: ./datagenerator
       dockerfile: Dockerfile
+  templatedataimport:
+    build: 
+      context: ./templategenerator
+      dockerfile: Dockerfile
     links:
       - mongo
   

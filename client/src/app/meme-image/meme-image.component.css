@@ -1,0 +1,73 @@
+/*
+    Original code snipped from: https://stackoverflow.com/questions/16310918/css-scale-and-square-center-crop-image
+    used to create an dynamic css grid with a fixed width and height and a perfectly covered thumbnail of the image
+*/
+.img-thumbnail {
+    display: inline-block;
+    width: 250px;
+    height: 250px;
+    margin: 2px;
+    border: 5px solid #161618;
+    background-position: center center;
+    background-size: cover;
+}
+
+.overlay {
+    position: relative;
+    background-color: rgba(22, 22, 24, 0.8);
+    width: 100%;
+    height: 0;
+    transition: .5s ease;
+}
+a:hover .overlay {
+    height: 100%;
+}
+a:hover .text {
+    white-space: normal;
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+.text {
+    white-space: normal;
+    color: transparent;
+    font-size: 20px;
+    position: absolute;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+
+.upvotes {
+    color: transparent;
+    left: 50%;
+    bottom: 10%;
+    position: absolute;
+    overflow: hidden;
+    transform: translate(-50%, -95%);
+}
+#heart {
+    fill: transparent;
+    color: transparent;
+    background-color: transparent;
+}
+a:hover #heart {
+    fill: #ed4d2d;
+}
+
+a:hover .upvotes {
+    color: white;
+    left: 50%;
+    bottom: 10%;
+    position: absolute;
+    overflow: hidden;
+    transform:translate(-50%, -90%);
+}

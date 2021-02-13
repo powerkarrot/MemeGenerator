@@ -1,0 +1,7 @@
+<a routerLink="/memes">All memes</a> | <a routerLink="/meme-generator">New meme</a>
+<div class="container-fluid" infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" (scrolledUp)="onUp()">
+    <a *ngFor="let template of templates" (click)="onSelect(template)">
+        <div class="img-thumbnail" style="background-image: url('{{template.url}}');">
+        </div>
+    </a>
+</div>

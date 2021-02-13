@@ -2,6 +2,7 @@
     <a routerLink="/memes">All memes</a>
     <hr/>
     <h2>Meme Generator</h2>
+    <a routerLink="/images">Select image</a>
     <form name="generateMemeForm" [formGroup]="memeForm">
         <input matInput formControlName="_id" hidden>
         <div fxLayout="row" fxLayoutAlign="start start">
@@ -17,6 +18,18 @@
                 class="form-control"
                 style="display: none"
                 (change)="onFileChange($event)">
+            <button (click)="hiddenTemplateInput.click()" mat-raised-button type="button" color="accent"
+                class="text-uppercase">
+            Upload template
+        </button>
+        <input
+            #hiddenTemplateInput
+            formControlName="file"
+            id="template"
+            type="file"
+            class="form-control"
+            style="display: none"
+            (change)="onFileChangeTemplate($event)">
         </div>
         <div fxLayout="row" style="margin-top: 10px">
             <mat-form-field>

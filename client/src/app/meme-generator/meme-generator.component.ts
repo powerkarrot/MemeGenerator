@@ -99,4 +99,26 @@ export class MemeGeneratorComponent implements OnInit {
             })
         }
     }
+
+    onFileChangeTemplate(event) {
+        if (event.target.files.length > 0) {
+            const file = event.target.files[0]
+            const name = file.name.split('.')[0]
+            const formData = new FormData()
+            let url = environment.apiUrl + '/meme-template'
+
+            formData.append('file', file)
+            formData.append('name', name)
+
+            this._http.post(url, formData).subscribe({
+                next: data => {
+                    console.log(data)
+                    this._router.navigate(['/images'])
+                },
+                error: error => {
+                    console.error(error)
+                }
+            })
+        }
+    }
 }

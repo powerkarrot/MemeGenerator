@@ -30,5 +30,5 @@ export class MemesComponent implements OnInit {
             }
         })
     }
-
 }
+
