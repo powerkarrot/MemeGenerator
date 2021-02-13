@@ -1,3 +1,56 @@
-<div class="image-container">
-    <img src="{{selectedMeme.url}}" alt="">
+<div class="singleview-container">
+    <div class="image-container">
+        <a class="carousel-control-prev" routerLink="/meme/{{prevMeme._id}}" *ngIf="prevMeme;else emptySpaceLeft">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <img [src]="selectedMeme.url" alt="selectedMeme.title" *ngIf="selectedMeme">
+        <a class="carousel-control-next" routerLink="/meme/{{nextMeme._id}}" *ngIf="nextMeme;else emptySpaceRight">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    <div class="passive-information">
+        <h5>Titel: {{selectedMeme.title}}</h5>
+        <h5>Date: </h5>
+        <h5>Description: {{selectedMeme.description}}</h5>
+        <div class="votes">
+            <div class="row">
+                <div class="block">
+                    <button mat-icon-button color="warn" aria-label="Downvote meme">
+                        <mat-icon>thumb_down</mat-icon>
+                    </button>
+                </div>
+                <div class="block"><h5>Votes: {{selectedMeme.votes}}</h5></div>
+                <div class="block">
+                    <button mat-icon-button color="warn" aria-label="Upvote meme">
+                        <mat-icon>thumb_up</mat-icon>
+                    </button>
+                </div>
+            </div>  
+        </div>
+        <h5>Angeglubscht: {{selectedMeme.views}}</h5>
+    </div>
+    <div class="comments">
+        <div *ngFor="comment in selectedMeme.Comments">
+            <h5>{{comment.comment}}</h5>
+            <h5>{{comment.votes}}</h5>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+
+
+
+<ng-template #emptySpaceRight>
+    <a class="carousel-control-next">
+    </a>
+</ng-template>
+<ng-template #emptySpaceLeft>
+    <a class="carousel-control-next">
+    </a>
+</ng-template>

@@ -1,11 +1,13 @@
-<app-meme-singleview [selectedMeme]="selectedMeme" *ngIf="selectedMeme"></app-meme-singleview>
 <div class="container-fluid" infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" (scrolledUp)="onUp()">
-    <a href="" *ngFor="let meme of memes" (click)="onSelect(meme)">
+    <a href="" *ngFor="let meme of memes" (click)="onSelect(meme)" routerLink="/meme/{{meme._id}}">
         <div class="img-thumbnail" style="background-image: url('{{meme.url}}');">
             <div class="overlay" *ngIf="selectedMeme==null">
                 <div class="text">{{meme.title}}</div>
+                <div class="views">{{meme.views}}
+                    <mat-icon id="icon warn">people</mat-icon>
+                </div>
                 <div class="upvotes">{{meme.votes}}
-                    <svg version="1.1" width="15" height="15" id="heart" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 391.837 391.837" style="enable-background:new 0 0 391.837 391.837;" xml:space="preserve"><g><path d="M285.257,35.528c58.743,0.286,106.294,47.836,106.58,106.58 c0,107.624-195.918,214.204-195.918,214.204S0,248.165,0,142.108c0-58.862,47.717-106.58,106.58-106.58l0,0 c36.032-0.281,69.718,17.842,89.339,48.065C215.674,53.517,249.273,35.441,285.257,35.528z"/></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+                    <mat-icon id="icon">favorite</mat-icon>
                 </div>
             </div>
         </div>

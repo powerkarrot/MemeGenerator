@@ -14,6 +14,8 @@ import {MemeComponent} from './meme/meme.component';
 import { MemeOverviewComponent } from './meme-overview/meme-overview.component'
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MemeSingleviewComponent } from './meme-singleview/meme-singleview.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AngularMaterialModule } from './angular-material.module';
 
 @NgModule({
     declarations: [
@@ -32,7 +34,9 @@ import { MemeSingleviewComponent } from './meme-singleview/meme-singleview.compo
         HttpClientModule,
         MatFormFieldModule,
         MatInputModule,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        NgbModule,
+        AngularMaterialModule
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -1,3 +1,5 @@
+import { Comment } from './comment';
+
 export interface Meme {
     _id: number;
     title: string;
@@ -13,4 +15,6 @@ export interface Meme {
     box_count: number;
     description: string;
     votes: number;
+    views: number;
+    comments: Comment[];
 }

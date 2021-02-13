@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs'; 
 import { Meme } from './meme';
-import { MEMES } from './mock-memes';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import {environment} from '../environments/environment';
@@ -17,6 +16,14 @@ export class MemeService {
     let url = environment.apiUrl + '/meme'
     let jsonMemes = this.http.get(url).pipe(
       catchError(this.handleError<Meme[]>('getMemes', []))
+    );
+    return jsonMemes;
+  }
+
+  getAdjacentMemes(id: string): Observable<Object | Meme[]> {
+    let url = environment.apiUrl + '/meme/neigh/' + id;
+    let jsonMemes = this.http.get(url).pipe(
+      catchError(this.handleError<Meme[]>('getAdjacentMemes', []))
     );
     return jsonMemes;
   }

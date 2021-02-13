@@ -1,9 +1,58 @@
+.singleview-container {
+    margin-left: 20%;
+    margin-right: 20%;
+    background-color: #0f0f0f;
+    color: white;
+}
 .image-container {
-    position: absolute;
-    width: 100%;
+    text-align: center;
+}
+img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.carousel-control-prev {
+    display: inline-block;
+    position: relative;
     height: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0.8;
-    background-color: black;
+}
+.carousel-control-next {
+    display: inline-block;
+    position: relative;
+    height: 100%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.passive-information {
+    text-align: center;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+}
+.comments {
+    text-align: center;
+}
+.image-downvote {
+    fill: #d23c22;
+    stroke: #d23c22;
+    color: #d23c22;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.block {
+    margin-left: 5px;
+    margin-top: auto;
 }

@@ -65,13 +65,9 @@ export class MemeOverviewComponent implements OnInit {
 
   getMemes(): void {
     this.memeService.getMemes().subscribe((memes)=>{
-      this.memes = memes;
-      this.memes.forEach((meme) => {
-        meme.description = "";
-        meme.votes = 0;
-      });
+      this.memes = <Meme[]>memes;
       console.log("meme-overview: loaded ",this.memes.length, " memes.");
-
+      console.log(this.memes);
     });
   }
 

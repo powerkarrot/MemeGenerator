@@ -11,7 +11,7 @@ const app = express()
 const port = process.env.PORT || 3007
 let basePath = '/home/ex3c/Dev/omm/server/'
 
-MongoClient.connect(dbUrl, {}, function (err, client) {
+MongoClient.connect(dbUrl, {useUnifiedTopology: true}, function (err, client) {
     if (err) throw err
     app.set('db', client.db('omm'))
     app.listen(port, () => {
@@ -73,7 +73,7 @@ app.get('/', function(req, res) {
 
 app.get('/meme', async function(req, res) {
     const db = req.app.get('db')
-    await db.collection('memes').find({}).toArray(function (err, memes) {
+    await db.collection('memes').find({}).sort({"_id": -1}).toArray(function (err, memes) {
         res.send(JSON.stringify(memes, null, 4))
     })
 })
@@ -82,6 +82,49 @@ app.get('/meme/:id', async function(req, res) {
     const db = req.app.get('db')
     await db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
         res.send(JSON.stringify(meme, null, 4))
+    })
+})
+app.get('/meme/neigh/:id', async function(req, res) {
+    const db = req.app.get('db')
+    var result = []
+    await db.collection('memes').find({}).sort({"_id": -1}).toArray(function (err, memes) {
+        db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
+            result.push(meme)
+            let pre = 0;
+            let suc = 0;
+            for(i = 0; i < memes.length; i++)
+            {
+                if (ObjectID(meme._id).equals(ObjectID(memes[i]._id))){
+                    pre = i - 1;
+                    suc = i + 1;
+                 }
+            }
+            if(pre >= 0)
+                result.unshift(memes[pre])
+            if(suc < memes.length)
+                result.push(memes[suc])
+            res.send(JSON.stringify(result, null, 4))
+        })
+    })
+})
+
+app.get('/meme/delete/:id', async function(req, res) {
+    const db = req.app.get('db')
+    await db.collection('memes').deleteOne({_id: ObjectID(req.params.id)}, function(err, obj) {
+        if (err) {
+            res.json({
+                success: false,
+                action: "delete",
+                data: err
+            })
+        }
+        res.json({
+            success: true,
+            action: "delete",
+            data: {
+                _id: req.params.id
+            }
+        })
     })
 })
 
@@ -100,12 +143,16 @@ app.post('/meme', async function(req, res) {
     memeGenerator.generateMeme({
         topText: meme.topText,
         bottomText: meme.bottomText,
-        url: url
+        url: url,
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
             if (err) return res.status(400).json({error: err})
             meme.url = 'http://localhost:3007/memes/' + fileName
             meme._id = new ObjectID()
+            meme.description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"
+            meme.votes = 0
+            meme.views = 0
+            meme.comments = []
             await db.collection('memes').insertOne(meme, function (err, r) {
                 if (err) return res.status(400).json({error: err})
                 res.json({
