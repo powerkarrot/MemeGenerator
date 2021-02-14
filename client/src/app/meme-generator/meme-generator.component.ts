@@ -65,17 +65,8 @@ export class MemeGeneratorComponent implements OnInit {
     ngOnInit(): void {
         this.memeForm.valueChanges.subscribe( formData => {
             setTimeout(() => {
-                let url = environment.apiUrl + '/meme';
-                if (this.id != null) {
-                    url = url + '/' + this.id;
-                }
-                this._http.post(url, formData).subscribe({
-                    next: data => {
-                        this.meme = data;
-                        this.id = JSON.parse(data.toString())._id;
-                        console.log(data);
-                    }
-                });
+                console.log('ngOnInit', formData);
+                this.updateMemeImg();
             });
         });
     }
@@ -103,12 +94,17 @@ export class MemeGeneratorComponent implements OnInit {
     updateMemeImg(): void{
         const formData = this.generateMemeFormData();
         let url = environment.apiUrl + '/meme';
+
+        // if id is null the meme has not been created yet
         if (this.id != null) {
             url = url + '/' + this.id;
+            console.log('id != null');
         }
-        this._http.post(url, formData).subscribe({
+        this._http.post<any>(url, formData).subscribe({
             next: data => {
-                console.log(data);
+                console.log('updateMemeImg()', data);
+                this.meme = data;
+                this.id = data._id;
             },
             error: error => {
                 console.error(error);

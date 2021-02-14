@@ -85,6 +85,9 @@ app.get('/meme/:id', async function(req, res) {
     })
 })
 
+/**
+ * creates a meme and gives it an id
+ */
 app.post('/meme', async function(req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
@@ -119,6 +122,9 @@ app.post('/meme', async function(req, res) {
     })
 })
 
+/**
+ * Updates a meme with a certain id
+ */
 app.post('/meme/:id', async function(req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
@@ -140,10 +146,7 @@ app.post('/meme/:id', async function(req, res) {
             if (err) return res.status(400).json({error: err})
             meme.url = 'http://localhost:3007/memes/' + fileName
             meme._id = ObjectID(req.params.id)
-            await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}).then(function (meme) {
-                if (err) return res.status(400).json({error: err})
-                // res.set('Content-Type', 'image/png')
-                // res.send(data)
+            await db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
                 res.send(JSON.stringify(meme, null, 4))
             })
         })
