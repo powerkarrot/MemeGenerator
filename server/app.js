@@ -144,9 +144,9 @@ app.post('/meme/:id', async function(req, res) {
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
             if (err) return res.status(400).json({error: err})
-            meme.url = 'http://localhost:3007/memes/' + fileName
+            meme.url = 'http://localhost:3007/memes/' + fileName + '?' + (new Date()).getTime()
             meme._id = ObjectID(req.params.id)
-            await db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
+            await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
                 res.send(JSON.stringify(meme, null, 4))
             })
         })

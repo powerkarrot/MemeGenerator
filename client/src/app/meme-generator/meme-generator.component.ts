@@ -3,6 +3,7 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Router} from '@angular/router';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
     selector: 'app-meme-generator',
@@ -63,12 +64,12 @@ export class MemeGeneratorComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.memeForm.valueChanges.subscribe( formData => {
-            setTimeout(() => {
+        this.memeForm.valueChanges
+            .pipe(debounceTime(1000))
+            .subscribe( formData => {
                 console.log('ngOnInit', formData);
                 this.updateMemeImg();
             });
-        });
     }
 
     onGenerateMemeButtonPressed(): void {
