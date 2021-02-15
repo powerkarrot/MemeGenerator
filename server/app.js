@@ -191,7 +191,11 @@ app.post('/meme/:id', async function(req, res) {
     }
     memeGenerator.generateMeme({
         topText: meme.topText,
+        topX: meme.topX,
+        topY: meme.topY,
         bottomText: meme.bottomText,
+        bottomX: meme.bottomX,
+        bottomY: meme.bottomY,
         url: url
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
