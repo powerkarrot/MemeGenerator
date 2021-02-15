@@ -9,7 +9,6 @@ const fs = require('fs')
 const dbUrl = 'mongodb://localhost:27017'
 const app = express()
 const port = process.env.PORT || 3007
-let basePath = '/home/ex3c/Dev/omm/server/'
 
 MongoClient.connect(dbUrl, {useUnifiedTopology: true}, function (err, client) {
     if (err) throw err
@@ -47,7 +46,7 @@ async function upload(files) {
     let uploads = []
     if (files) {
         let fileFields = Object.getOwnPropertyNames(files), fileField, fileObject
-        let path = basePath + 'uploads/'
+        let path = __dirname + '/uploads/'
         if (!fs.existsSync(path)) fs.mkdirSync(path, {recursive: true})
         for (let i = 0; i < fileFields.length; i++) {
             fileField = files[fileFields[i]]
@@ -73,7 +72,9 @@ app.get('/', function(req, res) {
 
 app.get('/meme', async function(req, res) {
     const db = req.app.get('db')
-    await db.collection('memes').find({}).sort({"_id": -1}).toArray(function (err, memes) {
+    let options = {}
+    if (req.hasOwnProperty('query')) options = {limit: parseInt(req.query.limit), skip: parseInt(req.query.skip)}
+    await db.collection('memes').find({}, options).sort({"_id": -1}).toArray(function (err, memes) {
         res.send(JSON.stringify(memes, null, 4))
     })
 })

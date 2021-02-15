@@ -11,15 +11,17 @@ export class MemeOverviewComponent implements OnInit {
 
   memes: Meme[] = [];
   selectedMeme: Meme = null;
-  
+
 
   throttle = 100;
   sum = 100;
   scrollDistance = 1;
   scrollUpDistance = 2;
   direction = '';
+  limit = 0
+  skip = 0
 
-  maxCols: number; 
+  maxCols: number;
   cols: number;
   rows: number;
 
@@ -30,6 +32,7 @@ export class MemeOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.limit = Math.ceil(window.innerWidth / 250) * Math.ceil(window.innerHeight / 250)
     this.getMemes();
     this.maxCols = 9;
     this.rows = this.memes.length / this.maxCols;
@@ -52,6 +55,8 @@ export class MemeOverviewComponent implements OnInit {
 
   onScrollDown() {
     console.log('scrolled down!');
+    this.getMemes()
+    return
     const start = this.sum;
     this.sum + 100;
     this.appendMemes(start, this.sum);
@@ -64,10 +69,11 @@ export class MemeOverviewComponent implements OnInit {
   }
 
   getMemes(): void {
-    this.memeService.getMemes().subscribe((memes)=>{
-      this.memes = <Meme[]>memes;
+    this.memeService.getMemes(this.limit, this.skip).subscribe((memes)=>{
+      this.memes = this.memes.concat(<Meme[]>memes);
       console.log("meme-overview: loaded ",this.memes.length, " memes.");
       console.log(this.memes);
+      this.skip += this.limit
     });
   }
 

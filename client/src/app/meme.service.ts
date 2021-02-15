@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs'; 
+import { Observable, of } from 'rxjs';
 import { Meme } from './meme';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -12,8 +12,8 @@ export class MemeService {
 
   constructor(private http: HttpClient) { }
 
-  getMemes(): Observable<Object | Meme[]> {
-    let url = environment.apiUrl + '/meme'
+  getMemes(limit, skip): Observable<Object | Meme[]> {
+    let url = environment.apiUrl + '/meme?limit=' + limit + '&skip=' + skip
     let jsonMemes = this.http.get(url).pipe(
       catchError(this.handleError<Meme[]>('getMemes', []))
     );
