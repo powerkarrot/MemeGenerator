@@ -143,8 +143,12 @@ app.post('/meme', async function(req, res) {
     }
     memeGenerator.generateMeme({
         topText: meme.topText,
+        topX: meme.topX,
+        topY: meme.topY,
         bottomText: meme.bottomText,
-        url: url,
+        bottomX: meme.bottomX,
+        bottomY: meme.bottomY,
+        url: url
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
             if (err) return res.status(400).json({error: err})
