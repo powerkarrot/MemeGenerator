@@ -31,11 +31,11 @@ export class MemeGeneratorComponent implements OnInit {
             topX: [{
                 value: null,
                 disabled: false
-            }, Validators.required],
+            }],
             topY: [{
                 value: null,
                 disabled: false
-            }, Validators.required],
+            }],
             bottomText: [{
                 value: null,
                 disabled: false
@@ -69,8 +69,10 @@ export class MemeGeneratorComponent implements OnInit {
         if (file) formData.append('file', file)
         formData.append('title', this.memeForm.get('title').value)
         formData.append('topText', this.memeForm.get('topText').value)
-        formData.append('topX', this.memeForm.get('topX').value)
-        formData.append('topY', this.memeForm.get('topY').value)
+        let topX = this.memeForm.get('topX').value
+        if (topX) formData.append('topX', topX)
+        let topY = this.memeForm.get('topY').value
+        if (topY) formData.append('topY', topY)
         let bottomText = this.memeForm.get('bottomText').value
         if (bottomText) formData.append('bottomText', bottomText)
         let bottomX = this.memeForm.get('bottomX').value
@@ -80,8 +82,8 @@ export class MemeGeneratorComponent implements OnInit {
         let url = environment.apiUrl + '/meme'
         this._http.post(url, formData).subscribe({
             next: data => {
-                console.log(data)
-                this._router.navigate(['/memes'])
+                // @ts-ignore
+                this._router.navigate(['/meme/' + data._id])
             },
             error: error => {
                 console.error(error)
