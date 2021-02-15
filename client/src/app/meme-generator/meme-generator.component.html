@@ -16,6 +16,24 @@
                 style="display: none"
                 (change)="onFileChange($event)">
         </div>
+        or
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button (click)="loadTemplates()" mat-raised-button type="button" color="accent"
+                    class="text-uppercase" class="btn">
+                Load templates
+            </button>
+        </div>
+        <div *ngIf="templates">
+            <img *ngFor="let template of templates" src="{{template}}" alt="template"
+                 width="90" height="90" (click)="selectTemplate(template)"/>
+        </div>
+        or
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <mat-form-field>
+                <mat-label>Image URL</mat-label>
+                <input matInput formControlName="imgUrl">
+            </mat-form-field>
+        </div>
         <div fxLayout="row" style="margin-top: 10px">
             <mat-form-field>
                 <mat-label>Title</mat-label>
@@ -32,12 +50,10 @@
             <mat-form-field>
                 <mat-label>Top x</mat-label>
                 <input matInput formControlName="topX">
-                <mat-error>Top x is required!</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Top y</mat-label>
                 <input matInput formControlName="topY">
-                <mat-error>Top y is required!</mat-error>
             </mat-form-field>
         </div>
         <div fxLayout="row">
@@ -55,7 +71,7 @@
             </mat-form-field>
         </div>
 
-        <img src="{{meme.url}}" alt="{{meme.title}}"/>
+        <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"/>
 
         <div fxLayout="row">
             <button mat-button color="primary" (click)="onGenerateMemeButtonPressed()">

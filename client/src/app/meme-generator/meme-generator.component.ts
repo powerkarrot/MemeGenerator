@@ -16,6 +16,7 @@ export class MemeGeneratorComponent implements OnInit {
     meme: any = null;
     memeHidden: boolean = this.meme == null;
     id = null;
+    templates = null
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -24,6 +25,10 @@ export class MemeGeneratorComponent implements OnInit {
     ) {
         this.memeForm = this._formBuilder.group({
             _id: [],
+            imgUrl: [{
+                value: null,
+                disabled: false
+            }],
             title: [{
                 value: null,
                 disabled: false
@@ -72,6 +77,26 @@ export class MemeGeneratorComponent implements OnInit {
             });
     }
 
+    loadTemplates(): void {
+        let url = environment.apiUrl + '/templates'
+        this._http.get(url).subscribe({
+            next: data => {
+                this.templates = data
+                this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i);
+            },
+            error: error => {
+                console.error(error)
+            }
+        })
+    }
+
+    selectTemplate(url): void {
+        this.memeForm.patchValue({
+            imgUrl: url,
+        })
+        this.updateMemeImg()
+    }
+
     onGenerateMemeButtonPressed(): void {
         const formData = this.generateMemeFormData();
         let url = environment.apiUrl + '/meme';
@@ -81,7 +106,7 @@ export class MemeGeneratorComponent implements OnInit {
         this._http.post(url, formData).subscribe({
             next: data => {
                 console.log(data);
-                this._router.navigate(['/memes']);
+                this._router.navigate(['/meme/' + this.id]);
             },
             error: error => {
                 console.error(error);
@@ -119,6 +144,10 @@ export class MemeGeneratorComponent implements OnInit {
         if (file) {
             formData.append('file', file);
         }
+        const imgUrl = this.memeForm.get('imgUrl').value;
+        if (imgUrl) {
+            formData.append('url', imgUrl);
+        }
         formData.append('title', this.memeForm.get('title').value);
         formData.append('topText', this.memeForm.get('topText').value);
         formData.append('topX', this.memeForm.get('topX').value);
@@ -147,7 +176,8 @@ export class MemeGeneratorComponent implements OnInit {
             const name = file.name.split('.')[0]
             this.memeForm.patchValue({
                 fileSource: file,
-                name: name
+                name: name,
+                imgUrl: null
             })
         }
     }

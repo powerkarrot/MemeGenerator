@@ -24,6 +24,7 @@ app.use(bodyParser.json())
 app.use(fileUpload())
 // app.use(express.static('.'))
 app.use('/memes', express.static(__dirname + '/memes'))
+app.use('/uploads', express.static(__dirname + '/uploads'))
 
 const memeGenerator = new memeLib({
     canvasOptions: { // optional
@@ -85,6 +86,14 @@ app.get('/meme/:id', async function(req, res) {
         res.send(JSON.stringify(meme, null, 4))
     })
 })
+
+app.get('/templates', async function(req, res) {
+    fs.readdir(__dirname + '/uploads', function(err, fileNames) {
+        if (err) return res.status(400).json({error: err})
+        res.send(JSON.stringify(fileNames, null, 4))
+    })
+})
+
 app.get('/meme/neigh/:id', async function(req, res) {
     const db = req.app.get('db')
     var result = []
@@ -181,7 +190,7 @@ app.post('/meme/:id', async function(req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
     const uploads = await upload(req.files)
-    if (uploads.length > 0) {
+    if (uploads.length > 0 && !meme.url) {
         url = uploads[0].fullPath
         fileName = uploads[0].fileName
     } else {
