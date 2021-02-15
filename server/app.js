@@ -129,6 +129,9 @@ app.get('/meme/delete/:id', async function(req, res) {
     })
 })
 
+/**
+ * creates a meme and gives it an id
+ */
 app.post('/meme', async function(req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
@@ -166,6 +169,37 @@ app.post('/meme', async function(req, res) {
                 })
                 // res.set('Content-Type', 'image/png')
                 // res.send(data)
+            })
+        })
+    })
+})
+
+/**
+ * Updates a meme with a certain id
+ */
+app.post('/meme/:id', async function(req, res) {
+    const db = req.app.get('db')
+    let meme = req.body, url, fileName
+    const uploads = await upload(req.files)
+    if (uploads.length > 0) {
+        url = uploads[0].fullPath
+        fileName = uploads[0].fileName
+    } else {
+        url = meme.url
+        fileName = url.split('/')
+        fileName = fileName[fileName.length - 1]
+    }
+    memeGenerator.generateMeme({
+        topText: meme.topText,
+        bottomText: meme.bottomText,
+        url: url
+    }).then(function (data) {
+        fs.writeFile('./memes/' + fileName, data, async function (err, result) {
+            if (err) return res.status(400).json({error: err})
+            meme.url = 'http://localhost:3007/memes/' + fileName + '?' + (new Date()).getTime()
+            meme._id = ObjectID(req.params.id)
+            await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
+                res.send(JSON.stringify(meme, null, 4))
             })
         })
     })

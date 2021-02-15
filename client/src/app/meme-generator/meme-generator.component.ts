@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core'
-import {FormBuilder, Validators} from '@angular/forms'
-import {HttpClient} from '@angular/common/http'
-import {environment} from '../../environments/environment'
-import {Router} from '@angular/router'
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment';
+import {Router} from '@angular/router';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
     selector: 'app-meme-generator',
@@ -11,7 +12,10 @@ import {Router} from '@angular/router'
 })
 export class MemeGeneratorComponent implements OnInit {
 
-    memeForm: any
+    memeForm: any;
+    meme: any = null;
+    memeHidden: boolean = this.meme == null;
+    id = null;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -60,30 +64,48 @@ export class MemeGeneratorComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        this.memeForm.valueChanges
+            .pipe(debounceTime(1000))
+            .subscribe( formData => {
+                console.log('ngOnInit', formData);
+                this.updateMemeImg();
+            });
     }
 
-    generateMeme(): void {
-        const formData = new FormData()
-        let file = this.memeForm.get('fileSource').value
-        if (file) formData.append('file', file)
-        formData.append('title', this.memeForm.get('title').value)
-        formData.append('topText', this.memeForm.get('topText').value)
-        let topX = this.memeForm.get('topX').value
-        if (topX) formData.append('topX', topX)
-        let topY = this.memeForm.get('topY').value
-        if (topY) formData.append('topY', topY)
-        let bottomText = this.memeForm.get('bottomText').value
-        if (bottomText) formData.append('bottomText', bottomText)
-        let bottomX = this.memeForm.get('bottomX').value
-        if (bottomX) formData.append('bottomX', bottomX)
-        let bottomY = this.memeForm.get('bottomY').value
-        if (bottomY) formData.append('bottomY', bottomY)
-        let url = environment.apiUrl + '/meme'
+    onGenerateMemeButtonPressed(): void {
+        const formData = this.generateMemeFormData();
+        let url = environment.apiUrl + '/meme';
+        if (this.id != null) {
+            url = url + '/' + this.id;
+        }
         this._http.post(url, formData).subscribe({
             next: data => {
-                // @ts-ignore
-                this._router.navigate(['/meme/' + data._id])
+                console.log(data);
+                this._router.navigate(['/memes']);
+            },
+            error: error => {
+                console.error(error);
+            }
+        })
+    }
+
+    /**
+     * Updates the meme without navigating to /memes
+     */
+    updateMemeImg(): void{
+        const formData = this.generateMemeFormData();
+        let url = environment.apiUrl + '/meme';
+
+        // if id is null the meme has not been created yet
+        if (this.id != null) {
+            url = url + '/' + this.id;
+            console.log('id != null');
+        }
+        this._http.post<any>(url, formData).subscribe({
+            next: data => {
+                console.log('updateMemeImg()', data);
+                this.meme = data;
+                this.id = data._id;
             },
             error: error => {
                 console.error(error)
@@ -91,7 +113,35 @@ export class MemeGeneratorComponent implements OnInit {
         })
     }
 
-    onFileChange(event) {
+    private generateMemeFormData(): FormData {
+        const formData = new FormData();
+        const file = this.memeForm.get('fileSource').value;
+        if (file) {
+            formData.append('file', file);
+        }
+        formData.append('title', this.memeForm.get('title').value);
+        formData.append('topText', this.memeForm.get('topText').value);
+        formData.append('topX', this.memeForm.get('topX').value);
+        formData.append('topY', this.memeForm.get('topY').value);
+
+        const bottomText = this.memeForm.get('bottomText').value;
+        if (bottomText) {
+            formData.append('bottomText', bottomText);
+        }
+
+        const bottomX = this.memeForm.get('bottomX').value;
+        if (bottomX) {
+            formData.append('bottomX', bottomX);
+        }
+
+        const bottomY = this.memeForm.get('bottomY').value;
+        if (bottomY) {
+            formData.append('bottomY', bottomY);
+        }
+        return formData;
+    }
+
+    onFileChange(event): void {
         if (event.target.files.length > 0) {
             const file = event.target.files[0]
             const name = file.name.split('.')[0]
