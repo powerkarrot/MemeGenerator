@@ -78,7 +78,7 @@ async function upload(files) {
 }
 
 app.get('/', function (req, res) {
-    res.send('API running')
+    res.send('OMM WS21 - Meme Generator - API running')
 })
 
 /**
