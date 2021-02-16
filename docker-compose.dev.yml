@@ -1,0 +1,17 @@
+version: "3"
+services:
+  client:
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+  server:
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+  dataimport:
+    build: 
+      context: ./datagenerator
+      dockerfile: Dockerfile
+    links:
+      - mongo
+  
