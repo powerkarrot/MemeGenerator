@@ -9,20 +9,16 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {MatFormFieldModule} from "@angular/material/form-field"
 import {MatInputModule} from '@angular/material/input'
 import {HttpClientModule} from '@angular/common/http'
-import {MemesComponent} from './memes/memes.component'
-import {MemeComponent} from './meme/meme.component';
-import { MemeOverviewComponent } from './meme-overview/meme-overview.component'
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { MemeSingleviewComponent } from './meme-singleview/meme-singleview.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AngularMaterialModule } from './angular-material.module';
+import {MemeOverviewComponent} from './meme-overview/meme-overview.component'
+import {InfiniteScrollModule} from 'ngx-infinite-scroll'
+import {MemeSingleviewComponent} from './meme-singleview/meme-singleview.component'
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
+import {AngularMaterialModule} from './angular-material.module'
 
 @NgModule({
     declarations: [
         AppComponent,
         MemeGeneratorComponent,
-        MemesComponent,
-        MemeComponent,
         MemeOverviewComponent,
         MemeSingleviewComponent
     ],

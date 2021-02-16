@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
-import {Router} from '@angular/router';
-import {debounceTime} from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core'
+import {FormBuilder, Validators} from '@angular/forms'
+import {Router} from '@angular/router'
+import {debounceTime} from 'rxjs/operators'
+import {MemeService} from '../meme.service'
 
 @Component({
     selector: 'app-meme-generator',
@@ -12,16 +11,21 @@ import {debounceTime} from 'rxjs/operators';
 })
 export class MemeGeneratorComponent implements OnInit {
 
-    memeForm: any;
-    meme: any = null;
-    memeHidden: boolean = this.meme == null;
-    id = null;
+    memeForm: any
+    meme: any = null
+    id = null
     templates = null
 
+    /**
+     *
+     * @param _formBuilder
+     * @param _router
+     * @param _memeService
+     */
     constructor(
         private _formBuilder: FormBuilder,
-        private _http: HttpClient,
-        private _router: Router
+        private _router: Router,
+        private _memeService: MemeService
     ) {
         this.memeForm = this._formBuilder.group({
             _id: [],
@@ -68,108 +72,107 @@ export class MemeGeneratorComponent implements OnInit {
         })
     }
 
+    /**
+     * watches meme for changes and updates it
+     */
     ngOnInit(): void {
         this.memeForm.valueChanges
-            .pipe(debounceTime(1000))
-            .subscribe( formData => {
-                console.log('ngOnInit', formData);
-                this.updateMemeImg();
-            });
+            .pipe(debounceTime(500))
+            .subscribe(formData => {
+                this.updateMeme()
+            })
     }
 
+    /**
+     * loads templates (uploaded images)
+     */
     loadTemplates(): void {
-        let url = environment.apiUrl + '/templates'
-        this._http.get(url).subscribe({
-            next: data => {
-                this.templates = data
-                this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i);
-            },
-            error: error => {
-                console.error(error)
-            }
-        })
-    }
-
-    selectTemplate(url): void {
-        this.memeForm.patchValue({
-            imgUrl: url,
-        })
-        this.updateMemeImg()
-    }
-
-    onGenerateMemeButtonPressed(): void {
-        const formData = this.generateMemeFormData();
-        let url = environment.apiUrl + '/meme';
-        if (this.id != null) {
-            url = url + '/' + this.id;
-        }
-        this._http.post(url, formData).subscribe({
-            next: data => {
-                console.log(data);
-                this._router.navigate(['/meme/' + this.id]);
-            },
-            error: error => {
-                console.error(error);
-            }
+        this._memeService.loadTemplates().subscribe((templates) => {
+            this.templates = templates
+            this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i)
         })
     }
 
     /**
-     * Updates the meme without navigating to /memes
+     * selects template image
+     *
+     * @param url
      */
-    updateMemeImg(): void{
-        const formData = this.generateMemeFormData();
-        let url = environment.apiUrl + '/meme';
-
-        // if id is null the meme has not been created yet
-        if (this.id != null) {
-            url = url + '/' + this.id;
-            console.log('id != null');
-        }
-        this._http.post<any>(url, formData).subscribe({
-            next: data => {
-                console.log('updateMemeImg()', data);
-                this.meme = data;
-                this.id = data._id;
-            },
-            error: error => {
-                console.error(error)
-            }
+    selectTemplate(url): void {
+        this.memeForm.patchValue({
+            imgUrl: url,
         })
     }
 
-    private generateMemeFormData(): FormData {
-        const formData = new FormData();
-        const file = this.memeForm.get('fileSource').value;
-        if (file) {
-            formData.append('file', file);
-        }
-        const imgUrl = this.memeForm.get('imgUrl').value;
-        if (imgUrl) {
-            formData.append('url', imgUrl);
-        }
-        formData.append('title', this.memeForm.get('title').value);
-        formData.append('topText', this.memeForm.get('topText').value);
-        formData.append('topX', this.memeForm.get('topX').value);
-        formData.append('topY', this.memeForm.get('topY').value);
-
-        const bottomText = this.memeForm.get('bottomText').value;
-        if (bottomText) {
-            formData.append('bottomText', bottomText);
-        }
-
-        const bottomX = this.memeForm.get('bottomX').value;
-        if (bottomX) {
-            formData.append('bottomX', bottomX);
-        }
-
-        const bottomY = this.memeForm.get('bottomY').value;
-        if (bottomY) {
-            formData.append('bottomY', bottomY);
-        }
-        return formData;
+    /**
+     * updates the meme
+     */
+    updateMeme(): void {
+        const formData = this.generateMemeFormData()
+        this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
+            this.meme = meme
+            // @ts-ignore
+            this.id = meme._id
+        })
     }
 
+    /**
+     * prepares meme data for sending to the server
+     *
+     * @private
+     */
+    private generateMemeFormData(): FormData {
+        const formData = new FormData()
+
+        const file = this.memeForm.get('fileSource').value
+        if (file) {
+            formData.append('file', file)
+        }
+
+        const imgUrl = this.memeForm.get('imgUrl').value
+        if (imgUrl) {
+            formData.append('url', imgUrl)
+        }
+
+        formData.append('title', this.memeForm.get('title').value)
+
+        const topText = this.memeForm.get('topText').value
+        if (topText) {
+            formData.append('topText', topText)
+        }
+
+        const topX = this.memeForm.get('topX').value
+        if (topX) {
+            formData.append('topX', topX)
+        }
+
+        const topY = this.memeForm.get('topY').value
+        if (topY) {
+            formData.append('topY', topX)
+        }
+
+        const bottomText = this.memeForm.get('bottomText').value
+        if (bottomText) {
+            formData.append('bottomText', bottomText)
+        }
+
+        const bottomX = this.memeForm.get('bottomX').value
+        if (bottomX) {
+            formData.append('bottomX', bottomX)
+        }
+
+        const bottomY = this.memeForm.get('bottomY').value
+        if (bottomY) {
+            formData.append('bottomY', bottomY)
+        }
+        return formData
+    }
+
+    /**
+     * handles file upload
+     *
+     * @param event
+     */
     onFileChange(event): void {
         if (event.target.files.length > 0) {
             const file = event.target.files[0]
@@ -180,5 +183,22 @@ export class MemeGeneratorComponent implements OnInit {
                 imgUrl: null
             })
         }
+    }
+
+    /**
+     * deletes current meme and redirect to overview
+     */
+    discardMeme(): void {
+        this._memeService.deleteMeme(this.id).subscribe((res) => {
+            this._router.navigate(['/memes'])
+        })
+    }
+
+    /**
+     * redirects to memes overview
+     * (since it has been already saved)
+     */
+    finishMeme(): void {
+        this._router.navigate(['/meme/' + this.id])
     }
 }

@@ -3,8 +3,7 @@
     <form name="generateMemeForm" [formGroup]="memeForm">
         <input matInput formControlName="_id" hidden>
         <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="hiddenFileInput.click()" mat-raised-button type="button" color="accent"
-                    class="text-uppercase" class="btn btn-primary">
+            <button (click)="hiddenFileInput.click()" mat-raised-button color="secondary">
                 Upload image
             </button>
             <input
@@ -16,18 +15,17 @@
                 style="display: none"
                 (change)="onFileChange($event)">
         </div>
-        or
+        <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="loadTemplates()" mat-raised-button type="button" color="accent"
-                    class="text-uppercase" class="btn">
+            <button (click)="loadTemplates()" mat-raised-button color="secondary">
                 Load templates
             </button>
         </div>
-        <div *ngIf="templates">
+        <div *ngIf="templates" id="templates">
             <img *ngFor="let template of templates" src="{{template}}" alt="template"
                  width="90" height="90" (click)="selectTemplate(template)"/>
         </div>
-        or
+        <p>or</p>
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
                 <mat-label>Image URL</mat-label>
@@ -73,8 +71,13 @@
 
         <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"/>
 
-        <div fxLayout="row">
-            <button mat-button color="primary" (click)="onGenerateMemeButtonPressed()">
+        <div fxLayout="row" style="margin-top: 10px">
+            <button mat-raised-button color="accent" (click)="discardMeme()">
+                Discard Meme
+            </button>
+        </div>
+        <div fxLayout="row" style="margin-top: 10px">
+            <button mat-raised-button color="primary" (click)="finishMeme()">
                 Finish Meme
             </button>
         </div>

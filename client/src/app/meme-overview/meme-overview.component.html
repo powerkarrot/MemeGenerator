@@ -1,7 +1,8 @@
-<div class="container-fluid" infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" (scrolledUp)="onUp()">
-    <a href="" *ngFor="let meme of memes" (click)="onSelect(meme)" routerLink="/meme/{{meme._id}}">
+<div class="container-fluid" infinite-scroll [infiniteScrollDistance]="scrollDistance"
+     [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="loadMemes()">
+    <a href="" *ngFor="let meme of memes" routerLink="/meme/{{meme._id}}">
         <div class="img-thumbnail" style="background-image: url('{{meme.url}}');">
-            <div class="overlay" *ngIf="selectedMeme==null">
+            <div class="overlay">
                 <div class="text">{{meme.title}}</div>
                 <div class="views">{{meme.views}}
                     <mat-icon id="icon warn">people</mat-icon>

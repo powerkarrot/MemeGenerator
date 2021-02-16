@@ -1,7 +1,19 @@
 h2 {
-    color:white;
+    color: white;
 }
 
 mat-label {
-    color:white
+    color: white
+}
+
+p {
+    color: white;
+}
+
+input {
+    color: white;
+}
+
+#templates img {
+    cursor: pointer;
 }

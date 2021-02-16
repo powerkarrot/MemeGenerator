@@ -7,9 +7,14 @@ const ObjectID = require('mongodb').ObjectID
 const memeLib = require('./meme-generator')
 const fs = require('fs')
 const dbUrl = 'mongodb://localhost:27017'
+const memeBaseUrl = 'http://localhost:3007/memes/'
 const app = express()
 const port = process.env.PORT || 3007
 
+/**
+ * connects to DB
+ *
+ */
 MongoClient.connect(dbUrl, {useUnifiedTopology: true}, function (err, client) {
     if (err) throw err
     app.set('db', client.db('omm'))
@@ -22,10 +27,14 @@ app.use(cors({origin: true}))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(fileUpload())
-// app.use(express.static('.'))
 app.use('/memes', express.static(__dirname + '/memes'))
 app.use('/uploads', express.static(__dirname + '/uploads'))
 
+/**
+ * default canvas and font options
+ *
+ * @type {MemeGenerator}
+ */
 const memeGenerator = new memeLib({
     canvasOptions: { // optional
         canvasWidth: 500,
@@ -38,11 +47,12 @@ const memeGenerator = new memeLib({
     }
 })
 
-// app.use(function (req, res, next) {
-//     res.setHeader('Content-Type', 'application/json')
-//     next()
-// })
-
+/**
+ * handles file uploads
+ *
+ * @param files
+ * @returns {Promise<[]>}
+ */
 async function upload(files) {
     let uploads = []
     if (files) {
@@ -67,81 +77,24 @@ async function upload(files) {
     return uploads
 }
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.send('API running')
 })
 
-app.get('/meme', async function(req, res) {
-    const db = req.app.get('db')
-    let options = {}
-    if (req.hasOwnProperty('query')) options = {limit: parseInt(req.query.limit), skip: parseInt(req.query.skip)}
-    await db.collection('memes').find({}, options).sort({"_id": -1}).toArray(function (err, memes) {
-        res.send(JSON.stringify(memes, null, 4))
-    })
-})
-
-app.get('/meme/:id', async function(req, res) {
-    const db = req.app.get('db')
-    await db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
-        res.send(JSON.stringify(meme, null, 4))
-    })
-})
-
-app.get('/templates', async function(req, res) {
-    fs.readdir(__dirname + '/uploads', function(err, fileNames) {
+/**
+ * loads all files in the uploads path
+ */
+app.get('/templates', async function (req, res) {
+    fs.readdir(__dirname + '/uploads', function (err, fileNames) {
         if (err) return res.status(400).json({error: err})
         res.send(JSON.stringify(fileNames, null, 4))
-    })
-})
-
-app.get('/meme/neigh/:id', async function(req, res) {
-    const db = req.app.get('db')
-    var result = []
-    await db.collection('memes').find({}).sort({"_id": -1}).toArray(function (err, memes) {
-        db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
-            result.push(meme)
-            let pre = 0;
-            let suc = 0;
-            for(i = 0; i < memes.length; i++)
-            {
-                if (ObjectID(meme._id).equals(ObjectID(memes[i]._id))){
-                    pre = i - 1;
-                    suc = i + 1;
-                 }
-            }
-            if(pre >= 0)
-                result.unshift(memes[pre])
-            if(suc < memes.length)
-                result.push(memes[suc])
-            res.send(JSON.stringify(result, null, 4))
-        })
-    })
-})
-
-app.get('/meme/delete/:id', async function(req, res) {
-    const db = req.app.get('db')
-    await db.collection('memes').deleteOne({_id: ObjectID(req.params.id)}, function(err, obj) {
-        if (err) {
-            res.json({
-                success: false,
-                action: "delete",
-                data: err
-            })
-        }
-        res.json({
-            success: true,
-            action: "delete",
-            data: {
-                _id: req.params.id
-            }
-        })
     })
 })
 
 /**
  * creates a meme and gives it an id
  */
-app.post('/meme', async function(req, res) {
+app.post('/meme', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
     const uploads = await upload(req.files)
@@ -164,9 +117,9 @@ app.post('/meme', async function(req, res) {
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
             if (err) return res.status(400).json({error: err})
-            meme.url = 'http://localhost:3007/memes/' + fileName
+            meme.url = memeBaseUrl + fileName
             meme._id = new ObjectID()
-            meme.description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"
+            meme.description = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam'
             meme.votes = 0
             meme.views = 0
             meme.comments = []
@@ -176,17 +129,15 @@ app.post('/meme', async function(req, res) {
                     _id: meme._id,
                     url: meme.url
                 })
-                // res.set('Content-Type', 'image/png')
-                // res.send(data)
             })
         })
     })
 })
 
 /**
- * Updates a meme with a certain id
+ * updates a meme with a certain id
  */
-app.post('/meme/:id', async function(req, res) {
+app.post('/meme/:id', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
     const uploads = await upload(req.files)
@@ -209,7 +160,7 @@ app.post('/meme/:id', async function(req, res) {
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
             if (err) return res.status(400).json({error: err})
-            meme.url = 'http://localhost:3007/memes/' + fileName + '?' + (new Date()).getTime()
+            meme.url = memeBaseUrl + fileName + '?' + (new Date()).getTime()
             meme._id = ObjectID(req.params.id)
             await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
                 res.send(JSON.stringify(meme, null, 4))
@@ -218,3 +169,41 @@ app.post('/meme/:id', async function(req, res) {
     })
 })
 
+/**
+ * reads memes from database matching query and options
+ */
+app.get('/meme', async function (req, res) {
+    const db = req.app.get('db')
+    const query = JSON.parse(req.query.q)
+    if (query.hasOwnProperty('_id')) {
+        if (query._id.hasOwnProperty('$lt')) query._id.$lt = ObjectID(query._id.$lt)
+        else if (query._id.hasOwnProperty('$gt')) query._id.$gt = ObjectID(query._id.$gt)
+        else query._id = ObjectID(query._id)
+    }
+    const options = JSON.parse(req.query.o)
+    await db.collection('memes').find(query, options)
+        .toArray(function (err, memes) {
+            res.send(JSON.stringify(memes, null, 4))
+        })
+})
+
+/**
+ * reads meme by id
+ */
+app.get('/meme/:id', async function (req, res) {
+    const db = req.app.get('db')
+    await db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
+        res.send(JSON.stringify(meme, null, 4))
+    })
+})
+
+/**
+ * deletes meme by id
+ */
+app.delete('/meme/:id', async function(req, res) {
+    const db = req.app.get('db')
+    await db.collection('memes').deleteOne({_id: ObjectID(req.params.id)}, function(err, obj) {
+        if (err) return res.sendStatus(404)
+        res.sendStatus(200)
+    })
+})

@@ -1,14 +1,18 @@
-'use strict';
+/**
+ * this module is an adaptation of nodejs-meme-generator
+ */
 
-const request = require('request').defaults({encoding: null});
-const Canvas = require('canvas');
+'use strict'
+
+const request = require('request').defaults({encoding: null})
+const Canvas = require('canvas')
 const fs = require('fs')
 
 /**
- * Meme class
- * 
+ * meme class
+ *
+ * @param userConfig
  * @constructor
- * @param {Object} userConfig {canvasOptions, fontOptions}
  */
 function MemeGenerator (userConfig = {}) {
 	const {canvasOptions, fontOptions} = userConfig;
@@ -23,109 +27,117 @@ function MemeGenerator (userConfig = {}) {
 			lineHeight: 2
 		}
 	}, canvasOptions ? {canvasOptions: canvasOptions} : null,
-	fontOptions ? {fontOptions: fontOptions} : null);
+	fontOptions ? {fontOptions: fontOptions} : null)
 
-	this.setCanvas(config.canvasOptions);
-	this.setFontOptions(config.fontOptions);
+	this.setCanvas(config.canvasOptions)
+	this.setFontOptions(config.fontOptions)
 }
 
 /**
- * 
- * @param {Object} options {canvasWidth, canvasHeight}
+ * sets canvas
+ *
+ * @param options
  */
 MemeGenerator.prototype.setCanvas = function (options) {
-	const {canvasWidth, canvasHeight} = options;
-	const canvas = new Canvas(canvasWidth, canvasHeight);
-	const Image = Canvas.Image;
+	const {canvasWidth, canvasHeight} = options
+	const canvas = new Canvas(canvasWidth, canvasHeight)
+	const Image = Canvas.Image
 
-	this.canvas = canvas;
-	this.ctx = canvas.getContext('2d');
-	this.canvasImg = new Image();
+	this.canvas = canvas
+	this.ctx = canvas.getContext('2d')
+	this.canvasImg = new Image()
 
-	this.ctx.lineWidth  = 2;
-	this.ctx.strokeStyle = 'black';
-	this.ctx.mutterLine = 2;
-	this.ctx.fillStyle = 'white';
-	this.ctx.textAlign = 'center';
+	this.ctx.lineWidth  = 2
+	this.ctx.strokeStyle = 'black'
+	this.ctx.mutterLine = 2
+	this.ctx.fillStyle = 'white'
+	this.ctx.textAlign = 'center'
 }
 
 /**
- * 
- * @param {Object} options {fontFamily, fontSize, lineHeight}
+ * sets fonts options
+ *
+ * @param options
  */
 MemeGenerator.prototype.setFontOptions = function (options) {
-	const {fontFamily, fontSize, lineHeight} = options;
+	const {fontFamily, fontSize, lineHeight} = options
 
-	this.fontFamily = fontFamily;
-	this.fontSize = fontSize;
-	this.lineHeight = lineHeight;
+	this.fontFamily = fontFamily
+	this.fontSize = fontSize
+	this.lineHeight = lineHeight
 }
 
 /**
- * Set meme canvas
+ * sets image options
  * 
  * @param {Object} options {topText, bottomText, url}
  */
 MemeGenerator.prototype.setImageOptions = function (options) {
-	const {topText, topX, topY, bottomText, bottomX, bottomY, url} = options;
+	const {topText, topX, topY, bottomText, bottomX, bottomY, url} = options
 
-	this.url = url;
-	this.topText = topText;
-	this.topX = topX;
-	this.topY = topY;
-	this.bottomText = bottomText;
-	this.bottomX = bottomX;
-	this.bottomY = bottomY;
+	this.url = url
+	this.topText = topText
+	this.topX = topX
+	this.topY = topY
+	this.bottomText = bottomText
+	this.bottomX = bottomX
+	this.bottomY = bottomY
 }
 
 /**
- * Set meme canvas
+ * sets meme canvas
  * 
  * @param {Object} imageOptions {topText, bottomText, url}
  */
 MemeGenerator.prototype.generateMeme = function (imageOptions) {
-	this.setImageOptions(imageOptions);
+	this.setImageOptions(imageOptions)
 
 	return new Promise((resolve, reject) => {
 		if (!this.url.includes('http')) {
 			let that = this
 			fs.readFile(this.url, function(err, data) {
 				if (err) {
-					reject(new Error('The image could not be loaded.'));
+					reject(new Error('The image could not be loaded.'))
 				}
-				that.canvasImg.src = new Buffer(data);
+				that.canvasImg.src = new Buffer(data)
 
-				that.calculateCanvasSize();
-				that.drawMeme();
+				that.calculateCanvasSize()
+				that.drawMeme()
 
-				resolve(that.canvas.toBuffer());
+				resolve(that.canvas.toBuffer())
 			})
 		} else {
 			request.get(this.url, (error, response, body) => {
 				if (!error && response.statusCode === 200) {
-					this.canvasImg.src = new Buffer(body);
+					this.canvasImg.src = new Buffer(body)
 
-					this.calculateCanvasSize();
-					this.drawMeme();
+					this.calculateCanvasSize()
+					this.drawMeme()
 
-					resolve(this.canvas.toBuffer());
+					resolve(this.canvas.toBuffer())
 				} else {
-					reject(new Error('The image could not be loaded.'));
+					reject(new Error('The image could not be loaded.'))
 				}
-			});
+			})
 		}
-	});
+	})
 }
 
+/**
+ *
+ */
 MemeGenerator.prototype.calculateCanvasSize = function () {
-	const {canvas, canvasImg} = this;
+	const {canvas, canvasImg} = this
 
-	canvas.height = canvasImg.height / canvasImg.width * canvas.width;
+	canvas.height = canvasImg.height / canvasImg.width * canvas.width
 
-	this.memeWidth = canvas.width;
-	this.memeHeight = canvas.height;
+	this.memeWidth = canvas.width
+	this.memeHeight = canvas.height
 }
 
+/**
+ * draws memes
+ */
 MemeGenerator.prototype.drawMeme = function () {
 	const {
 		canvas,
@@ -143,85 +155,86 @@ MemeGenerator.prototype.drawMeme = function () {
 		lineHeight,
 		ctx,
 		wrapText
-	} = this;
+	} = this
 
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.drawImage(canvasImg, 0, 0, memeWidth, memeHeight);
+	ctx.clearRect(0, 0, canvas.width, canvas.height)
+	ctx.drawImage(canvasImg, 0, 0, memeWidth, memeHeight)
 
-	let x = memeWidth / 2;
-	let y;
+	let x = memeWidth / 2
+	let y
 
 	if (topText) {
-		y = 0;
+		y = 0
 		if (topX) x = parseInt(topX)
 		if (topY) y = parseInt(topY)
-		this.ctx.textBaseline = 'top';
-		wrapText(ctx, topText, x, y, memeWidth, lineHeight, false, fontSize, fontFamily);
+		this.ctx.textBaseline = 'top'
+		wrapText(ctx, topText, x, y, memeWidth, lineHeight, false, fontSize, fontFamily)
 	}
 
 	if (bottomText) {
-		y = memeHeight;
+		y = memeHeight
 		if (bottomX) x = parseInt(bottomX)
+		else if (topX) x = memeWidth / 2
 		if (bottomY) y = parseInt(bottomY)
-		this.ctx.textBaseline = 'bottom';
-		wrapText(ctx, bottomText, x, y, memeWidth, lineHeight, true, fontSize, fontFamily);
+		this.ctx.textBaseline = 'bottom'
+		wrapText(ctx, bottomText, x, y, memeWidth, lineHeight, true, fontSize, fontFamily)
 	}
 }
 
 /**
- * 
- * @param {Object} context
- * @param {String} text
- * @param {Number} x
- * @param {Number} y
- * @param {Number} maxWidth
- * @param {Number} lineHeightRatio
- * @param {Boolean} fromBottom
- * @param {Number} fontSize
- * @param {String} fontFamily
+ *
+ * @param context
+ * @param text
+ * @param x
+ * @param y
+ * @param maxWidth
+ * @param lineHeightRatio
+ * @param fromBottom
+ * @param fontSize
+ * @param fontFamily
  */
 MemeGenerator.prototype.wrapText = function (
 	context, text, x, y, maxWidth, lineHeightRatio, fromBottom, fontSize, fontFamily) {
 
 	if (!text) {
-		return;
+		return
 	}
 
-	context.font = `bold ${fontSize}pt ${fontFamily}`;
+	context.font = `bold ${fontSize}pt ${fontFamily}`
 
-	const pushMethod = fromBottom ? 'unshift' : 'push';
-	const lineHeight = lineHeightRatio * fontSize;
+	const pushMethod = fromBottom ? 'unshift' : 'push'
+	const lineHeight = lineHeightRatio * fontSize
 
-	let lines = [];
-	let line = '';
-	let words = text.split(' ');
+	let lines = []
+	let line = ''
+	let words = text.split(' ')
 
 	for (let n = 0; n < words.length; n++) {
-		const testLine = line + ' ' + words[n];
-		const metrics = context.measureText(testLine);
-		const testWidth = metrics.width;
+		const testLine = line + ' ' + words[n]
+		const metrics = context.measureText(testLine)
+		const testWidth = metrics.width
 
 		if (testWidth > maxWidth) {
-			lines[pushMethod](line);
-			line = words[n] + ' ';
+			lines[pushMethod](line)
+			line = words[n] + ' '
 		} else {
-			line = testLine;
+			line = testLine
 		}
 	}
 
-	lines[pushMethod](line);
+	lines[pushMethod](line)
 
 	if (lines.length > 2) {
 		MemeGenerator.prototype.wrapText(
-			context, text, x, y, maxWidth, lineHeightRatio, fromBottom, fontSize - 10, fontFamily);
+			context, text, x, y, maxWidth, lineHeightRatio, fromBottom, fontSize - 10, fontFamily)
 	} else {
 		for (let k in lines) {
 			if (fromBottom) {
-				context.strokeText(lines[k], x, y - lineHeight * k);
-				context.fillText(lines[k], x, y - lineHeight * k);
+				context.strokeText(lines[k], x, y - lineHeight * k)
+				context.fillText(lines[k], x, y - lineHeight * k)
 			} else {
-				context.strokeText(lines[k], x, y + lineHeight * k);
-				context.fillText(lines[k], x, y + lineHeight * k);
+				context.strokeText(lines[k], x, y + lineHeight * k)
+				context.fillText(lines[k], x, y + lineHeight * k)
 			}
 		}
 	}
