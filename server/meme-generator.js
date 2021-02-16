@@ -85,7 +85,7 @@ MemeGenerator.prototype.setImageOptions = function (options) {
 }
 
 /**
- * sets meme canvas
+ * generates meme by local file or image url
  * 
  * @param {Object} imageOptions {topText, bottomText, url}
  */

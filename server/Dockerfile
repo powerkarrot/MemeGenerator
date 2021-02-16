@@ -8,5 +8,4 @@ FROM ubuntu:20.04
   RUN npm install
   RUN npm install -g nodemon --unsafe-perm
   COPY . .
-  RUN cp ./replace/index.js ./node_modules/nodejs-meme-generator/index.js
   CMD ["nodemon", "app.js", "--legacy-watch"]
