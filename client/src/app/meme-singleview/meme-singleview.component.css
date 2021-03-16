@@ -39,6 +39,15 @@ button {
 }
 .comments {
     text-align: center;
+    background-color: #181818;
+    border: 1px solid black;
+}
+.comment {
+    margin-top: 5px;
+}
+.comment-title {
+    border: 1px solid #161618;
+    background-color: #232323;
 }
 .image-downvote {
     fill: #d23c22;

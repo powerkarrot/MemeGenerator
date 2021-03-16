@@ -11,7 +11,18 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
-        "comments": []
+        "comments": [
+            {
+                "username": "ex3c",
+                "comment": "nice xD",
+                "date": "2021-03-16T11:52:00.820Z"
+            },
+            {
+                "username": "Vodafone",
+                "comment": "-.-",
+                "date": "2021-03-16T11:53:00.820Z"
+            }
+        ]
     },
     {
         "_id": {
