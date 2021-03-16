@@ -123,6 +123,7 @@ app.post('/meme', async function (req, res) {
             meme.votes = 0
             meme.views = 0
             meme.comments = []
+            meme.date = new Date(Date.now()).toISOString()
             await db.collection('memes').insertOne(meme, function (err, r) {
                 if (err) return res.status(400).json({error: err})
                 res.json({
