@@ -6,7 +6,11 @@
         "title": "Wenn Vodafone nicht geht",
         "topText": "Wenn Vodafone",
         "bottomText": "nicht geht",
-        "url": "http://localhost:3007/memes/test1.jpg"
+        "url": "http://localhost:3007/memes/test1.jpg",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -15,7 +19,11 @@
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
-        "url": "http://localhost:3007/memes/test2.png"
+        "url": "http://localhost:3007/memes/test2.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -24,7 +32,11 @@
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
-        "url": "http://localhost:3007/memes/test3.png"
+        "url": "http://localhost:3007/memes/test3.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -32,7 +44,11 @@
         },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
-        "url": "http://localhost:3007/memes/test4.png"
+        "url": "http://localhost:3007/memes/test4.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -41,7 +57,11 @@
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
-        "url": "http://localhost:3007/memes/test5.jpg"
+        "url": "http://localhost:3007/memes/test5.jpg",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -53,7 +73,11 @@
         "bottomText": "Test meme",
         "bottomX": 170,
         "bottomY": 250,
-        "url": "http://localhost:3007/memes/test6.png"
+        "url": "http://localhost:3007/memes/test6.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -64,7 +88,11 @@
         "bottomText": "soft drinks",
         "bottomX": 285,
         "bottomY": 430,
-        "url": "http://localhost:3007/memes/test7.png"
+        "url": "http://localhost:3007/memes/test7.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -73,7 +101,11 @@
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
-        "url": "http://localhost:3007/memes/test8.png"
+        "url": "http://localhost:3007/memes/test8.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -82,7 +114,11 @@
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
-        "url": "http://localhost:3007/memes/test9.png"
+        "url": "http://localhost:3007/memes/test9.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -91,9 +127,12 @@
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
-        "url": "http://localhost:3007/memes/test10.png"
+        "url": "http://localhost:3007/memes/test10.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
-
     {
         "_id": {
             "$oid": "602037c600f5dd0ae75d0533"
@@ -101,7 +140,11 @@
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
-        "url": "http://localhost:3007/memes/test2.png"
+        "url": "http://localhost:3007/memes/test2.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -110,7 +153,11 @@
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
-        "url": "http://localhost:3007/memes/test3.png"
+        "url": "http://localhost:3007/memes/test3.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -118,7 +165,11 @@
         },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
-        "url": "http://localhost:3007/memes/test4.png"
+        "url": "http://localhost:3007/memes/test4.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -127,7 +178,11 @@
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
-        "url": "http://localhost:3007/memes/test5.jpg"
+        "url": "http://localhost:3007/memes/test5.jpg",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -139,7 +194,11 @@
         "bottomText": "Test meme",
         "bottomX": 170,
         "bottomY": 250,
-        "url": "http://localhost:3007/memes/test6.png"
+        "url": "http://localhost:3007/memes/test6.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -150,7 +209,11 @@
         "bottomText": "soft drinks",
         "bottomX": 285,
         "bottomY": 430,
-        "url": "http://localhost:3007/memes/test7.png"
+        "url": "http://localhost:3007/memes/test7.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -159,7 +222,11 @@
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
-        "url": "http://localhost:3007/memes/test8.png"
+        "url": "http://localhost:3007/memes/test8.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -168,7 +235,11 @@
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
-        "url": "http://localhost:3007/memes/test9.png"
+        "url": "http://localhost:3007/memes/test9.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -177,9 +248,12 @@
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
-        "url": "http://localhost:3007/memes/test10.png"
+        "url": "http://localhost:3007/memes/test10.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
-
     {
         "_id": {
             "$oid": "602037c600f5dd0ae75d0543"
@@ -187,7 +261,11 @@
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
-        "url": "http://localhost:3007/memes/test2.png"
+        "url": "http://localhost:3007/memes/test2.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -196,7 +274,11 @@
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
-        "url": "http://localhost:3007/memes/test3.png"
+        "url": "http://localhost:3007/memes/test3.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -204,7 +286,11 @@
         },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
-        "url": "http://localhost:3007/memes/test4.png"
+        "url": "http://localhost:3007/memes/test4.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -213,7 +299,11 @@
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
-        "url": "http://localhost:3007/memes/test5.jpg"
+        "url": "http://localhost:3007/memes/test5.jpg",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -225,7 +315,11 @@
         "bottomText": "Test meme",
         "bottomX": 170,
         "bottomY": 250,
-        "url": "http://localhost:3007/memes/test6.png"
+        "url": "http://localhost:3007/memes/test6.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -236,7 +330,11 @@
         "bottomText": "soft drinks",
         "bottomX": 285,
         "bottomY": 430,
-        "url": "http://localhost:3007/memes/test7.png"
+        "url": "http://localhost:3007/memes/test7.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -245,7 +343,11 @@
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
-        "url": "http://localhost:3007/memes/test8.png"
+        "url": "http://localhost:3007/memes/test8.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -254,7 +356,11 @@
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
-        "url": "http://localhost:3007/memes/test9.png"
+        "url": "http://localhost:3007/memes/test9.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -263,9 +369,12 @@
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
-        "url": "http://localhost:3007/memes/test10.png"
+        "url": "http://localhost:3007/memes/test10.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
-
     {
         "_id": {
             "$oid": "602037c600f5dd0ae75d0553"
@@ -273,7 +382,11 @@
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
-        "url": "http://localhost:3007/memes/test2.png"
+        "url": "http://localhost:3007/memes/test2.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -282,7 +395,11 @@
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
-        "url": "http://localhost:3007/memes/test3.png"
+        "url": "http://localhost:3007/memes/test3.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -290,7 +407,11 @@
         },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
-        "url": "http://localhost:3007/memes/test4.png"
+        "url": "http://localhost:3007/memes/test4.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -299,7 +420,11 @@
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
-        "url": "http://localhost:3007/memes/test5.jpg"
+        "url": "http://localhost:3007/memes/test5.jpg",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -311,7 +436,11 @@
         "bottomText": "Test meme",
         "bottomX": 170,
         "bottomY": 250,
-        "url": "http://localhost:3007/memes/test6.png"
+        "url": "http://localhost:3007/memes/test6.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -322,7 +451,11 @@
         "bottomText": "soft drinks",
         "bottomX": 285,
         "bottomY": 430,
-        "url": "http://localhost:3007/memes/test7.png"
+        "url": "http://localhost:3007/memes/test7.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -331,7 +464,11 @@
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
-        "url": "http://localhost:3007/memes/test8.png"
+        "url": "http://localhost:3007/memes/test8.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -340,7 +477,11 @@
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
-        "url": "http://localhost:3007/memes/test9.png"
+        "url": "http://localhost:3007/memes/test9.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -349,9 +490,12 @@
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
-        "url": "http://localhost:3007/memes/test10.png"
+        "url": "http://localhost:3007/memes/test10.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
-
     {
         "_id": {
             "$oid": "602037c600f5dd0ae75d0563"
@@ -359,7 +503,11 @@
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
-        "url": "http://localhost:3007/memes/test2.png"
+        "url": "http://localhost:3007/memes/test2.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -368,7 +516,11 @@
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
-        "url": "http://localhost:3007/memes/test3.png"
+        "url": "http://localhost:3007/memes/test3.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -376,7 +528,11 @@
         },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
-        "url": "http://localhost:3007/memes/test4.png"
+        "url": "http://localhost:3007/memes/test4.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -385,7 +541,11 @@
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
-        "url": "http://localhost:3007/memes/test5.jpg"
+        "url": "http://localhost:3007/memes/test5.jpg",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -397,7 +557,11 @@
         "bottomText": "Test meme",
         "bottomX": 170,
         "bottomY": 250,
-        "url": "http://localhost:3007/memes/test6.png"
+        "url": "http://localhost:3007/memes/test6.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -408,7 +572,11 @@
         "bottomText": "soft drinks",
         "bottomX": 285,
         "bottomY": 430,
-        "url": "http://localhost:3007/memes/test7.png"
+        "url": "http://localhost:3007/memes/test7.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -417,7 +585,11 @@
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
-        "url": "http://localhost:3007/memes/test8.png"
+        "url": "http://localhost:3007/memes/test8.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -426,7 +598,11 @@
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
-        "url": "http://localhost:3007/memes/test9.png"
+        "url": "http://localhost:3007/memes/test9.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -435,9 +611,12 @@
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
-        "url": "http://localhost:3007/memes/test10.png"
+        "url": "http://localhost:3007/memes/test10.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
-
     {
         "_id": {
             "$oid": "602037c600f5dd0ae75d0573"
@@ -445,7 +624,11 @@
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
-        "url": "http://localhost:3007/memes/test2.png"
+        "url": "http://localhost:3007/memes/test2.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -454,7 +637,11 @@
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
-        "url": "http://localhost:3007/memes/test3.png"
+        "url": "http://localhost:3007/memes/test3.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -462,7 +649,11 @@
         },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
-        "url": "http://localhost:3007/memes/test4.png"
+        "url": "http://localhost:3007/memes/test4.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -471,7 +662,11 @@
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
-        "url": "http://localhost:3007/memes/test5.jpg"
+        "url": "http://localhost:3007/memes/test5.jpg",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -483,7 +678,11 @@
         "bottomText": "Test meme",
         "bottomX": 170,
         "bottomY": 250,
-        "url": "http://localhost:3007/memes/test6.png"
+        "url": "http://localhost:3007/memes/test6.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -494,7 +693,11 @@
         "bottomText": "soft drinks",
         "bottomX": 285,
         "bottomY": 430,
-        "url": "http://localhost:3007/memes/test7.png"
+        "url": "http://localhost:3007/memes/test7.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -503,7 +706,11 @@
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
-        "url": "http://localhost:3007/memes/test8.png"
+        "url": "http://localhost:3007/memes/test8.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -512,7 +719,11 @@
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
-        "url": "http://localhost:3007/memes/test9.png"
+        "url": "http://localhost:3007/memes/test9.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     },
     {
         "_id": {
@@ -521,7 +732,10 @@
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
-        "url": "http://localhost:3007/memes/test10.png"
+        "url": "http://localhost:3007/memes/test10.png",
+        "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        "votes": 0,
+        "views": 0,
+        "comments": []
     }
-
 ]
