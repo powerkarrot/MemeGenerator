@@ -30,7 +30,8 @@ export class MemeRandomComponent implements OnInit {
      * load memes considering limit and updates skip value
      */
     loadRandomMeme(): void {
-        this.memeService.getRandomMeme().subscribe((meme) => {
+        this.memeService.getRandomMeme().subscribe((data) => {
+            const meme = <Meme>data
             const url = '/meme/' + meme._id
             this.router.navigateByUrl(url)
         })
