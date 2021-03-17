@@ -12,7 +12,7 @@
     </div>
     <div class="passive-information">
         <h5>Titel: {{selectedMeme.title}}</h5>
-        <h5>Date: </h5>
+        <h5>Date: {{selectedMeme.dateAdded | date: 'dd/MM/yyyy - h:mm:a'}}</h5>
         <h5>Description: {{selectedMeme.description}}</h5>
         <div class="votes">
             <div class="row">
@@ -32,9 +32,13 @@
         <h5>Angeglubscht: {{selectedMeme.views}}</h5>
     </div>
     <div class="comments">
-        <div *ngFor="comment in selectedMeme.Comments">
+        <h4>Comments</h4>
+        <div *ngFor="let comment of selectedMeme.comments" class="comment">
+            <div class="comment-title row">
+                <div class="col-sm-2"><h5>User: {{comment.username}}</h5></div>
+                <div class="col-sm-2"><h5>Date: {{comment.date | date: 'dd/MM/yyyy - h:mm:a'}}</h5></div>
+            </div>
             <h5>{{comment.comment}}</h5>
-            <h5>{{comment.votes}}</h5>
         </div>
     </div>
 </div>
