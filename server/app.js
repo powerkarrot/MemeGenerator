@@ -189,6 +189,21 @@ app.get('/meme', async function (req, res) {
 })
 
 /**
+ * gets a random meme
+ */
+app.get('/meme/random', async function (req, res) {
+    const db = req.app.get('db')
+    const agg = db.collection('memes').aggregate([
+        {$sample:{size:1}}
+    ])
+    const meme = await agg.toArray(function(err, meme) {
+        if (err) throw err
+        console.log(JSON.stringify(meme))
+        res.send(JSON.stringify(meme[0], null, 4))
+    })
+})
+
+/**
  * reads meme by id
  */
 app.get('/meme/:id', async function (req, res) {

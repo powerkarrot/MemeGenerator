@@ -52,6 +52,16 @@ export class MemeService {
     }
 
     /**
+     * reads a random meme
+     */
+    getRandomMeme() : Observable<Object | Meme> {
+        let url = environment.apiUrl + '/meme/random'
+        return this._http.get(url).pipe(
+            catchError(this.handleError<Meme>('getRandomMeme'))
+        )
+    }
+
+    /**
      * reads all memes matching the query
      *
      * @param query
