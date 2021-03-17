@@ -198,7 +198,7 @@ app.get('/meme/random', async function (req, res) {
     const meme = await agg.toArray(function(err, meme) {
         if (err) throw err
         console.log(JSON.stringify(meme))
-        res.send(JSON.stringify(meme, null, 4))
+        res.send(JSON.stringify(meme[0], null, 4))
     })
 })
 

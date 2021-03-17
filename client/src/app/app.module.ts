@@ -4,6 +4,7 @@ import {NgModule} from '@angular/core'
 import {AppRoutingModule} from './app-routing.module'
 import {AppComponent} from './app.component'
 import {MemeGeneratorComponent} from './meme-generator/meme-generator.component'
+import {MemeRandomComponent} from './meme-random/meme-random.component'
 import {ReactiveFormsModule} from '@angular/forms'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {MatFormFieldModule} from "@angular/material/form-field"
@@ -20,7 +21,8 @@ import {AngularMaterialModule} from './angular-material.module'
         AppComponent,
         MemeGeneratorComponent,
         MemeOverviewComponent,
-        MemeSingleviewComponent
+        MemeSingleviewComponent,
+        MemeRandomComponent
     ],
     imports: [
         BrowserModule,
