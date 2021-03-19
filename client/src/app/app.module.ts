@@ -14,6 +14,8 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll'
 import {MemeSingleviewComponent} from './meme-singleview/meme-singleview.component'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {AngularMaterialModule} from './angular-material.module'
+import { ColorPickerModule } from 'ngx-color-picker';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
     declarations: [
@@ -32,7 +34,9 @@ import {AngularMaterialModule} from './angular-material.module'
         MatInputModule,
         InfiniteScrollModule,
         NgbModule,
-        AngularMaterialModule
+        AngularMaterialModule,
+        ColorPickerModule,
+        MatCheckboxModule
     ],
     providers: [],
     bootstrap: [AppComponent]

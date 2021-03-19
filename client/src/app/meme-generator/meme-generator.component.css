@@ -17,3 +17,8 @@ input {
 #templates img {
     cursor: pointer;
 }
+
+mat-checkbox {
+    color: white;
+    margin-right: 10px;
+}

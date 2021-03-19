@@ -41,6 +41,10 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }, Validators.required],
+            topSize: [{
+                value: null,
+                disabled: false
+            }],
             topX: [{
                 value: null,
                 disabled: false
@@ -49,7 +53,23 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }],
+            topBold: [{
+                value: null,
+                disabled: false
+            }],
+            topItalic: [{
+                value: null,
+                disabled: false
+            }],
+            topColor: [{
+                value: null,
+                disabled: false
+            }],
             bottomText: [{
+                value: null,
+                disabled: false
+            }],
+            bottomSize: [{
                 value: null,
                 disabled: false
             }],
@@ -58,6 +78,18 @@ export class MemeGeneratorComponent implements OnInit {
                 disabled: false
             }],
             bottomY: [{
+                value: null,
+                disabled: false
+            }],
+            bottomBold: [{
+                value: null,
+                disabled: false
+            }],
+            bottomItalic: [{
+                value: null,
+                disabled: false
+            }],
+            bottomColor: [{
                 value: null,
                 disabled: false
             }],
@@ -141,6 +173,11 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('topText', topText)
         }
 
+        const topSize = this.memeForm.get('topSize').value
+        if (topSize) {
+            formData.append('topSize', topSize)
+        }
+
         const topX = this.memeForm.get('topX').value
         if (topX) {
             formData.append('topX', topX)
@@ -151,9 +188,29 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('topY', topX)
         }
 
+        const topBold = this.memeForm.get('topBold').value
+        if (topBold) {
+            formData.append('topBold', topBold)
+        }
+
+        const topItalic = this.memeForm.get('topItalic').value
+        if (topItalic) {
+            formData.append('topItalic', topItalic)
+        }
+
+        const topColor = this.memeForm.get('topColor').value
+        if (topColor) {
+            formData.append('topColor', topColor)
+        }
+
         const bottomText = this.memeForm.get('bottomText').value
         if (bottomText) {
             formData.append('bottomText', bottomText)
+        }
+
+        const bottomSize = this.memeForm.get('bottomSize').value
+        if (bottomSize) {
+            formData.append('bottomSize', bottomSize)
         }
 
         const bottomX = this.memeForm.get('bottomX').value
@@ -165,6 +222,22 @@ export class MemeGeneratorComponent implements OnInit {
         if (bottomY) {
             formData.append('bottomY', bottomY)
         }
+
+        const bottomBold = this.memeForm.get('bottomBold').value
+        if (bottomBold) {
+            formData.append('bottomBold', bottomBold)
+        }
+
+        const bottomItalic = this.memeForm.get('bottomItalic').value
+        if (bottomItalic) {
+            formData.append('bottomItalic', bottomItalic)
+        }
+
+        const bottomColor = this.memeForm.get('bottomColor').value
+        if (bottomColor) {
+            formData.append('bottomColor', bottomColor)
+        }
+
         return formData
     }
 

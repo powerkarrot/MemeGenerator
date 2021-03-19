@@ -108,11 +108,19 @@ app.post('/meme', async function (req, res) {
     }
     memeGenerator.generateMeme({
         topText: meme.topText,
+        topSize: meme.topSize,
         topX: meme.topX,
         topY: meme.topY,
+        topBold: meme.topBold,
+        topItalic: meme.topItalic,
+        topColor: meme.topColor,
         bottomText: meme.bottomText,
+        bottomSize: meme.bottomSize,
         bottomX: meme.bottomX,
         bottomY: meme.bottomY,
+        bottomBold: meme.bottomBold,
+        bottomItalic: meme.bottomItalic,
+        bottomColor: meme.bottomColor,
         url: url
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
@@ -151,11 +159,19 @@ app.post('/meme/:id', async function (req, res) {
     }
     memeGenerator.generateMeme({
         topText: meme.topText,
+        topSize: meme.topSize,
         topX: meme.topX,
         topY: meme.topY,
+        topBold: meme.topBold,
+        topItalic: meme.topItalic,
+        topColor: meme.topColor,
         bottomText: meme.bottomText,
+        bottomSize: meme.bottomSize,
         bottomX: meme.bottomX,
         bottomY: meme.bottomY,
+        bottomBold: meme.bottomBold,
+        bottomItalic: meme.bottomItalic,
+        bottomColor: meme.bottomColor,
         url: url
     }).then(function (data) {
         fs.writeFile('./memes/' + fileName, data, async function (err, result) {
