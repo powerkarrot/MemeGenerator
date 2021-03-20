@@ -65,3 +65,15 @@ button {
     margin-left: 5px;
     margin-top: auto;
 }
+
+.autoplay {
+    display: flex;
+}
+.accent {
+    background-color: #d23c22;
+    border-color: #d23c22;
+}
+.btn-primary:not(:disabled):not(.disabled).active{
+    background-color: #c0371f;
+    border-color: #c0371f;
+}
