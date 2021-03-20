@@ -27,6 +27,19 @@ export class MemeService {
         )
     }
 
+    voteMeme(id: number, isUpvote : boolean): Observable<any> {
+        if (id !== null) {
+            let url = environment.apiUrl + '/meme/vote/' + id
+            const vote = isUpvote ? 1 : -1
+            const data = {
+                "vote": vote
+            }
+            return this._http.post(url, data).pipe(
+                catchError(this.handleError<any>('voteMeme'))
+            )
+        }
+    }
+
     /**
      * deletes meme
      *

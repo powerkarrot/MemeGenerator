@@ -65,10 +65,15 @@ button {
     margin-left: 5px;
     margin-top: auto;
 }
-
-.autoplay {
-    display: flex;
+.wrapper {
+    overflow: hidden;
+    width:fit-content;
 }
+.element {
+    float: left;
+    margin-left: 10px;
+}
+
 .accent {
     background-color: #d23c22;
     border-color: #d23c22;

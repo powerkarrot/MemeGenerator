@@ -5,6 +5,38 @@ import {ActivatedRoute} from '@angular/router'
 import {MemeService} from '../meme.service'
 import {Router} from '@angular/router';
 import {interval, Subscription} from 'rxjs';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+@Component({
+    selector: 'ngbd-modal-content',
+    styleUrls: ['./meme-singleview.component.css'],
+    template: `
+    <div class="modal-header">
+      <h4 class="modal-title">Share meme!</h4>
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <input type="url" class="form-control" id="memeUrl" aria-describedby="memeUrl" value="{{url}}" #memeUrl>
+        <button class="btn-primary accent" (click)="copyMemeUrl(memeUrl)">Copy</button>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+    </div>
+  `
+})
+export class NgbdModalContent {
+    @Input() url;
+
+    constructor(public activeModal: NgbActiveModal) {}
+
+    copyMemeUrl(inputElement) {
+        inputElement.select()
+        document.execCommand('copy')
+        inputElement.setSelectionRange(0, 0)
+    }
+}
 
 @Component({
     selector: 'app-meme-singleview',
@@ -30,7 +62,11 @@ export class MemeSingleviewComponent implements OnInit {
      * @param _route
      * @param memeService
      */
-    constructor(private _http: HttpClient, private _route: ActivatedRoute, private memeService: MemeService, private router: Router) {
+    constructor(private _http: HttpClient,
+                private _route: ActivatedRoute, 
+                private memeService: MemeService, 
+                private router: Router,
+                private modalService: NgbModal) {
     }
 
     /**
@@ -74,10 +110,6 @@ export class MemeSingleviewComponent implements OnInit {
         })
     }
 
-    getRandomMeme(): void {
-        
-    }
-
     onAutoplayClicked($event): void {
         if (this.model.autoplay == true) {
             this.timer = interval(5000).subscribe((val) => {
@@ -97,6 +129,19 @@ export class MemeSingleviewComponent implements OnInit {
         } else {
             this.timer.unsubscribe()
         }
+    }
+
+    vote(positive: boolean): void {
+        this.memeService.voteMeme(this.selectedMeme._id, positive).subscribe((data) => {
+            if (data.modifiedCount == 1){
+                this.getMemes()
+            }
+        })
+    }
+
+    share(): void {
+        const modalRef = this.modalService.open(NgbdModalContent)
+        modalRef.componentInstance.url = this.selectedMeme.url
     }
 
     ngOnDestroy() {

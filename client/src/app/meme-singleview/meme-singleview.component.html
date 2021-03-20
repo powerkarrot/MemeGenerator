@@ -10,9 +10,9 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-    <div class="passive-information">
-        <div class="row actionbar">
-            <div class="col-sm-4 autoplay">
+    <div class="passive-information" *ngIf="selectedMeme">
+        <div class="wrapper center actionbar">
+            <div class="element">
                 <div class="btn-group btn-group-toggle">
                     <label class="btn-primary accent" ngbButtonLabel>
                       <input type="checkbox" ngbButton [(ngModel)]="model.autoplay" (change)="onAutoplayClicked($event)"> Autoplay
@@ -22,6 +22,31 @@
                     </label>
                 </div>  
             </div>
+            <div class="element">
+                <a href="{{selectedMeme.url}}" mat-icon-button color="warn" target="_blank">
+                    <mat-icon>download</mat-icon>
+                </a>
+            </div>
+            <div class="element">
+                <button mat-icon-button color="warn" aria-label="Share" (click)="share()">
+                    <mat-icon>share</mat-icon>
+                </button>
+            </div>
+            <div class="element">
+                <button mat-icon-button color="warn" aria-label="Downvote meme" (click)="vote(false)">
+                    <mat-icon>thumb_down</mat-icon>
+                </button>
+            </div>
+            <div class="element">
+                <button mat-icon-button color="warn" aria-label="Upvote meme" (click)="vote(true)">
+                    <mat-icon>thumb_up</mat-icon>
+                </button>
+            </div>
+            <div class="element">
+                <h5>Votes: {{selectedMeme.votes}}</h5>
+            </div>
+                    
+            <div class="element"><h5>Views: {{selectedMeme.views}}</h5></div>
         </div>
 
         <div class="row">
@@ -29,29 +54,9 @@
             <div class="col-sm-2"><h5>Description: {{selectedMeme.description}}</h5></div>
             <div class="col-sm-2"><h5>Date: {{selectedMeme.dateAdded | date: 'dd/MM/yyyy - h:mm:a'}}</h5></div>
         </div>
-        <div class="row">
-            <div class="col-sm-2">
-                <div class="votes">
-                    <div class="row">
-                        <div class="block">
-                            <button mat-icon-button color="warn" aria-label="Downvote meme">
-                                <mat-icon>thumb_down</mat-icon>
-                            </button>
-                        </div>
-                        <div class="block"><h5>Votes: {{selectedMeme.votes}}</h5></div>
-                        <div class="block">
-                            <button mat-icon-button color="warn" aria-label="Upvote meme">
-                                <mat-icon>thumb_up</mat-icon>
-                            </button>
-                        </div>
-                    </div>  
-                </div>
-            </div>
-            <div class="col-sm-2"><h5>Views: {{selectedMeme.views}}</h5></div>
-        </div>
         
     </div>
-    <div class="comments">
+    <div class="comments" *ngIf="selectedMeme">
         <h4>Comments</h4>
         <div *ngFor="let comment of selectedMeme.comments" class="comment">
             <div class="comment-title row">

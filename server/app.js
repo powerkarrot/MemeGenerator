@@ -135,6 +135,18 @@ app.post('/meme', async function (req, res) {
     })
 })
 
+app.post('/meme/vote/:id', async function(req, res) {
+    const db = req.app.get('db')
+    const votes = req.body.vote < 0 ? -1 : 1
+    const query = { _id: ObjectID(req.params.id) }
+    const newValues = { $inc: {votes: votes} }  
+
+    db.collection('memes').updateOne(query, newValues, function(err, result) {
+        if (err) throw err
+        res.send(result)
+    })
+})
+
 /**
  * updates a meme with a certain id
  */
