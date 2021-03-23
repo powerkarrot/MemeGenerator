@@ -16,6 +16,7 @@ import {MemeSingleviewComponent} from './meme-singleview/meme-singleview.compone
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {AngularMaterialModule} from './angular-material.module'
 import { FormsModule } from '@angular/forms'; 
+import { MemeSearchComponent } from './meme-search/meme-search.component'
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import { FormsModule } from '@angular/forms';
         MemeGeneratorComponent,
         MemeOverviewComponent,
         MemeSingleviewComponent,
-        MemeRandomComponent
+        MemeRandomComponent,
+        MemeSearchComponent
     ],
     imports: [
         BrowserModule,

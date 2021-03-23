@@ -187,14 +187,31 @@ app.post('/meme/:id', async function (req, res) {
  */
 app.get('/meme', async function (req, res) {
     const db = req.app.get('db')
-    const query = JSON.parse(req.query.q)
+    let query = JSON.parse(req.query.q)
+    let searchstr 
+    let filterstr 
     if (query.hasOwnProperty('_id')) {
         if (query._id.hasOwnProperty('$lt')) query._id.$lt = ObjectID(query._id.$lt)
         else if (query._id.hasOwnProperty('$gt')) query._id.$gt = ObjectID(query._id.$gt)
         else query._id = ObjectID(query._id)
     }
+    
     const options = JSON.parse(req.query.o)
-    await db.collection('memes').find(query, options)
+    const sort = JSON.parse(req.query.s)
+    if (req.query.fu) {
+        searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
+        query = {title: searchstr}
+    }
+
+    if (req.query.fi) {
+        filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
+        if (req.query.fu) {
+            query = {title:searchstr, url:filterstr} //{title: /mein/i}, {url: /png/i}
+        }
+    }
+
+    console.log("Query is: " + query)
+    await db.collection('memes').find(query, options).sort(sort) 
         .toArray(function (err, memes) {
             res.send(JSON.stringify(memes, null, 4))
         })
