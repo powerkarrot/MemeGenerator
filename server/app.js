@@ -1,4 +1,7 @@
 const express = require('express')
+const SHA256 = require("crypto-js/sha256")
+const PBKDF2 = require("crypto-js/pbkdf2")
+const WordArray = require("crypto-js/lib-typedarrays")
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
@@ -233,5 +236,57 @@ app.delete('/meme/:id', async function(req, res) {
     await db.collection('memes').deleteOne({_id: ObjectID(req.params.id)}, function(err, obj) {
         if (err) return res.sendStatus(404)
         res.sendStatus(200)
+    })
+})
+
+app.post('/login', async function(req, res) {
+    const db = req.app.get('db')
+    const username = req.body.user
+    const plainpw = req.body.pw
+
+    await db.collection('users').findOne({username: username}).then(function (userdata) {
+        if(userdata){
+            const encpw = PBKDF2(plainpw, userdata.salt, {keySize: 16,  iterations:1000})
+            if(userdata.pw == encpw) {
+                const api_key = ""+SHA256(WordArray.random(64))
+                const data = {
+                    _id: userdata._id,
+                    username: userdata.username,
+                    memes: userdata.memes,
+                    api_cred: ""+api_key
+                }
+                
+                res.send(JSON.stringify({status: "OK", data: data}, null, 4))
+            } else {
+                res.send(JSON.stringify({status: "Error: Wrong login", data: {}}, null, 4))
+            }
+        } else {
+            res.send(JSON.stringify({status: "Error: Wrong login", data: {}}, null, 4))
+        }
+    })
+})
+
+app.post('/register', async function(req, res) {
+    const db = req.app.get('db')
+    const username = req.body.user
+    const plainpw = req.body.pw
+    const salt = ""+SHA256(WordArray.random(64))
+    const encpw = ""+PBKDF2(plainpw, salt, {keySize: 16,  iterations:1000})
+
+    const data = {
+        _id: new ObjectID(),
+        username: username,
+        salt: salt,
+        pw: encpw,
+        memes: {
+            liked: [],
+            disliked: [],
+            created: []
+        }
+    }
+
+    await db.collection('users').insertOne(data, function (err, r) {
+        if (err) return res.status(400).json({error: err})
+        res.send(JSON.stringify({status: "OK", data: data}, null, 4))
     })
 })
