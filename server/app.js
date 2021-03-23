@@ -183,7 +183,7 @@ app.post('/meme/:id', async function (req, res) {
 })
 
 /**
- * reads memes from database matching query and options
+ * reads memes from database matching query, sort and options
  */
 app.get('/meme', async function (req, res) {
     const db = req.app.get('db')
@@ -195,12 +195,12 @@ app.get('/meme', async function (req, res) {
         else if (query._id.hasOwnProperty('$gt')) query._id.$gt = ObjectID(query._id.$gt)
         else query._id = ObjectID(query._id)
     }
-    
+
     const options = JSON.parse(req.query.o)
     const sort = JSON.parse(req.query.s)
     if (req.query.fu) {
         searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
-        query = {title: searchstr}
+        query = {$or:[{title: searchstr}, {tags:searchstr}]} 
     }
 
     if (req.query.fi) {
