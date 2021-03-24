@@ -9,7 +9,7 @@
             <label for="regPassword">Password</label>
             <input type="password" class="form-control" id="regPassword" placeholder="password" [(ngModel)]="model.password" name="password">
             <input type="password" class="form-control" id="regPasswordRe" placeholder="re" style="margin-top: 20px;" [(ngModel)]="model.password_re" name="password_re" (keypress)="keyEvent($event)" (change)="keyEvent($event)" [ngClass]="{'match': model.password==model.password_re,
-            'err': !model.password==model.password_re}" ngbPopover="{{status}}" container="body">
+            'err': model.password!=model.password_re}" ngbPopover="{{status}}" container="body">
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
