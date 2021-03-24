@@ -54,7 +54,7 @@ export class MemeSingleviewComponent implements OnInit {
     model = {
         autoplay: false,
         random: false
-    };
+    }
 
     /**
      *
