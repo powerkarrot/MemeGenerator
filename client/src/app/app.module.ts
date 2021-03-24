@@ -17,6 +17,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {AngularMaterialModule} from './angular-material.module'
 import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './register/register.component'
+import {StorageServiceModule} from 'ngx-webstorage-service'
+import {LocalStorageService} from './localStorage.service'
 
 @NgModule({
     declarations: [
@@ -38,9 +40,10 @@ import { RegisterComponent } from './register/register.component'
         InfiniteScrollModule,
         NgbModule,
         FormsModule,
+        StorageServiceModule,
         AngularMaterialModule
     ],
-    providers: [],
+    providers: [LocalStorageService],
     bootstrap: [AppComponent, LoginDropdownComponent]
 })
 export class AppModule {

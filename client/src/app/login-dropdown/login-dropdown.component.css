@@ -3,6 +3,10 @@
     background-color: #ff4081;
     border-color: #e53974;
 }
+.btn-dropdown {
+	color: #fff;
+	background-color: #161618;
+}
 .btn-primary:hover {
     background-color: #ff4081;
 }

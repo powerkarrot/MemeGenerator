@@ -19,14 +19,25 @@ export class UserService {
      * @param password 
      * @returns 
      */
-    login(username, password): Observable<Object | Userdata> {
+    login(username, password): Observable<Object | any> {
         let url = environment.apiUrl + '/login'
         const data = {
             user: username,
             pw: password
         }
         return this._http.post(url, data).pipe(
-            catchError(this.handleError<Userdata>('login'))
+            catchError(this.handleError<any>('login'))
+        )
+    }
+
+    logout(userId, userCred): Observable<Object | any> {
+        let url = environment.apiUrl + '/logout'
+        const data = {
+            id: userId,
+            cred: userCred
+        }
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<any>('logout'))
         )
     }
 
@@ -43,7 +54,7 @@ export class UserService {
             pw: password
         }
         return this._http.post(url, data).pipe(
-            catchError(this.handleError<Userdata>('register'))
+            catchError(this.handleError<any>('register'))
         )
     }
 

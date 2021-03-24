@@ -255,8 +255,19 @@ app.post('/login', async function(req, res) {
                     memes: userdata.memes,
                     api_cred: ""+api_key
                 }
-                
-                res.send(JSON.stringify({status: "OK", data: data}, null, 4))
+
+                // Create Authentication object and enter it into db for access control
+                const auth = {
+                    _id: new ObjectID(),
+                    date: new Date(Date.now()).toISOString(),
+                    userid: userdata._id,
+                    cred: ""+ api_key
+                }
+
+                db.collection('authentication').insertOne(auth, function (err, r) {
+                    if (err) return res.status(400).json({error: err})
+                    res.send(JSON.stringify({status: "OK", data: data}, null, 4))
+                })
             } else {
                 res.send(JSON.stringify({status: "Error: Wrong login", data: {}}, null, 4))
             }
@@ -289,4 +300,31 @@ app.post('/register', async function(req, res) {
         if (err) return res.status(400).json({error: err})
         res.send(JSON.stringify({status: "OK", data: data}, null, 4))
     })
+})
+
+app.get('/auth/delete', async function (req, res) {
+    const db = req.app.get('db')
+    await db.collection('authentication').deleteMany({}).then(function(r){
+        res.send(r)
+    })
+    
+})
+
+app.get('/auth', async function (req, res) {
+    const db = req.app.get('db')
+    await db.collection('authentication').findOne({}).then(function (meme) {
+        res.send(JSON.stringify(meme, null, 4))
+    }) 
+})
+
+app.post('/logout', async function(req, res) {
+    const db = req.app.get('db')
+    const userID = req.body.id
+    const userCred = req.body.cred
+
+    await db.collection('authentication').deleteOne({userid: ObjectID(userID)}, function(err, obj) {
+        if (err) return res.sendStatus(404)
+        res.send(JSON.stringify({status: "OK", text:"User logged out!"}, null, 4))
+    })
+    
 })
