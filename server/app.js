@@ -213,7 +213,6 @@ app.get('/meme', async function (req, res) {
         }
     }
 
-    console.log("Query is: " + query)
     await db.collection('memes').find(query, options).sort(sort) 
         .toArray(function (err, memes) {
             res.send(JSON.stringify(memes, null, 4))
