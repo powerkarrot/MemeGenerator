@@ -18,8 +18,6 @@ export class MemeSearchComponent implements OnInit {
     fis: string[] = ['jpg', 'png']
 
     /**
-     *
-     * @param _formBuilder
      * @param _router
      */
     constructor( private router: Router){}
@@ -28,6 +26,9 @@ export class MemeSearchComponent implements OnInit {
         console.log("hi")
     }
 
+    /**
+     * creates url containing query parameters from user input and redirects to main page
+     */
     searchMeme(): void {
 
         let searchstr = ""
@@ -50,6 +51,10 @@ export class MemeSearchComponent implements OnInit {
         this.router.navigateByUrl(ur1)
     }
 
+    /**
+     * 
+     * @param data 
+     */
     onClickSubmit(data):void {
         
     }

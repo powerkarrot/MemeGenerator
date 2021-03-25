@@ -37,6 +37,7 @@ export class MemeOverviewComponent implements OnInit {
 
     /**
      * calculates loading limit using screen size and size of meme div
+     * handles possible search/filter/sort parameters in url
      * loads the first amount of memes
      */
     //TODO: search und sort in q dingsen bsp "title": type search / votes: type sort / png: type filter
@@ -64,7 +65,8 @@ export class MemeOverviewComponent implements OnInit {
     }
 
     /**
-     * load memes considering limit and updates skip value
+     * loads memes considering limit and possible search/filter/sort parameters
+     * updates skip value
      */
     loadMemes(): void {
         const options = {
