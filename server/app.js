@@ -1,4 +1,7 @@
 const express = require('express')
+const SHA256 = require("crypto-js/sha256")
+const PBKDF2 = require("crypto-js/pbkdf2")
+const WordArray = require("crypto-js/lib-typedarrays")
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
@@ -297,4 +300,94 @@ app.delete('/meme/:id', async function(req, res) {
         if (err) return res.sendStatus(404)
         res.sendStatus(200)
     })
+})
+
+app.post('/login', async function(req, res) {
+    const db = req.app.get('db')
+    const username = req.body.user
+    const plainpw = req.body.pw
+
+    await db.collection('users').findOne({username: username}).then(function (userdata) {
+        if(userdata){
+            const encpw = PBKDF2(plainpw, userdata.salt, {keySize: 16,  iterations:1000})
+            if(userdata.pw == encpw) {
+                const api_key = ""+SHA256(WordArray.random(64))
+                const data = {
+                    _id: userdata._id,
+                    username: userdata.username,
+                    memes: userdata.memes,
+                    api_cred: ""+api_key
+                }
+
+                // Create Authentication object and enter it into db for access control
+                const auth = {
+                    _id: new ObjectID(),
+                    date: new Date(Date.now()).toISOString(),
+                    userid: userdata._id,
+                    cred: ""+ api_key
+                }
+
+                db.collection('authentication').insertOne(auth, function (err, r) {
+                    if (err) return res.status(400).json({error: err})
+                    res.send(JSON.stringify({status: "OK", data: data}, null, 4))
+                })
+            } else {
+                res.send(JSON.stringify({status: "Error: Wrong login", data: {}}, null, 4))
+            }
+        } else {
+            res.send(JSON.stringify({status: "Error: Wrong login", data: {}}, null, 4))
+        }
+    })
+})
+
+app.post('/register', async function(req, res) {
+    const db = req.app.get('db')
+    const username = req.body.user
+    const plainpw = req.body.pw
+    const salt = ""+SHA256(WordArray.random(64))
+    const encpw = ""+PBKDF2(plainpw, salt, {keySize: 16,  iterations:1000})
+
+    const data = {
+        _id: new ObjectID(),
+        username: username,
+        salt: salt,
+        pw: encpw,
+        memes: {
+            liked: [],
+            disliked: [],
+            created: []
+        }
+    }
+
+    await db.collection('users').insertOne(data, function (err, r) {
+        if (err) return res.status(400).json({error: err})
+        res.send(JSON.stringify({status: "OK", data: data}, null, 4))
+    })
+})
+
+app.get('/auth/delete', async function (req, res) {
+    const db = req.app.get('db')
+    await db.collection('authentication').deleteMany({}).then(function(r){
+        res.send(r)
+    })
+    
+})
+
+app.get('/auth', async function (req, res) {
+    const db = req.app.get('db')
+    await db.collection('authentication').findOne({}).then(function (meme) {
+        res.send(JSON.stringify(meme, null, 4))
+    }) 
+})
+
+app.post('/logout', async function(req, res) {
+    const db = req.app.get('db')
+    const userID = req.body.id
+    const userCred = req.body.cred
+
+    await db.collection('authentication').deleteOne({userid: ObjectID(userID)}, function(err, obj) {
+        if (err) return res.sendStatus(404)
+        res.send(JSON.stringify({status: "OK", text:"User logged out!"}, null, 4))
+    })
+    
 })
