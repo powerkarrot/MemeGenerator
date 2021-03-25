@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core'
 import {MemeService} from '../meme.service'
+import {ActivatedRoute} from '@angular/router'
 import {Meme} from '../meme'
+
+
 
 @Component({
     selector: 'app-meme-overview',
@@ -15,25 +18,60 @@ export class MemeOverviewComponent implements OnInit {
     scrollUpDistance = 2
     limit = 0
     skip = 0
+    query = {}
+    sort = {}
+    category
+    search 
+    filter
 
     /**
      *
      * @param memeService
      */
-    constructor(private memeService: MemeService) {
+    constructor(
+        private memeService: MemeService,
+        private _route: ActivatedRoute, 
+
+        ) {
     }
 
     /**
      * calculates loading limit using screen size and size of meme div
+     * handles possible search/filter/sort parameters in url
      * loads the first amount of memes
      */
+
+    //TODO: search und sort in q dingsen bsp "title": type search / votes: type sort / png: type filter
     ngOnInit(): void {
         this.limit = Math.ceil(window.innerWidth / 250) * Math.ceil(window.innerHeight / 250)
+
+        this._route.queryParams.subscribe(params => {
+            let order = -1
+            if(params.sort) {
+                if(params.order) {
+                    order = (params.order == "Up") ? 1 : -1
+                } 
+                this.category = params.sort
+                if(this.category == 'title') this.sort = {title:order}
+                else if (this.category == 'votes') this.sort = {votes:order}
+                else if (this.category == 'views') this.sort = {views:order}
+                else if (this.category == 'creation date') this.sort = {dateAdded:order}
+                else this.sort = "{}" 
+            }
+            if(params.filter) {
+                this.filter = params.filter
+            }
+
+            if(params.title) {
+                this.search = params.title
+            }
+        })
         this.loadMemes()
     }
 
     /**
-     * load memes considering limit and updates skip value
+     * loads memes considering limit and possible search/filter/sort parameters
+     * updates skip value
      */
     loadMemes(): void {
         const options = {
@@ -41,10 +79,10 @@ export class MemeOverviewComponent implements OnInit {
             skip: this.skip,
             sort: {_id: -1}
         }
-        this.memeService.getMemes({}, options).subscribe((memes) => {
+        this.memeService.getMemes(this.query, options, this.sort, this.search, this.filter).subscribe((memes) => {
+            console.log(this.query)
             this.memes = this.memes.concat(<Meme[]>memes)
             this.skip += this.limit
         })
     }
-
 }

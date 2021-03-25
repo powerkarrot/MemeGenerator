@@ -15,7 +15,8 @@ import {MemeSingleviewComponent} from './meme-singleview/meme-singleview.compone
 import {LoginDropdownComponent} from './login-dropdown/login-dropdown.component'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {AngularMaterialModule} from './angular-material.module'
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms'; 
+import { MemeSearchComponent } from './meme-search/meme-search.component'
 import { RegisterComponent } from './register/register.component'
 import {StorageServiceModule} from 'ngx-webstorage-service'
 import {LocalStorageService} from './localStorage.service'
@@ -27,6 +28,7 @@ import {LocalStorageService} from './localStorage.service'
         MemeOverviewComponent,
         MemeSingleviewComponent,
         MemeRandomComponent,
+        MemeSearchComponent,
         LoginDropdownComponent,
         RegisterComponent
     ],

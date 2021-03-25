@@ -2,6 +2,7 @@
   "name": "omm",
   "version": "1.0.0",
   "dependencies": {
+    "adm-zip": "^0.5.4",
     "body-parser": "^1.19.0",
     "canvas": "^1.6.13",
     "cors": "^2.8.5",

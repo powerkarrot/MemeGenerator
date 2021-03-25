@@ -9,6 +9,7 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
 const memeLib = require('./meme-generator')
 const fs = require('fs')
+var AdmZip = require("adm-zip");
 const dbUrl = process.env.MONGO_URI || 'mongodb://localhost:27017'
 const memeBaseUrl = 'http://localhost:3007/memes/'
 const app = express()
@@ -32,6 +33,8 @@ app.use(bodyParser.json())
 app.use(fileUpload())
 app.use('/memes', express.static(__dirname + '/memes'))
 app.use('/uploads', express.static(__dirname + '/uploads'))
+app.use('/zips', express.static(__dirname + '/zips'))
+
 
 /**
  * default canvas and font options
@@ -186,18 +189,34 @@ app.post('/meme/:id', async function (req, res) {
 })
 
 /**
- * reads memes from database matching query and options
+ * reads memes from database matching query, sort and options
  */
 app.get('/meme', async function (req, res) {
     const db = req.app.get('db')
-    const query = JSON.parse(req.query.q)
+    let query = JSON.parse(req.query.q)
+    let searchstr 
+    let filterstr 
     if (query.hasOwnProperty('_id')) {
         if (query._id.hasOwnProperty('$lt')) query._id.$lt = ObjectID(query._id.$lt)
         else if (query._id.hasOwnProperty('$gt')) query._id.$gt = ObjectID(query._id.$gt)
         else query._id = ObjectID(query._id)
     }
+
     const options = JSON.parse(req.query.o)
-    await db.collection('memes').find(query, options)
+    const sort = JSON.parse(req.query.s)
+    if (req.query.fu) {
+        searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
+        query = {$or:[{title: searchstr}, {tags:searchstr}]} 
+    }
+
+    if (req.query.fi) {
+        filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
+        if (req.query.fu) {
+            query = {title:searchstr, url:filterstr} //{title: /mein/i}, {url: /png/i}
+        }
+    }
+
+    await db.collection('memes').find(query, options).sort(sort) 
         .toArray(function (err, memes) {
             res.send(JSON.stringify(memes, null, 4))
         })
@@ -226,6 +245,50 @@ app.get('/meme/:id', async function (req, res) {
     await db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
         res.send(JSON.stringify(meme, null, 4))
     })
+})
+
+/**
+ * API for downloading a set of images as a zip file using search parameters
+ * If the max. images is not specified, a maximum of 100 are retrieved
+ * 
+ * example testings for now: 
+ * http://localhost:3007/downloads?q={}&o={"limit":3,"skip":0,"sort":{"_id":-1}}&s={}&fu="now"&fi={}
+ * http://localhost:3007/downloads?&fu="vodafone"&fi="png"
+ * 
+ */
+app.get('/downloads', async function(req, res) {
+
+    const db = req.app.get('db')
+    let searchstr, filterstr
+    let localPath
+    let query, options, sort = {}
+    
+    if (req.query.o) options = JSON.parse(req.query.o) 
+    else options = {"limit":100,"skip":0,"sort":{"_id":-1}}
+    if (req.query.q) query = JSON.parse(req.query.q)
+    if (req.query.s) sort = JSON.parse(req.query.s)
+    if (req.query.fu) {
+        searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
+        query = {title: searchstr}
+    }
+    if (req.query.fi) {
+        filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
+        if (req.query.fu) query = {title:searchstr, url:filterstr}
+    }
+
+    await db.collection('memes').find(query, options).sort(sort) 
+        .toArray(function (err, memes) {
+
+            localPath = memes.map(b => b.url.replace(/http:\/\/localhost:3007/g, '.'))
+            var zip = new AdmZip();
+            var content = "Dogs are better than cats.";
+            zip.addFile("README.txt", Buffer.alloc(content.length, content), "");
+            localPath.map(a => zip.addLocalFile(a))
+            zip.writeZip("./zips/files.zip");
+           })
+
+    res.writeHead(302, {'Location': '/zips/files.zip'});
+    res.end();
 })
 
 /**
