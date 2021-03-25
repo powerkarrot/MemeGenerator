@@ -73,12 +73,15 @@ export class MemeService {
             catchError(this.handleError<Meme>('getRandomMeme'))
         )
     }
-
     /**
      * reads all memes matching the query
-     *
-     * @param query
-     * @param options
+     * 
+     * @param query 
+     * @param options 
+     * @param sort 
+     * @param search 
+     * @param filter 
+     * @returns 
      */
     getMemes(query = {}, options = {}, sort = {}, search = {}, filter = {}): Observable<Object | Meme[]> {
         let url = environment.apiUrl + '/meme?q=' + JSON.stringify(query) + '&o=' + JSON.stringify(options) + '&s=' + JSON.stringify(sort) + '&fu=' + JSON.stringify(search)  + '&fi=' + JSON.stringify(filter)

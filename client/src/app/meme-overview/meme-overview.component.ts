@@ -40,17 +40,22 @@ export class MemeOverviewComponent implements OnInit {
      * handles possible search/filter/sort parameters in url
      * loads the first amount of memes
      */
+
     //TODO: search und sort in q dingsen bsp "title": type search / votes: type sort / png: type filter
     ngOnInit(): void {
         this.limit = Math.ceil(window.innerWidth / 250) * Math.ceil(window.innerHeight / 250)
 
         this._route.queryParams.subscribe(params => {
+            let order = -1
             if(params.sort) {
+                if(params.order) {
+                    order = (params.order == "Up") ? 1 : -1
+                } 
                 this.category = params.sort
-                if(this.category == 'title') {this.sort = {title:1}}
-                else if (this.category == 'votes') {this.sort = {votes:1}}
-                else if (this.category == 'views') {this.sort = {views:1}}
-                else if (this.category == 'creation date') {this.sort = {dateAdded:1}}
+                if(this.category == 'title') this.sort = {title:order}
+                else if (this.category == 'votes') this.sort = {votes:order}
+                else if (this.category == 'views') this.sort = {views:order}
+                else if (this.category == 'creation date') this.sort = {dateAdded:order}
                 else this.sort = "{}" 
             }
             if(params.filter) {

@@ -16,6 +16,9 @@ export class MemeSearchComponent implements OnInit {
     items: string[] = ['title', 'votes', 'creation date', 'views']
     filters: string
     fis: string[] = ['jpg', 'png']
+    direction: string[] = ['Up','Down'] 
+    order: string
+
 
     /**
      * @param _router
@@ -34,20 +37,22 @@ export class MemeSearchComponent implements OnInit {
         let searchstr = ""
         let sortstr = ""
         let filterstr = ""
+        let orderstr = ""
 
         if(this.criteria) {
             sortstr = '&sort=' + this.criteria
         }
         if (this.inputText) {
             searchstr = 'title=' + this.inputText
-            console.log(searchstr)
         }
         if(this.filters) {
             filterstr = '&filter=' + this.filters
-            console.log(filterstr)
+        }
+        if(this.order) {
+            orderstr = '&order=' + this.order
         }
 
-        const ur1 = '/memes?'+ searchstr + sortstr + filterstr
+        const ur1 = '/memes?'+ searchstr + sortstr + filterstr + orderstr
         this.router.navigateByUrl(ur1)
     }
 
