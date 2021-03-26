@@ -43,6 +43,46 @@ export class MemeOverviewComponent implements OnInit {
 
     //TODO: search und sort in q dingsen bsp "title": type search / votes: type sort / png: type filter
     ngOnInit(): void {
+
+        var  test = { 
+                    url: "http://pngimg.com/uploads/dog/dog_PNG50322.png", 
+                    text: [
+                        {title: "title6", 
+                        description: "Lmeh", 
+                        topText: "DUUUUUUUUUUUDE",
+                        bottomText: "thetheh" ,
+                        topX: 200,
+                        topY: 200,
+                        bottomX: 200,
+                        bottomY: 200
+                     },
+                     {title: "title7", 
+                        description: "ugh", 
+                        topText: "never",
+                        bottomText: "again" ,
+                        topX: 200,
+                        topY: 200,
+                        bottomX: 200,
+                        bottomY: 200
+                     },
+                     {title: "title8", 
+                        description: "welll", 
+                        topText: "FUUUUUUU",
+                        bottomText: "AAARRRGGHHHHH" ,
+                        topX: 200,
+                        topY: 200,
+                        bottomX: 200,
+                        bottomY: 200
+                     }
+                    ]
+                }
+
+        this.memeService.test("kmkm", test).subscribe((meme) => {
+            //this.meme = meme
+            // @ts-ignore
+            this.id = meme._id
+        })
+
         this.limit = Math.ceil(window.innerWidth / 250) * Math.ceil(window.innerHeight / 250)
 
         this._route.queryParams.subscribe(params => {

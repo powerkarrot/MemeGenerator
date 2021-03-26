@@ -103,7 +103,9 @@ app.get('/templates', async function (req, res) {
 app.post('/meme', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
+    console.log("req.body: " + JSON.stringify(req.body ))
     const uploads = await upload(req.files)
+    
     if (uploads.length > 0) {
         url = uploads[0].fullPath
         fileName = uploads[0].fileName
@@ -112,6 +114,7 @@ app.post('/meme', async function (req, res) {
         fileName = url.split('/')
         fileName = fileName[fileName.length - 1]
     }
+
     memeGenerator.generateMeme({
         topText: meme.topText,
         topX: meme.topX,
@@ -141,6 +144,95 @@ app.post('/meme', async function (req, res) {
     })
 })
 
+/**
+*    { 
+        url: "http://pngimg.com/uploads/dog/dog_PNG50322.png", 
+        text: [
+            {title: "blablabla", 
+            description: "blabla", 
+            topText: "blabla",
+            bottomText: "blabla" ,
+            topX: 200,
+            topY: 200,
+            bottomX: 200,
+            bottomY: 200
+            },
+            ...
+        ]
+    }
+ */
+app.post('/createMemes', async function (req, res) {
+
+    const db = req.app.get('db')
+
+    let meme = req.body
+    let url = req.body.url
+    let filepaths =[]
+    let memes = []
+
+    var zip = new AdmZip();
+    var content = "Dogs are better than cats.";
+    zip.addFile("README.txt", Buffer.alloc(content.length, content), "");
+
+    extension = "." +  url.split('.').pop();
+    meme.text.forEach(c => {  filepaths.push('./memes/' + c.title + extension)})
+    memes = meme.text
+
+    response = []
+
+    for (let i = 0; i < memes.length; i++) {
+        await memeGenerator.generateMeme({
+                    topText: memes[i].topText,
+                    topX: memes[i].topX,
+                    topY: memes[i].topY,
+                    bottomText: memes[i].bottomText,
+                    bottomX: memes[i].bottomX,
+                    bottomY: memes[i].bottomY,
+                    url: url
+            
+        }).then(function (data) {
+
+            fs.writeFile(filepaths[i], data, async function (err, result) {
+                if (err) return res.status(400).json({error: err})
+                fileName = filepaths[i]
+
+                memes[i].url = memeBaseUrl + memes[i].title + extension
+                memes[i]._id = new ObjectID()
+                memes[i].description = memes[i].description
+                memes[i].votes = 0
+                memes[i].views = 0
+                memes[i].comments = []
+                memes[i].date = new Date(Date.now()).toISOString()
+
+                await db.collection('memes').insertOne(memes[i], function (err, r) {
+                    if (err) response.push({error: err}) 
+                    response.push({
+                        _id: memes[i]._id,
+                        url: memes[i].url
+                    })
+
+                    if (i == memes.length-1){
+                        filepaths.map(path => {
+                            zip.addLocalFile(path)
+                            zip.writeZip("./zips/files.zip");
+
+
+                        })         
+                    }
+                })
+            })
+        })
+      }
+
+    //res.send(memeBaseUrl + '/zips/files.zip')
+    res.writeHead(302, {'Location': '/zips/files.zip'});
+    //res.json(response)
+    res.end();
+})
+
+/**
+ * 
+ */
 app.post('/meme/vote/:id', async function(req, res) {
     const db = req.app.get('db')
     const votes = req.body.vote < 0 ? -1 : 1
@@ -160,6 +252,8 @@ app.post('/meme/:id', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
     const uploads = await upload(req.files)
+
+    
     if (uploads.length > 0 && !meme.url) {
         url = uploads[0].fullPath
         fileName = uploads[0].fileName
@@ -181,11 +275,15 @@ app.post('/meme/:id', async function (req, res) {
             if (err) return res.status(400).json({error: err})
             meme.url = memeBaseUrl + fileName + '?' + (new Date()).getTime()
             meme._id = ObjectID(req.params.id)
+            id = meme._id
             await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
                 res.send(JSON.stringify(meme, null, 4))
             })
+
+            
         })
     })
+
 })
 
 /**
@@ -212,7 +310,7 @@ app.get('/meme', async function (req, res) {
     if (req.query.fi) {
         filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
         if (req.query.fu) {
-            query = {title:searchstr, url:filterstr} //{title: /mein/i}, {url: /png/i}
+            query = {title:searchstr, url:filterstr} 
         }
     }
 
@@ -254,7 +352,7 @@ app.get('/meme/:id', async function (req, res) {
  * example testings for now: 
  * http://localhost:3007/downloads?q={}&o={"limit":3,"skip":0,"sort":{"_id":-1}}&s={}&fu="now"&fi={}
  * http://localhost:3007/downloads?&fu="vodafone"&fi="png"
- * 
+ * TODO see promises
  */
 app.get('/downloads', async function(req, res) {
 

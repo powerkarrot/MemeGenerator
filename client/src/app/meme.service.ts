@@ -22,6 +22,19 @@ export class MemeService {
     updateMeme(id, data): Observable<Object | Meme> {
         let url = environment.apiUrl + '/meme'
         if (id !== null) url += '/' + id
+        console.log(url)
+        console.log(data)
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<Meme>('updateMeme'))
+        )
+    }
+
+    //delete
+    test(id, data): Observable<Object | Meme> {
+        let url = environment.apiUrl + '/createMemes'
+        //if (id !== null) url += '/' + id
+        console.log(url)
+        console.log(data)
         return this._http.post(url, data).pipe(
             catchError(this.handleError<Meme>('updateMeme'))
         )
