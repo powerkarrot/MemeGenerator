@@ -3,9 +3,12 @@ import {Meme} from '../meme'
 import {HttpClient} from '@angular/common/http'
 import {ActivatedRoute} from '@angular/router'
 import {MemeService} from '../meme.service'
-import {Router} from '@angular/router';
-import {interval, Subscription} from 'rxjs';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router'
+import {interval, Subscription} from 'rxjs'
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import {LocalStorageService} from '../localStorage.service'
+import { Userdata } from '../userdata'
+import {ToastService} from '../toast-service'
 
 @Component({
     selector: 'ngbd-modal-content',
@@ -50,11 +53,14 @@ export class MemeSingleviewComponent implements OnInit {
     nextMeme: Meme
     subscription: any
     timer: any
+    userData: Userdata
 
     model = {
         autoplay: false,
-        random: false
+        random: false,
+        comment: ""
     }
+    loggedIn = false
 
     /**
      *
@@ -66,7 +72,9 @@ export class MemeSingleviewComponent implements OnInit {
                 private _route: ActivatedRoute, 
                 private memeService: MemeService, 
                 private router: Router,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private localStorageService: LocalStorageService,
+                private toastService: ToastService) {
     }
 
     /**
@@ -84,6 +92,8 @@ export class MemeSingleviewComponent implements OnInit {
             }
         })
         this.getMemes()
+        this.loggedIn = this.isLoggedIn()
+        console.log("liked Memes: ", this.localStorageService.getLikedMemes())
     }
 
     /**
@@ -132,10 +142,23 @@ export class MemeSingleviewComponent implements OnInit {
     }
 
     vote(positive: boolean): void {
-        this.memeService.voteMeme(this.selectedMeme._id, positive).subscribe((data) => {
-            if (data.modifiedCount == 1){
+        this.memeService.voteMeme(this.selectedMeme._id, positive,
+                                  this.userData._id, this.userData.username,
+                                  this.userData.api_cred).subscribe((data) => {
+            console.log("Voting: ", data)
+            if (data.status == 'OK'){
                 this.getMemes()
+                this.localStorageService.updateLocalStorage()
+                this.toastService.showSuccess(data.text)
+            } else {
+                this.toastService.showDanger(data.text)
             }
+        })
+    }
+
+    commentMeme(formdata): void {
+        this.memeService.commentMeme(this.selectedMeme._id, this.userData._id, this.userData.username, this.userData.api_cred, this.model.comment).subscribe((data) => {
+            console.log('Comment: ', data)
         })
     }
 
@@ -146,5 +169,13 @@ export class MemeSingleviewComponent implements OnInit {
 
     ngOnDestroy() {
         this.timer.unsubscribe();
+    }
+
+    isLoggedIn(): boolean {
+        if(this.localStorageService.hasLocalStorage()){
+            this.userData = <Userdata>this.localStorageService.getLocalStorage()
+            return true
+        }
+        return false
     }
 }

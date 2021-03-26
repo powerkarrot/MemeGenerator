@@ -1,13 +1,11 @@
 import { Meme } from './meme'
+import {Comment} from './comment'
 
 export interface Userdata {
     _id: number
     username: string
-    memes: {
-        liked: Meme[]
-        disliked: Meme[]
-        created: Meme[]
-    }
-    api_cred: string
-
+    votes: Meme[]
+    memes: Meme[]
+    api_cred: number
+    comment: Comment[]
 }

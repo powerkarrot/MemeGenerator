@@ -6,10 +6,11 @@
         "username": "ex3c",
         "salt": "ae756d40c02e2824e9bd2aa517e341789336d725aedf900216b8ad88ceec2928",
         "password": "8b915544b965d8278e11096207af83b4cc367f981bbf3223dfd5b642dc237ce80a1885dd219ca2b18748719537595305e152af3e3a004bcce1bd9ba6a2987127",
-        "memes": {
-            "liked": [],
-            "disliked": [],
-            "created": []
-        }
+        "memes": [],
+        "liked": [],
+        "disliked": [],
+        "comment": [
+
+        ]
     }
 ]

@@ -44,9 +44,9 @@ button {
 }
 .comment {
     margin-top: 5px;
+    background-color: #232323;
 }
 .comment-title {
-    border: 1px solid #161618;
     background-color: #232323;
 }
 .image-downvote {
@@ -56,11 +56,18 @@ button {
 }
 
 .row {
-    width: 100%;
+    width: 50%;
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
+.row2 {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
 .block {
     margin-left: 5px;
     margin-top: auto;
@@ -81,4 +88,7 @@ button {
 .btn-primary:not(:disabled):not(.disabled).active{
     background-color: #c0371f;
     border-color: #c0371f;
+}
+.comment-form {
+    background-color: #232323;
 }

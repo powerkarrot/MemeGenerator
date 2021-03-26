@@ -19,6 +19,8 @@ import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './register/register.component'
 import {StorageServiceModule} from 'ngx-webstorage-service'
 import {LocalStorageService} from './localStorage.service'
+import {UserPanelComponent} from './user-panel/user-panel.component'
+import {ToastsContainer} from './toasts-container/toasts-container.component'
 
 @NgModule({
     declarations: [
@@ -28,7 +30,9 @@ import {LocalStorageService} from './localStorage.service'
         MemeSingleviewComponent,
         MemeRandomComponent,
         LoginDropdownComponent,
-        RegisterComponent
+        RegisterComponent,
+        UserPanelComponent,
+        ToastsContainer
     ],
     imports: [
         BrowserModule,

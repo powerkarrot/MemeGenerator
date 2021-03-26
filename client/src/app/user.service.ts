@@ -58,6 +58,17 @@ export class UserService {
         )
     }
 
+    getUserdata(userId: number, userCred: number): Observable<Object | any> {
+        let url = environment.apiUrl + '/userdata'
+        const data = {
+            id: userId,
+            cred: userCred
+        }
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<any>('getUserdata'))
+        )
+    }
+
     /**
      * handles and logs errors
      *

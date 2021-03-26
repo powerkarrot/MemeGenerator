@@ -27,15 +27,33 @@ export class MemeService {
         )
     }
 
-    voteMeme(id: number, isUpvote : boolean): Observable<any> {
+    voteMeme(id: number, isUpvote : boolean, userid: number, username: string, apicred: number): Observable<any> {
         if (id !== null) {
             let url = environment.apiUrl + '/meme/vote/' + id
             const vote = isUpvote ? 1 : -1
             const data = {
+                "userid": userid,
+                "username": username,
+                "cred": apicred,
                 "vote": vote
             }
             return this._http.post(url, data).pipe(
                 catchError(this.handleError<any>('voteMeme'))
+            )
+        }
+    }
+
+    commentMeme(id: number, userid: number, username: string, apicred: number, comment: string): Observable<any> {
+        if(id !== null) {
+            let url = environment.apiUrl + '/meme/comment/' + id
+            const data = {
+                "userid": userid,
+                "username": username,
+                "cred": apicred,
+                "comment": comment 
+            }
+            return this._http.post(url, data).pipe(
+                catchError(this.handleError<any>('commentMeme'))
             )
         }
     }
