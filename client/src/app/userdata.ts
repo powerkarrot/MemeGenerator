@@ -5,7 +5,7 @@ export interface Userdata {
     _id: number
     username: string
     votes: Meme[]
-    memes: Meme[]
+    memes: any[]
     api_cred: number
     comment: Comment[]
 }

@@ -22,6 +22,7 @@ export class MemeService {
     updateMeme(id, data): Observable<Object | Meme> {
         let url = environment.apiUrl + '/meme'
         if (id !== null) url += '/' + id
+        console.log(data)
         return this._http.post(url, data).pipe(
             catchError(this.handleError<Meme>('updateMeme'))
         )
@@ -101,8 +102,16 @@ export class MemeService {
      * @param filter 
      * @returns 
      */
-    getMemes(query = {}, options = {}, sort = {}, search = {}, filter = {}): Observable<Object | Meme[]> {
-        let url = environment.apiUrl + '/meme?q=' + JSON.stringify(query) + '&o=' + JSON.stringify(options) + '&s=' + JSON.stringify(sort) + '&fu=' + JSON.stringify(search)  + '&fi=' + JSON.stringify(filter)
+    getMemes(query = {}, options = {}, sort = null, search = null, filter = null): Observable<Object | Meme[]> {
+        let url = environment.apiUrl + '/meme?q=' + JSON.stringify(query) + '&o=' + JSON.stringify(options) 
+        
+        if(sort) 
+            url += '&s=' + JSON.stringify(sort)  
+        if(search)
+            url += '&fu=' + JSON.stringify(search)
+        if(filter)
+            url += '&fi=' + JSON.stringify(filter)
+         
         console.log(url)
         return this._http.get(url).pipe(
             catchError(this.handleError<Meme[]>('getMemes', []))
