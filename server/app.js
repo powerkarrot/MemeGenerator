@@ -27,6 +27,11 @@ MongoClient.connect(dbUrl, {useUnifiedTopology: true}, function (err, client) {
     })
 })
 
+const ResponseType = {
+    DATA: 0,
+    ERROR: 1
+}
+
 app.use(cors({origin: true}))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -141,16 +146,146 @@ app.post('/meme', async function (req, res) {
     })
 })
 
+app.post('/meme/comment/:id', async function(req, res) {
+    const db = req.app.get('db')
+    const query = {_id: ObjectID(req.params.id)}
+    const userid = req.body.userid
+    const username = req.body.username
+    const cred = req.body.cred
+    const comment = req.body.comment
+
+    const hasPermission = isAutherized(db, userid, cred)
+
+    if(hasPermission){
+        var newValues = { 
+            $push: {
+                comments: {
+                    userid: ObjectID(userid),
+                    username: username,
+                    comment: comment,
+                    date: new Date(Date.now()).toISOString()
+                }
+            }
+        }
+
+        db.collection('memes').updateOne(query, newValues, function(err, result){
+            if (err) res.status(400).json({error: err})
+
+            newValues = { 
+                $push: {
+                    comments: {
+                        memeid: ObjectID(req.params.id),
+                        userid: ObjectID(userid),
+                        username: username,
+                        comment: comment,
+                        date: new Date(Date.now()).toISOString()
+                    }
+                }
+            }
+    
+            db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
+                if (err) res.status(400).json({error: err})
+                res.send(JSON.stringify({status: "OK", text:"Comment successfully posted!"}, null, 4))
+            })
+        })
+
+    } else {
+        res.send(JSON.stringify({status: "ERROR", text:"User not authorized!"}, null, 4))
+    }
+
+})
+
 app.post('/meme/vote/:id', async function(req, res) {
     const db = req.app.get('db')
     const votes = req.body.vote < 0 ? -1 : 1
+    const isPositive = votes > 0 ? true : false
+    const userid = req.body.userid
+    const cred = req.body.cred
     const query = { _id: ObjectID(req.params.id) }
-    const newValues = { $inc: {votes: votes} }  
+    var newValues = { $inc: {votes: votes} }  
 
-    db.collection('memes').updateOne(query, newValues, function(err, result) {
-        if (err) throw err
-        res.send(result)
-    })
+    const hasPermission = isAutherized(db, userid, cred)
+
+    if(hasPermission) {
+        db.collection('users').findOne({_id: ObjectID(userid)}, function(err, userdata) {
+            if (err) {
+                sendResponse(res, ResponseType.ERROR, "Database failure!")
+            }
+            const votes = userdata.votes
+            if(votes) {
+                findVote(votes, req.params.id).then((vote) => {
+                    // User has already voted
+                    if(vote && vote.length != 0){
+                        if (vote.isPositive != isPositive) {
+                            // Swap votes
+                            if(isPositive) {
+                                newValues = { $inc: {votes: 2} }
+                            } else {
+                                newValues = { $inc: {votes: -2} }
+                            }
+
+                            db.collection('memes').updateOne(query, newValues, function(err, result) {
+                                if (err) {
+                                    sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                } else {
+
+                                    votes.some(function(v, index) {
+                                        if(v.memeid == req.params.id) {
+                                            v.isPositive = isPositive
+                                            return true
+                                        }
+                                    })
+
+                                    newValues = {
+                                        $set: {
+                                            votes: votes
+                                        }
+                                    }
+                    
+                                    db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
+                                        if (err) {
+                                            sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                        } else {
+                                            sendResponse(res, ResponseType.DATA, "Successfully voted!")
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            sendResponse(res, ResponseType.ERROR, "User already voted!")
+                        }
+                    } else {
+                        db.collection('memes').updateOne(query, newValues, function(err, result) {
+                            if (err) {
+                                sendResponse(res, ResponseType.ERROR, "Database failure!")
+                            } else {
+                                const data = {
+                                    memeid: ObjectID(req.params.id),
+                                    isPositive: isPositive
+                                }
+                
+                                newValues = {
+                                    $push: {
+                                        votes: data
+                                    }
+                                }
+                
+                                db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
+                                    if (err) {
+                                        sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                    } else {
+                                        sendResponse(res, ResponseType.DATA, "Successfully voted!")
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            } 
+        })
+    } else {
+        sendResponse(res, ResponseType.ERROR, "User not authorized!")
+    }
 })
 
 /**
@@ -232,7 +367,6 @@ app.get('/meme/random', async function (req, res) {
     ])
     const meme = await agg.toArray(function(err, meme) {
         if (err) throw err
-        console.log(JSON.stringify(meme))
         res.send(JSON.stringify(meme[0], null, 4))
     })
 })
@@ -316,6 +450,7 @@ app.post('/login', async function(req, res) {
                     _id: userdata._id,
                     username: userdata.username,
                     memes: userdata.memes,
+                    votes: userdata.votes,
                     api_cred: ""+api_key
                 }
 
@@ -352,17 +487,34 @@ app.post('/register', async function(req, res) {
         username: username,
         salt: salt,
         pw: encpw,
-        memes: {
-            liked: [],
-            disliked: [],
-            created: []
-        }
+        votes: [],
+        memes: []
     }
 
     await db.collection('users').insertOne(data, function (err, r) {
         if (err) return res.status(400).json({error: err})
         res.send(JSON.stringify({status: "OK", data: data}, null, 4))
     })
+})
+
+/** Updates the userdata with the client */
+app.post('/userdata', async function(req, res) {
+    const db = req.app.get('db')
+    const userid = req.body.id
+    const cred = req.body.cred
+
+    const hasPermission = isAutherized(db, userid, cred)
+
+    if(hasPermission) {
+        await db.collection('users').findOne({_id: ObjectID(userid)}).then(function(userdata) {
+            createUserdata(userdata, cred).then(function(data){
+                // Funktioniert nicht :(
+                res.send(JSON.stringify({status: "OK", data: data}, null, 4))
+            })
+        })
+    } else {
+        res.send(JSON.stringify({status: "ERROR", text:"User not authorized!"}, null, 4))
+    }
 })
 
 app.get('/auth/delete', async function (req, res) {
@@ -391,3 +543,39 @@ app.post('/logout', async function(req, res) {
     })
     
 })
+
+async function sendResponse(response, type = 0, message = "" , data = []) {
+    switch(type) {
+        case 0: // Data response
+            response.send(JSON.stringify({status: "OK", text: message, data: data}))
+            break
+        case 1: // Error response
+            response.send(JSON.stringify({status: "ERROR", text: message, data: data}))
+            break
+    }
+}
+
+async function findVote(votes, memeid) {
+    return votes.find(v => v.memeid == memeid)
+}
+
+
+async function isAutherized(db, userid, cred) {
+    const query = {userid: ObjectID(userid)}
+    var authorized = false
+    await db.collection('authentication').findOne(query).then(function (auth) {
+        authorized = (auth.cred == cred)
+    }) 
+    return authorized
+}
+
+async function createUserdata(user, cred) {
+    const userdata = {
+        _id: user._id,
+        username: user.username,
+        api_cred: cred,
+        votes: user.votes,
+        memes: user.memes
+    }
+    return userdata
+}

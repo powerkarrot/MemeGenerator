@@ -1,0 +1,53 @@
+<div class="wrapper center text" *ngIf="userData">
+    <h2>Username: {{userData.username}}</h2>
+    <h3>Votes: {{votes}}</h3>
+    <h3>Generated Views: {{views}}</h3>
+</div>
+
+
+
+<div class="wrapper center">
+    <ul ngbNav #nav="ngbNav" [activeId]="2" class="nav-tabs justify-content-center">
+        <li [ngbNavItem]="1">
+        <a ngbNavLink class="header">Created Memes</a>
+        <ng-template ngbNavContent>
+            <div  class="content center">
+                <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+                farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+                ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
+                helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
+                8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
+                stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+            </div>
+        </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+        <a ngbNavLink class="header"><b>Voted memes</b></a>
+        <ng-template ngbNavContent>
+                <div  class="content center">
+                    <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+                    farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+                    ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
+                    helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
+                    8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
+                    stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                </div>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+            <a ngbNavLink class="header"><b>Comments</b></a>
+            <ng-template ngbNavContent>
+                    <div  class="content center">
+                        <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+                        farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+                        ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
+                        helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
+                        8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
+                        stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                    </div>
+                </ng-template>
+            </li>
+    </ul>
+</div>
+  
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>

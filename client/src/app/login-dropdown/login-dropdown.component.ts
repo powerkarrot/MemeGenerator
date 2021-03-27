@@ -23,9 +23,11 @@ export class LoginDropdownComponent implements OnInit {
 
     ngOnInit(): void {
         if(this.localStorageService.hasLocalStorage()){
-            this.isLoggedIn = true
-            this.userData = <Userdata>this.localStorageService.getLocalStorage()[0]
+            this.userData = <Userdata>this.localStorageService.getLocalStorage()
         }
+        //this.localStorageService.deleteLocalStorage()
+        this.localStorageService.updateLocalStorage()
+        this.isLoggedIn = this.localStorageService.hasLocalStorage()
         console.log("Has Userdata? - ",this.isLoggedIn)
     }
 
@@ -34,7 +36,7 @@ export class LoginDropdownComponent implements OnInit {
             this.userService.login(data.username, data.password).subscribe((res) => {
                 const userdata = <Userdata>res.data
                 this.localStorageService.storeOnLocalStorage(userdata)
-                this.userData = <Userdata>this.localStorageService.getLocalStorage()[0]
+                this.userData = <Userdata>this.localStorageService.getLocalStorage()
                 this.isLoggedIn = true
             })
         }
@@ -43,7 +45,8 @@ export class LoginDropdownComponent implements OnInit {
     logout(): void {
         if(this.isLoggedIn) {
             this.userService.logout(this.userData._id, this.userData.api_cred).subscribe((res) => {
-                this.isLoggedIn = this.localStorageService.deleteLocalStorage()
+                this.localStorageService.deleteLocalStorage()
+                this.isLoggedIn = this.localStorageService.hasLocalStorage()
                 console.log(res)
             })
         }

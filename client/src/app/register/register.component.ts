@@ -15,6 +15,7 @@ export class RegisterComponent implements OnInit {
     }
     pw_match = false
     status = "Password does not match!"
+    complete = false
 
 
     constructor(private userService: UserService) {
@@ -26,6 +27,7 @@ export class RegisterComponent implements OnInit {
     onClickSubmit(data) {
         this.userService.register(data.username, data.password).subscribe((res) => {
             console.log(res)
+            this.complete = true
         })
     }
 

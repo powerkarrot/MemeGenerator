@@ -1,13 +1,18 @@
 import {LOCAL_STORAGE, StorageService} from 'ngx-webstorage-service'
 import { Inject, Injectable} from '@angular/core'
 import {Userdata} from './userdata'
+import {Meme} from './meme'
+import {UserService} from './user.service'
 
 // Key used to access local data
 const STORAGE_KEY = 'local_userdata'
 
 @Injectable()
 export class LocalStorageService {
-    constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {}
+
+    private userdata : Userdata
+
+    constructor(@Inject(LOCAL_STORAGE) private storage: StorageService, private userService: UserService) {}
 
     public storeOnLocalStorage(loginData: Userdata): void {
         const currentUserdada = this.storage.get(STORAGE_KEY) || []
@@ -17,13 +22,14 @@ export class LocalStorageService {
 
         //Insert updated array to local storage
         this.storage.set(STORAGE_KEY, currentUserdada)
-
-        console.log(this.storage.get(STORAGE_KEY) || 'Local storage is emtpy')
     }
 
     public getLocalStorage(): any {
-        const userdata = this.storage.get(STORAGE_KEY) || []
-        return userdata
+        if(this.hasLocalStorage()){
+            const userdata = this.storage.get(STORAGE_KEY)[0]
+            return userdata
+        }
+        return []
     }
 
     public hasLocalStorage(): boolean {
@@ -37,5 +43,68 @@ export class LocalStorageService {
     public deleteLocalStorage(): boolean {
         this.storage.remove(STORAGE_KEY)
         return this.hasLocalStorage()
+    }
+
+    public updateLocalStorage(): boolean {
+        if(this.hasLocalStorage()) {
+            const userdata = this.getLocalStorage()
+            this.userService.getUserdata(userdata._id, userdata.api_cred).subscribe((res) => {
+                const data = <Userdata>res.data
+                console.log("LocalStorage: ", data)
+                this.deleteLocalStorage()
+                this.storeOnLocalStorage(data)
+                this.userdata = this.getLocalStorage()
+            })
+        }
+        return this.hasLocalStorage()
+    }
+
+    public getUserID(): number {
+        if(this.hasLocalStorage()) {
+            return this.getLocalStorage()._id
+        }
+        throw("No local storage found!")
+    }
+
+    public getUsername(): string {
+        if(this.hasLocalStorage()) {
+            return this.getLocalStorage().username
+        }
+        throw("No local storage found!")
+    }
+
+    public getLikedMemes(): Meme[] {
+        if(this.hasLocalStorage()) {
+            return this.getLocalStorage().votes
+        }
+        throw("No local storage found!")
+    }
+
+    public getDislikedMemes(): Meme[] {
+        if(this.hasLocalStorage()) {
+            return this.getLocalStorage().votes
+        }
+        throw("No local storage found!")
+    }
+
+    public getCreatedMemes(): Meme[] {
+        if(this.hasLocalStorage()) {
+            return this.getLocalStorage().memes
+        }
+        throw("No local storage found!")
+    }
+
+    public getApiKey(): number {
+        if(this.hasLocalStorage()) {
+            return this.getLocalStorage().api_cred
+        }
+        throw("No local storage found!")
+    }
+
+    public getComments(): Comment[] {
+        if(this.hasLocalStorage()) {
+            return this.getLocalStorage().comment
+        }
+        throw("No local storage found!")
     }
 }
