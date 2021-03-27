@@ -11,12 +11,23 @@ export class UserPanelComponent implements OnInit {
 
     isLoggedIn = false
     userData : Userdata
+    votes = 0
+    views = 0
 
     constructor(private lss: LocalStorageService) { }
 
     ngOnInit(): void {
-        
+        this.userData = this.lss.getLocalStorage()
+        this.calcVotes()
     }
 
+    calcVotes(): void {
+        if(this.userData && this.userData.memes.length > 0){
+            this.userData.memes.forEach(function(meme) {
+                this.votes += meme.votes
+                this.views += meme.views
+            })
+        }
+    }
     
 }
