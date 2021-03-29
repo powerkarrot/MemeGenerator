@@ -10,46 +10,82 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-    <div class="passive-information">
-        <h5>Titel: {{selectedMeme.title}}</h5>
-        <h5>Date: </h5>
-        <h5>Description: {{selectedMeme.description}}</h5>
-        <div class="votes">
-            <div class="row">
-                <div class="block">
-                    <button mat-icon-button color="warn" aria-label="Downvote meme">
-                        <mat-icon>thumb_down</mat-icon>
-                    </button>
-                </div>
-                <div class="block"><h5>Votes: {{selectedMeme.votes}}</h5></div>
-                <div class="block">
-                    <button mat-icon-button color="warn" aria-label="Upvote meme">
-                        <mat-icon>thumb_up</mat-icon>
-                    </button>
-                </div>
-            </div>  
+    <div class="passive-information" *ngIf="selectedMeme">
+        <div class="wrapper center actionbar">
+            <div class="element">
+                <div class="btn-group btn-group-toggle">
+                    <label class="btn-primary accent" ngbButtonLabel>
+                      <input type="checkbox" ngbButton [(ngModel)]="model.autoplay" (change)="onAutoplayClicked($event)"> Autoplay
+                    </label>
+                    <label class="btn-primary accent" ngbButtonLabel>
+                      <input type="checkbox" ngbButton [(ngModel)]="model.random"> Random
+                    </label>
+                </div>  
+            </div>
+            <div class="element">
+                <a href="{{selectedMeme.url}}" mat-icon-button color="warn" target="_blank">
+                    <mat-icon>download</mat-icon>
+                </a>
+            </div>
+            <div class="element">
+                <button mat-icon-button color="warn" aria-label="Share" (click)="share()">
+                    <mat-icon>share</mat-icon>
+                </button>
+            </div>
+            <div class="element" *ngIf="loggedIn">
+                <button mat-icon-button color="warn" aria-label="Downvote meme" (click)="vote(false)">
+                    <mat-icon>thumb_down</mat-icon>
+                </button>
+            </div>
+            <div class="element" *ngIf="loggedIn">
+                <button mat-icon-button color="warn" aria-label="Upvote meme" (click)="vote(true)">
+                    <mat-icon>thumb_up</mat-icon>
+                </button>
+            </div>
+            <div class="element">
+                <h5>Votes: {{selectedMeme.votes}}</h5>
+            </div>
+                    
+            <div class="element"><h5>Views: {{selectedMeme.views}}</h5></div>
         </div>
-        <h5>Angeglubscht: {{selectedMeme.views}}</h5>
+
+        <div class="wrapper center">
+            <div class="element"><h5>Titel: {{selectedMeme.title}}</h5></div>
+            <div class="element"><h5>Description: {{selectedMeme.description}}</h5></div>
+            <div class="element"><h5>Date: {{selectedMeme.dateAdded | date: 'dd/MM/yyyy - h:mm:a'}}</h5></div>
+            <div class="element"><h5>by: {{selectedMeme.createdBy.username}}</h5></div>
+        </div>
+        
     </div>
-    <div class="comments">
-        <div *ngFor="comment in selectedMeme.Comments">
-            <h5>{{comment.comment}}</h5>
-            <h5>{{comment.votes}}</h5>
+    <div class="comments" *ngIf="selectedMeme">
+        <h4>Comments</h4>
+        <h5 *ngIf="selectedMeme.comments.length == 0">No comments yet!</h5>
+        <ng-template #CommentForm [ngIf]="loggedIn">
+            <form #comment = "ngForm" class="px-4 py-3 comment-form" (ngSubmit)="commentMeme(comment.value)">
+                <div class="form-group">
+                    <label for="regUsername">Comment</label>
+                    <input type="text" class="form-control" id="comment" placeholder="comment" [(ngModel)]="model.comment" name="comment">
+                </div>
+                <button type="submit" class="btn btn-primary accent">Post Comment</button>
+            </form>
+        </ng-template>
+        <div *ngFor="let comment of selectedMeme.comments" class="comment">
+            <div class="comment-title wrapper center">
+                <div class="element"><h5>User: {{comment.username}}</h5></div>
+                <div class="element"><h5>Date: {{comment.date | date: 'dd/MM/yyyy - h:mm:a'}}</h5></div>
+            </div>
+            <h4>{{comment.comment}}</h4>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 
 <ng-template #emptySpaceRight>
     <a class="carousel-control-next">
     </a>
 </ng-template>
+
+
 <ng-template #emptySpaceLeft>
     <a class="carousel-control-next">
     </a>

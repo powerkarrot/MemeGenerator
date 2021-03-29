@@ -17,6 +17,21 @@ input {
 #templates img {
     cursor: pointer;
 }
+.wrapper {
+    width: 60%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.text {
+    color: #fff;
+    text-align: center;
+}
 
 mat-checkbox {
     color: white;

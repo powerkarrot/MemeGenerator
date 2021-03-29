@@ -1,0 +1,92 @@
+<div class="wrapper center text-color" *ngIf="userData">
+    <h2>Username: {{userData.username}}</h2>
+    <h3>Votes: {{votes}}</h3>
+    <h3>Generated Views: {{views}}</h3>
+</div>
+<div class="wrapper center">
+    <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav-tabs justify-content-center">
+        <li [ngbNavItem]="1">
+        <a ngbNavLink class="header">Created Memes</a>
+        <ng-template ngbNavContent>
+            <div  class="content center">
+                <div class="container-fluid">
+                    <a href="" *ngFor="let meme of memes" routerLink="/meme/{{meme._id}}">
+                        <div class="img-thumbnail" style="background-image: url('{{meme.url}}');">
+                            <div class="overlay">
+                                <div class="text">{{meme.title}}</div>
+                                <div class="views">{{meme.views}}
+                                    <mat-icon id="icon warn">people</mat-icon>
+                                </div>
+                                <div class="upvotes">{{meme.votes}}
+                                    <mat-icon id="icon">favorite</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+        <a ngbNavLink class="header"><b>Liked memes</b></a>
+        <ng-template ngbNavContent>
+                <div  class="content center">
+                    <div class="container-fluid">
+                        <a href="" *ngFor="let meme of likedMemes" routerLink="/meme/{{meme._id}}">
+                            <div class="img-thumbnail" style="background-image: url('{{meme.url}}');">
+                                <div class="overlay">
+                                    <div class="text">{{meme.title}}</div>
+                                    <div class="views">{{meme.views}}
+                                        <mat-icon id="icon warn">people</mat-icon>
+                                    </div>
+                                    <div class="upvotes">{{meme.votes}}
+                                        <mat-icon id="icon">favorite</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+            <a ngbNavLink class="header"><b>Disliked memes</b></a>
+            <ng-template ngbNavContent>
+                    <div  class="content center">
+                        <div class="container-fluid">
+                            <a href="" *ngFor="let meme of dislikedMemes" routerLink="/meme/{{meme._id}}">
+                                <div class="img-thumbnail" style="background-image: url('{{meme.url}}');">
+                                    <div class="overlay">
+                                        <div class="text">{{meme.title}}</div>
+                                        <div class="views">{{meme.views}}
+                                            <mat-icon id="icon warn">people</mat-icon>
+                                        </div>
+                                        <div class="upvotes">{{meme.votes}}
+                                            <mat-icon id="icon">favorite</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </ng-template>
+            </li>
+        <li [ngbNavItem]="4">
+            <a ngbNavLink class="header"><b>Comments</b></a>
+            <ng-template ngbNavContent>
+                    <div  class="content center">
+                        <div *ngFor="let comment of userData.comments" class="comment">
+                            <div class="comment-title wrapper center">
+                                <div class="element"><h5>User: {{comment.username}}</h5></div>
+                                <div class="element"><h5>Date: {{comment.date | date: 'dd/MM/yyyy - h:mm:a'}}</h5></div>
+                                <div class="element"><h5>Meme: <a [routerLink]="['/meme/', comment.memeid]">{{comment.memeid}}</a></h5></div>
+                            </div>
+                            <h4 style="text-align: center;">{{comment.comment}}</h4>
+                        </div>
+                    </div>
+                </ng-template>
+            </li>
+    </ul>
+</div>
+  
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>

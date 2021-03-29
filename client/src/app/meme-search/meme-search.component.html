@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col">
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-primary" id="filterDropdown" ngbDropdownToggle>Search</button>
+        <div ngbDropdownMenu aria-labelledby="filterDropdown" class="dropdown-menu">
+          <form #search="ngForm" (ngSubmit)="onClickSubmit(search.value)" class="px-4 py-3">
+            <b>Search</b>
+            <div class="form-group">
+              <input type="text" class="form-control" id="searchBar" [(ngModel)]="inputText" name="searchMe" placeholder="Fuck off">
+            </div>
+            <div class="dropdown-divider"></div>
+            <b>Sort by</b>
+            <mat-radio-group
+              aria-labelledby="example-radio-group-label"
+              class="example-radio-group"
+              [(ngModel)]="criteria" name="selection"> 
+              <mat-radio-button class="example-radio-button" *ngFor="let item of items" [value]="item">
+                {{item}}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div class="dropdown-divider"></div>
+            <b>Filter by</b> 
+            <br>
+            <mat-radio-group
+              aria-labelledby="example-radio-group-label2"
+              class="example-radio-group2"
+              [(ngModel)]="filters" name="filterSelection"> 
+              <mat-radio-button class="example-radio-button2" *ngFor="let item of fis" [value]="item">
+                {{item}}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div class="dropdown-divider"></div>
+            <b>Order</b>
+            <br>
+            <mat-radio-group
+              aria-labelledby="example-radio-group-label3"
+              class="example-radio-group3"
+              [(ngModel)]="order" name="orderSelection"> 
+              <mat-radio-button class="example-radio-button3" *ngFor="let item of direction" [value]="item">
+                {{item}}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div class="dropdown-divider"></div>
+            <button type="submit" id="searchBtn" (click)="searchMeme()" class="btn btn-primary">Search</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

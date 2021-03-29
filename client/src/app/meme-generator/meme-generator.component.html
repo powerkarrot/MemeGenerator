@@ -1,4 +1,4 @@
-<div style="padding: 10px; width: 600px;">
+<div style="padding: 10px; width: 600px;" class="wrapper center" *ngIf="isLoggedIn;else notLoggedIn">
     <h2>Meme Generator</h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
         <input matInput formControlName="_id" hidden>
@@ -37,6 +37,11 @@
                 <mat-label>Title</mat-label>
                 <input matInput formControlName="title" required>
                 <mat-error>Title is required!</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="description" required>
+                <mat-error>Description is required!</mat-error>
             </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
@@ -115,3 +120,9 @@
         </div>
     </form>
 </div>
+
+<ng-template #notLoggedIn>
+    <div class="wrapper center">
+        <h3 class="text">Please sign in or create a account to create a meme!</h3>
+    </div>
+</ng-template>

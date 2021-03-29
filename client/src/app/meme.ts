@@ -2,6 +2,7 @@ import { Comment } from './comment'
 
 export interface Meme {
     _id: number
+    dateAdded: string
     title: string
     topText: string
     topX: number
@@ -16,5 +17,10 @@ export interface Meme {
     description: string
     votes: number
     views: number
+    createdBy: {
+        _id: number
+        username: string
+    }
     comments: Comment[]
+    tags: string[]
 }

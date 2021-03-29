@@ -3,6 +3,7 @@ import {FormBuilder, Validators} from '@angular/forms'
 import {Router} from '@angular/router'
 import {debounceTime} from 'rxjs/operators'
 import {MemeService} from '../meme.service'
+import {LocalStorageService} from '../localStorage.service'
 
 @Component({
     selector: 'app-meme-generator',
@@ -15,6 +16,7 @@ export class MemeGeneratorComponent implements OnInit {
     meme: any = null
     id = null
     templates = null
+    isLoggedIn = false
 
     /**
      *
@@ -25,7 +27,8 @@ export class MemeGeneratorComponent implements OnInit {
     constructor(
         private _formBuilder: FormBuilder,
         private _router: Router,
-        private _memeService: MemeService
+        private _memeService: MemeService,
+        private lss: LocalStorageService
     ) {
         this.memeForm = this._formBuilder.group({
             _id: [],
@@ -34,6 +37,10 @@ export class MemeGeneratorComponent implements OnInit {
                 disabled: false
             }],
             title: [{
+                value: null,
+                disabled: false
+            }, Validators.required],
+            description: [{
                 value: null,
                 disabled: false
             }, Validators.required],
@@ -102,6 +109,7 @@ export class MemeGeneratorComponent implements OnInit {
                 disabled: false
             }],
         })
+        this.isLoggedIn = lss.hasLocalStorage()
     }
 
     /**
@@ -167,6 +175,7 @@ export class MemeGeneratorComponent implements OnInit {
         }
 
         formData.append('title', this.memeForm.get('title').value)
+        formData.append('description', this.memeForm.get('description').value)
 
         const topText = this.memeForm.get('topText').value
         if (topText) {
@@ -237,6 +246,10 @@ export class MemeGeneratorComponent implements OnInit {
         if (bottomColor) {
             formData.append('bottomColor', bottomColor)
         }
+
+        formData.append('userid', this.lss.getUserID().toString())
+        formData.append('username', this.lss.getUsername())
+        formData.append('cred', this.lss.getApiKey().toString())
 
         return formData
     }

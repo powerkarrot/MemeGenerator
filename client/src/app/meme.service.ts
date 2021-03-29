@@ -22,9 +22,41 @@ export class MemeService {
     updateMeme(id, data): Observable<Object | Meme> {
         let url = environment.apiUrl + '/meme'
         if (id !== null) url += '/' + id
+        console.log(data)
         return this._http.post(url, data).pipe(
             catchError(this.handleError<Meme>('updateMeme'))
         )
+    }
+
+    voteMeme(id: number, isUpvote : boolean, userid: number, username: string, apicred: number): Observable<any> {
+        if (id !== null) {
+            let url = environment.apiUrl + '/meme/vote/' + id
+            const vote = isUpvote ? 1 : -1
+            const data = {
+                "userid": userid,
+                "username": username,
+                "cred": apicred,
+                "vote": vote
+            }
+            return this._http.post(url, data).pipe(
+                catchError(this.handleError<any>('voteMeme'))
+            )
+        }
+    }
+
+    commentMeme(id: number, userid: number, username: string, apicred: number, comment: string): Observable<any> {
+        if(id !== null) {
+            let url = environment.apiUrl + '/meme/comment/' + id
+            const data = {
+                "userid": userid,
+                "username": username,
+                "cred": apicred,
+                "comment": comment 
+            }
+            return this._http.post(url, data).pipe(
+                catchError(this.handleError<any>('commentMeme'))
+            )
+        }
     }
 
     /**
@@ -52,13 +84,35 @@ export class MemeService {
     }
 
     /**
-     * reads all memes matching the query
-     *
-     * @param query
-     * @param options
+     * reads a random meme
      */
-    getMemes(query = {}, options = {}): Observable<Object | Meme[]> {
-        let url = environment.apiUrl + '/meme?q=' + JSON.stringify(query) + '&o=' + JSON.stringify(options)
+    getRandomMeme() : Observable<Object | Meme> {
+        let url = environment.apiUrl + '/meme/random'
+        return this._http.get(url).pipe(
+            catchError(this.handleError<Meme>('getRandomMeme'))
+        )
+    }
+    /**
+     * reads all memes matching the query
+     * 
+     * @param query 
+     * @param options 
+     * @param sort 
+     * @param search 
+     * @param filter 
+     * @returns 
+     */
+    getMemes(query = {}, options = {}, sort = null, search = null, filter = null): Observable<Object | Meme[]> {
+        let url = environment.apiUrl + '/meme?q=' + JSON.stringify(query) + '&o=' + JSON.stringify(options) 
+        
+        if(sort) 
+            url += '&s=' + JSON.stringify(sort)  
+        if(search)
+            url += '&fu=' + JSON.stringify(search)
+        if(filter)
+            url += '&fi=' + JSON.stringify(filter)
+         
+        console.log(url)
         return this._http.get(url).pipe(
             catchError(this.handleError<Meme[]>('getMemes', []))
         )

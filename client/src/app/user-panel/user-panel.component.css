@@ -1,0 +1,129 @@
+.header {
+    color: #fff;
+    background-color: #232323;
+}
+
+.content {
+    color: #fff;
+    width: 60%;
+}
+
+.wrapper {
+    width: 60%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.text-color {
+    color: #fff;
+}
+.img-thumbnail {
+    display: inline-block;
+    width: 250px;
+    height: 250px;
+    margin: 2px;
+    border: 1px solid #161618;
+    background-position: center center;
+    background-size: cover;
+}
+.comment {
+    margin-top: 5px;
+    background-color: #232323;
+}
+.comment-title {
+    background-color: #232323;
+}
+
+.wrapper {
+    overflow: hidden;
+    width:fit-content;
+}
+.element {
+    float: left;
+    margin-left: 10px;
+}
+
+.overlay {
+    position: relative;
+    background-color: rgba(22, 22, 24, 0.8);
+    width: 100%;
+    height: 0;
+    transition: .5s ease;
+}
+a:hover .overlay {
+    height: 100%;
+}
+a:hover .text {
+    white-space: normal;
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+.text {
+    white-space: normal;
+    color: transparent;
+    font-size: 20px;
+    position: absolute;
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+
+.upvotes {
+    color: transparent;
+    left: 50%;
+    bottom: 10%;
+    position: absolute;
+    overflow: hidden;
+    transform: translate(-50%, -95%);
+    font-size: 25px;
+}
+.views {
+    color: transparent;
+    left: 50%;
+    bottom: 10%;
+    position: absolute;
+    overflow: hidden;
+    transform: translate(-50%, -95%);
+    font-size: 25px;
+}
+a:hover .views {
+    color: white;
+    left: 50%;
+    bottom: 20%;
+    position: absolute;
+    overflow: hidden;
+    transform: translate(-50%, -90%);
+}
+#icon {
+    fill: transparent;
+    color: transparent;
+    background-color: transparent;
+}
+a:hover #icon {
+    fill: #ed4d2d;
+    color: #ed4d2d;
+}
+
+a:hover .upvotes {
+    color: white;
+    left: 50%;
+    bottom: 10%;
+    position: absolute;
+    overflow: hidden;
+    transform: translate(-50%, -90%);
+}
+
