@@ -1,7 +1,24 @@
 <div style="padding: 10px; width: 600px;" class="wrapper center" *ngIf="isLoggedIn;else notLoggedIn">
     <h2>Meme Generator</h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
-        <input matInput formControlName="_id" hidden>
+        <input matInput formControlName="_id" hidden>        
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button (click)="loadTemplates()" mat-raised-button color="secondary">
+                Uploaded templates
+            </button>
+        </div>
+        <p>or</p>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button (click)="imgFlipAPITemplates()" mat-raised-button color="secondary">
+                IMGFlip templates
+            </button>
+        </div>
+        <br/>
+        <div *ngIf="templates && (showImgFlipTemplates || showUploadedTemplates)" id="templates">
+            <img *ngFor="let template of templates" src="{{template}}" alt="template"
+                 width="90" height="90" (click)="selectTemplate(template)"/>
+        </div>
+        <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
             <button (click)="hiddenFileInput.click()" mat-raised-button color="secondary">
                 Upload image
@@ -17,22 +34,12 @@
         </div>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="loadTemplates()" mat-raised-button color="secondary">
-                Load templates
-            </button>
-        </div>
-        <div *ngIf="templates" id="templates">
-            <img *ngFor="let template of templates" src="{{template}}" alt="template"
-                 width="90" height="90" (click)="selectTemplate(template)"/>
-        </div>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
             <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary"> 
-                Toggle Webcam
+                Webcam
             </button>
         </div>
+        <br/>
         <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam">
-            
         </webcam>
         <button class="actionBtn" mat-raised-button color="secondary" (click)="triggerSnapshot();" *ngIf="showWebcam" >
             Take A Snapshot 
