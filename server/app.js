@@ -106,10 +106,12 @@ app.get('/templates', async function (req, res) {
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {
+    console.log("posting")
     const db = req.app.get('db')
     let meme = req.body, url, fileName
     const uploads = await upload(req.files)
     if (uploads.length > 0) {
+        console.log("uploaded")
         url = uploads[0].fullPath
         fileName = uploads[0].fileName
     } else {

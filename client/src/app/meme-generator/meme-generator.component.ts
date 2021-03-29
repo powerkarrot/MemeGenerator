@@ -3,6 +3,9 @@ import {FormBuilder, Validators} from '@angular/forms'
 import {Router} from '@angular/router'
 import {debounceTime} from 'rxjs/operators'
 import {MemeService} from '../meme.service'
+import {WebcamImage} from 'ngx-webcam'
+import {Subject, Observable} from 'rxjs';
+
 
 @Component({
     selector: 'app-meme-generator',
@@ -15,6 +18,10 @@ export class MemeGeneratorComponent implements OnInit {
     meme: any = null
     id = null
     templates = null
+    public webcamImage: WebcamImage = null
+    private trigger: Subject<void> = new Subject<void>()
+    public showWebcam = false;
+
 
     /**
      *
@@ -23,6 +30,7 @@ export class MemeGeneratorComponent implements OnInit {
      * @param _memeService
      */
     constructor(
+       
         private _formBuilder: FormBuilder,
         private _router: Router,
         private _memeService: MemeService
@@ -129,7 +137,8 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('file', file)
         }
 
-        const imgUrl = this.memeForm.get('imgUrl').value
+        let imgUrl = this.memeForm.get('imgUrl').value
+    
         if (imgUrl) {
             formData.append('url', imgUrl)
         }
@@ -177,6 +186,7 @@ export class MemeGeneratorComponent implements OnInit {
         if (event.target.files.length > 0) {
             const file = event.target.files[0]
             const name = file.name.split('.')[0]
+
             this.memeForm.patchValue({
                 fileSource: file,
                 name: name,
@@ -200,5 +210,68 @@ export class MemeGeneratorComponent implements OnInit {
      */
     finishMeme(): void {
         this._router.navigate(['/meme/' + this.id])
+    }
+
+    /**
+     * Trigger fired to capture and emit image
+     */
+    triggerSnapshot(): void {
+        this.trigger.next();
+    }
+
+    /**
+     * Gets the trigger Observable
+     */
+    public get triggerObservable(): Observable<void> {
+        return this.trigger.asObservable();
+    }
+
+    /**
+     * Toggles webcam visibility
+     */
+    public toggleWebcam(): void {
+        this.showWebcam = !this.showWebcam;
+    }
+
+    /**
+     * Handles captured webcam image
+     * 
+     * @param webcamImage 
+     */
+    handleImage(webcamImage: WebcamImage): void {
+
+        this.webcamImage = webcamImage  
+        let filename =  "webcamImage.jpeg"
+        this.memeForm.patchValue({
+            fileSource: this.dataurlToFile(webcamImage.imageAsDataUrl, filename),
+            name: filename,
+            imgUrl: null
+        })
+    }
+
+    /**
+     * 
+     * @param dataurl 
+     * @param filename 
+     * @returns 
+     * 
+     * Converts DataURl to Blob und Blob to File
+     * Adapted from https://stackoverflow.com/a/29390393 and https://stackoverflow.com/a/30470303
+     * 
+     */
+    dataurlToFile(dataurl, filename) {
+
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        let blob =  new Blob([u8arr], {type:mime});
+
+        var b: any = blob;
+        b.lastModifiedDate = new Date();
+        b.name = filename;
+    
+        return <File>b;
     }
 }

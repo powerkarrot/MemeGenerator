@@ -22,6 +22,8 @@ import {StorageServiceModule} from 'ngx-webstorage-service'
 import {LocalStorageService} from './localStorage.service'
 import {UserPanelComponent} from './user-panel/user-panel.component'
 import {ToastsContainer} from './toasts-container/toasts-container.component'
+import {WebcamModule} from 'ngx-webcam'
+
 
 @NgModule({
     declarations: [
@@ -34,10 +36,11 @@ import {ToastsContainer} from './toasts-container/toasts-container.component'
         LoginDropdownComponent,
         RegisterComponent,
         UserPanelComponent,
-        ToastsContainer
+        ToastsContainer,   
     ],
     imports: [
         BrowserModule,
+        WebcamModule,
         AppRoutingModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
