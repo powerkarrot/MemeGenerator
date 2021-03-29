@@ -26,6 +26,18 @@
                  width="90" height="90" (click)="selectTemplate(template)"/>
         </div>
         <p>or</p>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary"> 
+                Toggle Webcam
+            </button>
+        </div>
+        <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam">
+            
+        </webcam>
+        <button class="actionBtn" mat-raised-button color="secondary" (click)="triggerSnapshot();" *ngIf="showWebcam" >
+            Take A Snapshot 
+        </button>
+        <p>or</p>
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
                 <mat-label>Image URL</mat-label>

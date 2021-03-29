@@ -106,15 +106,24 @@ app.get('/templates', async function (req, res) {
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {
+    console.log("posting")
     const db = req.app.get('db')
     let meme = req.body, url, fileName
+    const uploads = await upload(req.files)
     const userid = ObjectID(req.body.userid)
     const cred = req.body.cred
     let userdata = {_id: userid, username: req.body.username}
-
     const hasPermission = isAutherized(db, userid, cred)
-
-    console.log(meme.userid)
+    
+    if (uploads.length > 0) {
+        console.log("uploaded")
+        url = uploads[0].fullPath
+        fileName = uploads[0].fileName
+    } else {
+        url = meme.url
+        fileName = url.split('/')
+        fileName = fileName[fileName.length - 1]
+    }
 
     if(!req.body.cred && !req.body.userid && !req.body.username) {
         console.log("Malformed request body!")
