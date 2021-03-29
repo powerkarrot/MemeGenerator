@@ -67,6 +67,7 @@ export class MemeOverviewComponent implements OnInit {
             }
         })
         this.loadMemes()
+
     }
 
     /**
@@ -80,7 +81,6 @@ export class MemeOverviewComponent implements OnInit {
             sort: {_id: -1}
         }
         this.memeService.getMemes(this.query, options, this.sort, this.search, this.filter).subscribe((memes) => {
-            console.log(this.query)
             this.memes = this.memes.concat(<Meme[]>memes)
             this.skip += this.limit
         })

@@ -21,6 +21,8 @@ export class MemeGeneratorComponent implements OnInit {
     public webcamImage: WebcamImage = null
     private trigger: Subject<void> = new Subject<void>()
     public showWebcam = false;
+    public showImgFlipTemplates = false
+    public showUploadedTemplates = false
     isLoggedIn = false
 
     /**
@@ -130,12 +132,40 @@ export class MemeGeneratorComponent implements OnInit {
     }
 
     /**
+     * Toggles template view
+     */
+    public toggleImgFlip(): void {
+        this.showImgFlipTemplates = !this.showImgFlipTemplates;
+    }
+
+    /**
+     * Toggles template view
+     */
+    public toggleUploaded(): void {
+        this.showUploadedTemplates = !this.showUploadedTemplates;
+    }
+
+    /**
      * loads templates (uploaded images)
      */
     loadTemplates(): void {
+        this.toggleUploaded()
+        if(this.showImgFlipTemplates) this.toggleImgFlip()
         this._memeService.loadTemplates().subscribe((templates) => {
             this.templates = templates
             this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i)
+        })
+    }
+
+    /**
+     * Loads templates (downloaded from ImgFlip API)
+     */
+    imgFlipAPITemplates() : void {
+        this.toggleImgFlip()
+        if(this.showUploadedTemplates) this.toggleUploaded()
+        this._memeService.getImgAPITemplates().subscribe((res) => {
+            this.templates = []
+            res.data.memes.forEach(i => this.templates.push(i.url))
         })
     }
 
@@ -160,6 +190,8 @@ export class MemeGeneratorComponent implements OnInit {
             // @ts-ignore
             this.id = meme._id
         })
+
+
     }
 
     /**
