@@ -108,42 +108,79 @@ app.get('/templates', async function (req, res) {
 app.post('/meme', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
-    const uploads = await upload(req.files)
-    if (uploads.length > 0) {
-        url = uploads[0].fullPath
-        fileName = uploads[0].fileName
-    } else {
-        url = meme.url
-        fileName = url.split('/')
-        fileName = fileName[fileName.length - 1]
+    const userid = ObjectID(req.body.userid)
+    const cred = req.body.cred
+    let userdata = {_id: userid, username: req.body.username}
+
+    const hasPermission = isAutherized(db, userid, cred)
+
+    console.log(meme.userid)
+
+    if(!req.body.cred && !req.body.userid && !req.body.username) {
+        console.log("Malformed request body!")
+        sendResponse(res, ResponseType.ERROR, "Malformed request body!")
+        return
     }
-    memeGenerator.generateMeme({
-        topText: meme.topText,
-        topX: meme.topX,
-        topY: meme.topY,
-        bottomText: meme.bottomText,
-        bottomX: meme.bottomX,
-        bottomY: meme.bottomY,
-        url: url
-    }).then(function (data) {
-        fs.writeFile('./memes/' + fileName, data, async function (err, result) {
-            if (err) return res.status(400).json({error: err})
-            meme.url = memeBaseUrl + fileName
-            meme._id = new ObjectID()
-            meme.description = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam'
-            meme.votes = 0
-            meme.views = 0
-            meme.comments = []
-            meme.date = new Date(Date.now()).toISOString()
-            await db.collection('memes').insertOne(meme, function (err, r) {
+
+    if(hasPermission) {
+        const uploads = await upload(req.files)
+        if (uploads.length > 0) {
+            url = uploads[0].fullPath
+            fileName = uploads[0].fileName
+        } else {
+            url = meme.url
+            fileName = url.split('/')
+            fileName = fileName[fileName.length - 1]
+        }
+        memeGenerator.generateMeme({
+            topText: meme.topText,
+            topX: meme.topX,
+            topY: meme.topY,
+            bottomText: meme.bottomText,
+            bottomX: meme.bottomX,
+            bottomY: meme.bottomY,
+            url: url
+        }).then(function (data) {
+            fs.writeFile('./memes/' + fileName, data, async function (err, result) {
                 if (err) return res.status(400).json({error: err})
-                res.json({
-                    _id: meme._id,
-                    url: meme.url
+                meme.url = memeBaseUrl + fileName
+                meme._id = new ObjectID()
+                meme.description = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam'
+                meme.votes = 0
+                meme.views = 0
+                meme.comments = []
+                meme.createdBy = userdata
+                meme.dateAdded = new Date(Date.now()).toISOString() 
+
+                const data = {
+                    memeid: ObjectID(meme._id)
+                }
+
+                const newValues = {
+                    $push: {
+                        memes: data
+                    }
+                }
+
+                await db.collection('users').updateOne({_id: userid}, newValues).then(function(e, r) {
+                    console.log(r)
+                    delete meme.userid
+                    delete meme.username
+                    delete meme.cred
+
+                    db.collection('memes').insertOne(meme, function (err, r) {
+                        if (err) return res.status(400).json({error: err})
+                        res.json({
+                            _id: meme._id,
+                            url: meme.url
+                        })
+                    })
                 })
             })
         })
-    })
+    } else {
+        sendResponse(res, ResponseType.ERROR, "Could not create meme! Make sure to login.")
+    }  
 })
 
 app.post('/meme/comment/:id', async function(req, res) {
@@ -294,33 +331,58 @@ app.post('/meme/vote/:id', async function(req, res) {
 app.post('/meme/:id', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
-    const uploads = await upload(req.files)
-    if (uploads.length > 0 && !meme.url) {
-        url = uploads[0].fullPath
-        fileName = uploads[0].fileName
-    } else {
-        url = meme.url
-        fileName = url.split('/')
-        fileName = fileName[fileName.length - 1]
+    const userid = req.body.userid
+    const cred = req.body.cred
+    let userdata = {_id: userid, username: req.body.username}
+
+    const hasPermission = isAutherized(db, userid, cred)
+
+    console.log(meme.userid)
+
+    if(!req.body.cred && !req.body.userid && !req.body.username) {
+        console.log("Malformed request body!")
+        sendResponse(res, ResponseType.ERROR, "Malformed request body!")
+        return
     }
-    memeGenerator.generateMeme({
-        topText: meme.topText,
-        topX: meme.topX,
-        topY: meme.topY,
-        bottomText: meme.bottomText,
-        bottomX: meme.bottomX,
-        bottomY: meme.bottomY,
-        url: url
-    }).then(function (data) {
-        fs.writeFile('./memes/' + fileName, data, async function (err, result) {
-            if (err) return res.status(400).json({error: err})
-            meme.url = memeBaseUrl + fileName + '?' + (new Date()).getTime()
-            meme._id = ObjectID(req.params.id)
-            await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
-                res.send(JSON.stringify(meme, null, 4))
+
+    if(hasPermission) {
+        const uploads = await upload(req.files)
+        if (uploads.length > 0 && !meme.url) {
+            url = uploads[0].fullPath
+            fileName = uploads[0].fileName
+        } else {
+            url = meme.url
+            fileName = url.split('/')
+            fileName = fileName[fileName.length - 1]
+        }
+        memeGenerator.generateMeme({
+            topText: meme.topText,
+            topX: meme.topX,
+            topY: meme.topY,
+            bottomText: meme.bottomText,
+            bottomX: meme.bottomX,
+            bottomY: meme.bottomY,
+            url: url
+        }).then(function (data) {
+            fs.writeFile('./memes/' + fileName, data, async function (err, result) {
+                if (err) return res.status(400).json({error: err})
+                meme.url = memeBaseUrl + fileName + '?' + (new Date()).getTime()
+                meme._id = ObjectID(req.params.id)
+                meme.votes = 0
+                meme.views = 0
+                meme.comments = []
+                meme.createdBy = userdata
+                delete meme.userid
+                delete meme.username
+                delete meme.cred
+                await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
+                    res.send(JSON.stringify(meme, null, 4))
+                })
             })
         })
-    })
+    } else {
+        sendResponse(res, ResponseType.ERROR, "Could not create meme! Make sure to login.")
+    } 
 })
 
 /**
@@ -332,18 +394,25 @@ app.get('/meme', async function (req, res) {
     let searchstr 
     let filterstr 
     if (query.hasOwnProperty('_id')) {
-        if (query._id.hasOwnProperty('$lt')) query._id.$lt = ObjectID(query._id.$lt)
-        else if (query._id.hasOwnProperty('$gt')) query._id.$gt = ObjectID(query._id.$gt)
-        else query._id = ObjectID(query._id)
+        if (query._id.hasOwnProperty('$lt')){
+            query._id.$lt = ObjectID(query._id.$lt)
+        } else if (query._id.hasOwnProperty('$gt')){ 
+            query._id.$gt = ObjectID(query._id.$gt)
+        } else if(query._id.hasOwnProperty('$in')) {
+            query._id.$in = query._id.$in.map(meme => ObjectID(meme))
+        } else {
+            query._id = ObjectID(query._id)
+        }
     }
-
+    
     const options = JSON.parse(req.query.o)
-    const sort = JSON.parse(req.query.s)
+    const sort = req.query.s ? JSON.parse(req.query.s) : {}
+    
     if (req.query.fu) {
         searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
         query = {$or:[{title: searchstr}, {tags:searchstr}]} 
     }
-
+    
     if (req.query.fi) {
         filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
         if (req.query.fu) {
@@ -508,7 +577,6 @@ app.post('/userdata', async function(req, res) {
     if(hasPermission) {
         await db.collection('users').findOne({_id: ObjectID(userid)}).then(function(userdata) {
             createUserdata(userdata, cred).then(function(data){
-                // Funktioniert nicht :(
                 res.send(JSON.stringify({status: "OK", data: data}, null, 4))
             })
         })
@@ -575,7 +643,8 @@ async function createUserdata(user, cred) {
         username: user.username,
         api_cred: cred,
         votes: user.votes,
-        memes: user.memes
+        memes: user.memes,
+        comments: user.comments
     }
     return userdata
 }

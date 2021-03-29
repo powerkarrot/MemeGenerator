@@ -4,6 +4,10 @@
             "$oid": "602037c600f5dd0ae75d0522"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Wenn Vodafone nicht geht",
         "topText": "Wenn Vodafone",
         "bottomText": "nicht geht",
@@ -29,6 +33,10 @@
             "$oid": "602037c600f5dd0ae75d0523"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
@@ -43,6 +51,10 @@
             "$oid": "602037c600f5dd0ae75d0524"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
@@ -57,6 +69,10 @@
             "$oid": "602037c600f5dd0ae75d0525"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
         "url": "http://localhost:3007/memes/test4.png",
@@ -70,6 +86,10 @@
             "$oid": "602037c600f5dd0ae75d0526"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
@@ -84,6 +104,10 @@
             "$oid": "602037c600f5dd0ae75d0527"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Test meme",
         "topText": "Test meme",
         "topX": 280,
@@ -101,6 +125,10 @@
             "$oid": "602037c600f5dd0ae75d0528"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Appreciating soft drinks",
         "topText": "Appreciating",
         "bottomText": "soft drinks",
@@ -117,6 +145,10 @@
             "$oid": "602037c600f5dd0ae75d0529"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
@@ -131,6 +163,10 @@
             "$oid": "602037c600f5dd0ae75d0530"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
@@ -145,6 +181,10 @@
             "$oid": "602037c600f5dd0ae75d0532"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
@@ -159,6 +199,10 @@
             "$oid": "602037c600f5dd0ae75d0533"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
@@ -173,6 +217,10 @@
             "$oid": "602037c600f5dd0ae75d0534"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
@@ -187,6 +235,10 @@
             "$oid": "602037c600f5dd0ae75d0535"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
         "url": "http://localhost:3007/memes/test4.png",
@@ -200,6 +252,10 @@
             "$oid": "602037c600f5dd0ae75d0536"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
@@ -214,6 +270,10 @@
             "$oid": "602037c600f5dd0ae75d0537"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Test meme",
         "topText": "Test meme",
         "topX": 280,
@@ -231,6 +291,10 @@
             "$oid": "602037c600f5dd0ae75d0538"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Appreciating soft drinks",
         "topText": "Appreciating",
         "bottomText": "soft drinks",
@@ -247,6 +311,10 @@
             "$oid": "602037c600f5dd0ae75d0539"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
@@ -261,6 +329,10 @@
             "$oid": "602037c600f5dd0ae75d0540"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
@@ -275,6 +347,10 @@
             "$oid": "602037c600f5dd0ae75d0542"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
@@ -289,6 +365,10 @@
             "$oid": "602037c600f5dd0ae75d0543"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
@@ -303,6 +383,10 @@
             "$oid": "602037c600f5dd0ae75d0544"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
@@ -317,6 +401,10 @@
             "$oid": "602037c600f5dd0ae75d0545"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
         "url": "http://localhost:3007/memes/test4.png",
@@ -330,6 +418,10 @@
             "$oid": "602037c600f5dd0ae75d0546"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
@@ -344,6 +436,10 @@
             "$oid": "602037c600f5dd0ae75d0547"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Test meme",
         "topText": "Test meme",
         "topX": 280,
@@ -361,6 +457,10 @@
             "$oid": "602037c600f5dd0ae75d0548"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Appreciating soft drinks",
         "topText": "Appreciating",
         "bottomText": "soft drinks",
@@ -377,6 +477,10 @@
             "$oid": "602037c600f5dd0ae75d0549"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
@@ -391,6 +495,10 @@
             "$oid": "602037c600f5dd0ae75d0550"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
@@ -405,6 +513,10 @@
             "$oid": "602037c600f5dd0ae75d0552"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
@@ -419,6 +531,10 @@
             "$oid": "602037c600f5dd0ae75d0553"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
@@ -433,6 +549,10 @@
             "$oid": "602037c600f5dd0ae75d0554"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
@@ -447,6 +567,10 @@
             "$oid": "602037c600f5dd0ae75d0555"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
         "url": "http://localhost:3007/memes/test4.png",
@@ -460,6 +584,10 @@
             "$oid": "602037c600f5dd0ae75d0556"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
@@ -474,6 +602,10 @@
             "$oid": "602037c600f5dd0ae75d0557"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Test meme",
         "topText": "Test meme",
         "topX": 280,
@@ -491,6 +623,10 @@
             "$oid": "602037c600f5dd0ae75d0558"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Appreciating soft drinks",
         "topText": "Appreciating",
         "bottomText": "soft drinks",
@@ -507,6 +643,10 @@
             "$oid": "602037c600f5dd0ae75d0559"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
@@ -521,6 +661,10 @@
             "$oid": "602037c600f5dd0ae75d0560"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
@@ -535,6 +679,10 @@
             "$oid": "602037c600f5dd0ae75d0562"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
@@ -549,6 +697,10 @@
             "$oid": "602037c600f5dd0ae75d0563"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
@@ -563,6 +715,10 @@
             "$oid": "602037c600f5dd0ae75d0564"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
@@ -577,6 +733,10 @@
             "$oid": "602037c600f5dd0ae75d0565"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
         "url": "http://localhost:3007/memes/test4.png",
@@ -590,6 +750,10 @@
             "$oid": "602037c600f5dd0ae75d0566"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
@@ -604,6 +768,10 @@
             "$oid": "602037c600f5dd0ae75d0567"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Test meme",
         "topText": "Test meme",
         "topX": 280,
@@ -621,6 +789,10 @@
             "$oid": "602037c600f5dd0ae75d0568"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Appreciating soft drinks",
         "topText": "Appreciating",
         "bottomText": "soft drinks",
@@ -637,6 +809,10 @@
             "$oid": "602037c600f5dd0ae75d0569"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
@@ -651,6 +827,10 @@
             "$oid": "602037c600f5dd0ae75d0570"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
@@ -665,6 +845,10 @@
             "$oid": "602037c600f5dd0ae75d0572"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",
@@ -679,6 +863,10 @@
             "$oid": "602037c600f5dd0ae75d0573"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Car goes BRRT",
         "topText": "Car goes",
         "bottomText": "BRRRT",
@@ -693,6 +881,10 @@
             "$oid": "602037c600f5dd0ae75d0574"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Fu Vodafone",
         "topText": "Fu",
         "bottomText": "Vodafone",
@@ -707,6 +899,10 @@
             "$oid": "602037c600f5dd0ae75d0575"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Vodafone is scheisse",
         "topText": "Vodafone is scheisse",
         "url": "http://localhost:3007/memes/test4.png",
@@ -720,6 +916,10 @@
             "$oid": "602037c600f5dd0ae75d0576"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Mein Schatz",
         "topText": "Mein Schatz",
         "topX": 190,
@@ -734,6 +934,10 @@
             "$oid": "602037c600f5dd0ae75d0577"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Test meme",
         "topText": "Test meme",
         "topX": 280,
@@ -751,6 +955,10 @@
             "$oid": "602037c600f5dd0ae75d0578"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Appreciating soft drinks",
         "topText": "Appreciating",
         "bottomText": "soft drinks",
@@ -767,6 +975,10 @@
             "$oid": "602037c600f5dd0ae75d0579"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "When is this semester going to end?",
         "topText": "When is this semester going to end?",
         "topX": 230,
@@ -781,6 +993,10 @@
             "$oid": "602037c600f5dd0ae75d0580"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Now go and write 3 exams in a week",
         "topText": "Now go and",
         "bottomText": "write 3 exams in a week",
@@ -795,6 +1011,10 @@
             "$oid": "602037c600f5dd0ae75d0582"
         },
         "dateAdded": "2021-03-16T11:50:23.820Z",
+        "createdBy": {
+            "_id": "1337Test1337",
+            "username": "Testimport"
+        },
         "title": "Stop and think for a minute",
         "topText": "Stop and think",
         "bottomText": "for a minute",

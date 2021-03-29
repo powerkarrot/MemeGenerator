@@ -13,8 +13,8 @@ const routes: Routes = [
     {path: 'meme-random', component: MemeRandomComponent},
     {path: 'meme-generator', component: MemeGeneratorComponent},
     {path: 'meme/:id', component: MemeSingleviewComponent},
-    {path: 'memes', component: MemeOverviewComponent},
-    {path: '', component: MemeOverviewComponent},
+    {path: 'memes', pathMatch: 'full', component: MemeOverviewComponent},
+    {path: '', pathMatch: 'full', component: MemeOverviewComponent},
 ]
 
 @NgModule({
