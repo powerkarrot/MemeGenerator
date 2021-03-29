@@ -59,6 +59,7 @@
     </div>
     <div class="comments" *ngIf="selectedMeme">
         <h4>Comments</h4>
+        <h5 *ngIf="selectedMeme.comments.length == 0">No comments yet!</h5>
         <ng-template #CommentForm [ngIf]="loggedIn">
             <form #comment = "ngForm" class="px-4 py-3 comment-form" (ngSubmit)="commentMeme(comment.value)">
                 <div class="form-group">

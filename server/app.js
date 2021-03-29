@@ -577,7 +577,6 @@ app.post('/userdata', async function(req, res) {
     if(hasPermission) {
         await db.collection('users').findOne({_id: ObjectID(userid)}).then(function(userdata) {
             createUserdata(userdata, cred).then(function(data){
-                // Funktioniert nicht :(
                 res.send(JSON.stringify({status: "OK", data: data}, null, 4))
             })
         })
@@ -644,7 +643,8 @@ async function createUserdata(user, cred) {
         username: user.username,
         api_cred: cred,
         votes: user.votes,
-        memes: user.memes
+        memes: user.memes,
+        comments: user.comments
     }
     return userdata
 }

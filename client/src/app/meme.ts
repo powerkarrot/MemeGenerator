@@ -17,7 +17,10 @@ export interface Meme {
     description: string
     votes: number
     views: number
-    createdBy: any
+    createdBy: {
+        _id: number
+        username: string
+    }
     comments: Comment[]
     tags: string[]
 }

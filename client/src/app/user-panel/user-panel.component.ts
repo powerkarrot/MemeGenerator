@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core'
-import { Userdata } from '../userdata'
+import {Userdata} from '../userdata'
+import {Meme} from '../meme'
 import {LocalStorageService} from '../localStorage.service'
 import {MemeService} from '../meme.service'
 
@@ -14,6 +15,9 @@ export class UserPanelComponent implements OnInit {
     userData : Userdata
     votes = 0
     views = 0
+    memes : Meme[]
+    likedMemes : Meme[]
+    dislikedMemes : Meme[]
 
     constructor(private lss: LocalStorageService, private memeService: MemeService) { }
 
@@ -21,6 +25,8 @@ export class UserPanelComponent implements OnInit {
         this.userData = this.lss.getLocalStorage()
         this.calcVotes()
         this.getMemes()
+        this.getLikedMemes()
+        this.getDislikedMemes()
     }
 
     calcVotes(): void {
@@ -47,9 +53,44 @@ export class UserPanelComponent implements OnInit {
                 '$in': memeids
             }
         }
-        console.log(query)
         this.memeService.getMemes(query).subscribe((memes) => {
-            console.log(memes)
+            this.memes = <Meme[]> memes
+        })
+    }
+
+    getLikedMemes() {
+        var memeids = []
+        this.userData.votes.forEach(function(meme) {
+            if(meme.isPositive)
+                memeids.push(meme.memeid)
+        })
+
+        const query = {
+            '_id': {
+                '$in': memeids
+            }
+        }
+
+        this.memeService.getMemes(query).subscribe((memes) => {
+            this.likedMemes = <Meme[]> memes
+        })
+    }
+
+    getDislikedMemes() {
+        var memeids = []
+        this.userData.votes.forEach(function(meme) {
+            if(!meme.isPositive)
+                memeids.push(meme.memeid)
+        })
+
+        const query = {
+            '_id': {
+                '$in': memeids
+            }
+        }
+
+        this.memeService.getMemes(query).subscribe((memes) => {
+            this.dislikedMemes = <Meme[]> memes
         })
     }
     
