@@ -32,3 +32,8 @@ input {
     color: #fff;
     text-align: center;
 }
+
+mat-checkbox {
+    color: white;
+    margin-right: 10px;
+}

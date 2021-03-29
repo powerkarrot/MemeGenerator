@@ -58,7 +58,23 @@
                 <mat-label>Top y</mat-label>
                 <input matInput formControlName="topY">
             </mat-form-field>
+            <mat-checkbox formControlName="topBold">Bold</mat-checkbox>
+            <mat-checkbox formControlName="topItalic">Italic</mat-checkbox>
+
+            <mat-form-field color="white">
+                <mat-label>Font size</mat-label>
+                <input formControlName="topSize" matInput type="number" min="10">
+            </mat-form-field>
+
+            <input
+                [value]="memeForm.get('topColor').value"
+                [colorPicker]="memeForm.get('topColor').value"
+                (colorPickerChange)="memeForm.get('topColor').setValue($event)"
+                [style.background]="memeForm.get('topColor').value"
+                class="colorPicker"
+                formControlName="topColor">
         </div>
+
         <div fxLayout="row">
             <mat-form-field>
                 <mat-label>Bottom text</mat-label>
@@ -72,6 +88,22 @@
                 <mat-label>Bottom y</mat-label>
                 <input matInput formControlName="bottomY">
             </mat-form-field>
+            <mat-checkbox formControlName="bottomBold">Bold</mat-checkbox>
+            <mat-checkbox formControlName="bottomItalic">Italic</mat-checkbox>
+
+            <mat-form-field color="white">
+                <mat-label>Font size</mat-label>
+                <input formControlName="bottomSize" matInput type="number" min="10">
+            </mat-form-field>
+
+            <input
+                [value]="memeForm.get('bottomColor').value"
+                [colorPicker]="memeForm.get('bottomColor').value"
+                (colorPickerChange)="memeForm.get('bottomColor').setValue($event)"
+                [style.background]="memeForm.get('bottomColor').value"
+
+                class="colorPicker"
+                formControlName="bottomColor">
         </div>
 
         <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"/>
