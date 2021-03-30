@@ -92,3 +92,13 @@ button {
 .comment-form {
     background-color: #232323;
 }
+.mat-chip.mat-standard-chip {
+	background-color: #ff4081;
+	color: rgba(255,255,255,.87);
+}
+.chip-list {
+    width: 100%;
+}
+::placeholder {
+    color: #fff;
+}

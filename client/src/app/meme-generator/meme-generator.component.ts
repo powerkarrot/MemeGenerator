@@ -4,6 +4,10 @@ import {Router} from '@angular/router'
 import {debounceTime} from 'rxjs/operators'
 import {MemeService} from '../meme.service'
 import {LocalStorageService} from '../localStorage.service'
+import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {Tag} from '../tags'
+
 
 @Component({
     selector: 'app-meme-generator',
@@ -17,6 +21,13 @@ export class MemeGeneratorComponent implements OnInit {
     id = null
     templates = null
     isLoggedIn = false
+
+    visible = true;
+    selectable = true;
+    removable = true;
+    addOnBlur = true;
+    readonly separatorKeysCodes: number[] = [COMMA];
+    tags: Tag[] = [];
 
     /**
      *
@@ -76,6 +87,10 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }],
+            visibility: [{
+                value: null,
+                disabled: false
+            }],
         })
         this.isLoggedIn = lss.hasLocalStorage()
     }
@@ -89,6 +104,27 @@ export class MemeGeneratorComponent implements OnInit {
             .subscribe(formData => {
                 this.updateMeme()
             })
+    }
+
+    add(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value;
+    
+        if ((value || '').trim()) {
+            this.tags.push({name: value.trim()});
+        }
+    
+        if (input) {
+            input.value = '';
+        }
+    }
+    
+    remove(tags: Tag): void {
+        const index = this.tags.indexOf(tags);
+    
+        if (index >= 0) {
+            this.tags.splice(index, 1);
+        }
     }
 
     /**
@@ -134,6 +170,8 @@ export class MemeGeneratorComponent implements OnInit {
 
         const file = this.memeForm.get('fileSource').value
         if (file) {
+            console.log("Filetype: ", typeof(file))
+            console.log("File is: ", file)
             formData.append('file', file)
         }
 
@@ -174,9 +212,20 @@ export class MemeGeneratorComponent implements OnInit {
         if (bottomY) {
             formData.append('bottomY', bottomY)
         }
+
+        const visibility = this.memeForm.get("visibility").value
+        console.log("Visbility: ", visibility)
+        if(visibility) {
+            formData.append('visibility', visibility)
+        } else {
+            formData.append('visibility', "public")
+        }
+
         formData.append('userid', this.lss.getUserID().toString())
         formData.append('username', this.lss.getUsername())
         formData.append('cred', this.lss.getApiKey().toString())
+        console.log("Tags: ", this.tags)
+        formData.append('tags', JSON.stringify(this.tags))
 
         return formData
     }

@@ -1,4 +1,5 @@
 import { Comment } from './comment'
+import {Tag} from './tags'
 
 export interface Meme {
     _id: number
@@ -17,10 +18,11 @@ export interface Meme {
     description: string
     votes: number
     views: number
+    visibility: string
     createdBy: {
         _id: number
         username: string
     }
     comments: Comment[]
-    tags: string[]
+    tags: Tag[]
 }
