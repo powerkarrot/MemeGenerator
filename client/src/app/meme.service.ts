@@ -143,6 +143,19 @@ export class MemeService {
     }
 
     /**
+     * Tests the /createMemes route
+     * 
+     * @param data 
+     * @returns 
+     */
+    testCreateMemeAPI(data): Observable<Object | Meme> {
+        let url = environment.apiUrl + '/createMemes'
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<Meme>('testcreateMemeAPI'))
+        )
+    }
+
+    /**
      * handles and logs errors
      *
      * @param operation

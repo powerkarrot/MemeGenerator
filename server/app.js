@@ -450,6 +450,77 @@ app.get('/meme', async function (req, res) {
         })
 })
 
+app.post('/createMemes', async function (req, res) {
+
+    const db = req.app.get('db')
+
+    let meme = req.body
+    let url = req.body.url
+    let filepaths =[]
+    let memes = []
+
+    var zip = new AdmZip();
+    var content = "Dogs are better than cats.";
+    zip.addFile("README.txt", Buffer.alloc(content.length, content), "");
+
+    extension = "." +  url.split('.').pop();
+    meme.text.forEach(c => {  filepaths.push('./memes/' + c.title + extension)})
+    memes = meme.text
+
+    response = []
+
+    for (let i = 0; i < memes.length; i++) {
+        await memeGenerator.generateMeme({
+                    topText: memes[i].topText,
+                    topX: memes[i].topX,
+                    topY: memes[i].topY,
+                    bottomText: memes[i].bottomText,
+                    bottomX: memes[i].bottomX,
+                    bottomY: memes[i].bottomY,
+                    url: url
+            
+        }).then(function (data) {
+
+            fs.writeFile(filepaths[i], data, async function (err, result) {
+                if (err) return res.status(400).json({error: err})
+                fileName = filepaths[i]
+
+                memes[i].url = memeBaseUrl + memes[i].title + extension
+                memes[i]._id = new ObjectID()
+                memes[i].description = memes[i].description
+                memes[i].votes = 0
+                memes[i].views = 0
+                memes[i].comments = []
+                memes[i].date = new Date(Date.now()).toISOString()
+
+                await db.collection('memes').insertOne(memes[i], function (err, r) {
+                    if (err) response.push({error: err}) 
+                    response.push({
+                        _id: memes[i]._id,
+                        url: memes[i].url
+                    })
+
+                    if (i == memes.length-1){
+                        filepaths.map(path => {
+                            zip.addLocalFile(path)
+                            zip.writeZip("./zips/files.zip")
+                        })         
+                    }
+                })
+            })
+        })
+      }
+
+    res.writeHead(302, {'Location': '/zips/files.zip'});
+    //res.json(response)
+    res.end();
+})
+
+
+async function ichHAsseDichGrad() {
+    
+}
+
 /**
  * gets a random meme
  */
