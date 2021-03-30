@@ -145,6 +145,7 @@ export class MemeSingleviewComponent implements OnInit {
             this.memeService.getMeme(id).subscribe((data) => {
                 // @ts-ignore
                 this.selectedMeme = <Meme>data
+                console.log(this.selectedMeme)
             })
             let options = {
                 limit: 1,
