@@ -1,4 +1,4 @@
-<div style="padding: 10px; width: 600px;" class="wrapper center" *ngIf="isLoggedIn;else notLoggedIn">
+<div style="padding: 10px;" class="wrapper center" *ngIf="isLoggedIn;else notLoggedIn">
     <h2>Meme Generator</h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
         <input matInput formControlName="_id" hidden>        
@@ -107,6 +107,30 @@
                 <mat-label>Bottom y</mat-label>
                 <input matInput formControlName="bottomY">
             </mat-form-field>
+            <mat-radio-group formControlName="visibility">
+                <mat-radio-button value="public" style="color: #fff;" [checked]="true">Public</mat-radio-button>
+                <mat-radio-button color="warn" value="unlisted" style="color: #fff; margin-left: 10px;">Unlisted</mat-radio-button>
+                <mat-radio-button value="private"  style="color: #fff; margin-left: 10px;">Private</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div fxLayout="row">
+            <mat-form-field class="chip-list">
+                <mat-label>Tags</mat-label>
+                <mat-chip-list #chipList aria-label="Tag selection">
+                <mat-chip *ngFor="let tag of tags" color="accent" [selectable]="selectable"
+                        [removable]="removable" (removed)="remove(tag)">
+                    {{tag.name}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="New tag..."
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add($event)" style="color: #fff;">
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
+        <div fxLayout="row">
             <mat-checkbox formControlName="bottomBold">Bold</mat-checkbox>
             <mat-checkbox formControlName="bottomItalic">Italic</mat-checkbox>
 

@@ -28,7 +28,6 @@ export class LoginDropdownComponent implements OnInit {
         //this.localStorageService.deleteLocalStorage()
         this.localStorageService.updateLocalStorage()
         this.isLoggedIn = this.localStorageService.hasLocalStorage()
-        console.log("Has Userdata? - ",this.isLoggedIn)
     }
 
     onClickSubmit(data): void {
@@ -47,7 +46,6 @@ export class LoginDropdownComponent implements OnInit {
             this.userService.logout(this.userData._id, this.userData.api_cred).subscribe((res) => {
                 this.localStorageService.deleteLocalStorage()
                 this.isLoggedIn = this.localStorageService.hasLocalStorage()
-                console.log(res)
             })
         }
     }

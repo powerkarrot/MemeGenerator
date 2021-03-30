@@ -6,6 +6,10 @@ import {MemeService} from '../meme.service'
 import {WebcamImage} from 'ngx-webcam'
 import {Subject, Observable} from 'rxjs'
 import {LocalStorageService} from '../localStorage.service'
+import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {Tag} from '../tags'
+
 
 @Component({
     selector: 'app-meme-generator',
@@ -24,6 +28,13 @@ export class MemeGeneratorComponent implements OnInit {
     public showImgFlipTemplates = false
     public showUploadedTemplates = false
     isLoggedIn = false
+
+    visible = true;
+    selectable = true;
+    removable = true;
+    addOnBlur = true;
+    readonly separatorKeysCodes: number[] = [COMMA];
+    tags: Tag[] = [];
 
     /**
      *
@@ -116,6 +127,10 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }],
+            visibility: [{
+                value: null,
+                disabled: false
+            }],
         })
         this.isLoggedIn = lss.hasLocalStorage()
     }
@@ -129,6 +144,27 @@ export class MemeGeneratorComponent implements OnInit {
             .subscribe(formData => {
                 this.updateMeme()
             })
+    }
+
+    add(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value;
+    
+        if ((value || '').trim()) {
+            this.tags.push({name: value.trim()});
+        }
+    
+        if (input) {
+            input.value = '';
+        }
+    }
+    
+    remove(tags: Tag): void {
+        const index = this.tags.indexOf(tags);
+    
+        if (index >= 0) {
+            this.tags.splice(index, 1);
+        }
     }
 
     /**
@@ -185,7 +221,9 @@ export class MemeGeneratorComponent implements OnInit {
      */
     updateMeme(): void {
         const formData = this.generateMemeFormData()
+        console.log(formData)
         this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
+            console.log(meme)
             this.meme = meme
             // @ts-ignore
             this.id = meme._id
@@ -270,7 +308,11 @@ export class MemeGeneratorComponent implements OnInit {
         if (bottomY) {
             formData.append('bottomY', bottomY)
         }
-
+        const visibility = this.memeForm.get("visibility").value
+        if(visibility) {
+            formData.append('visibility', visibility)
+        } else {
+            formData.append('visibility', "public")
         const bottomBold = this.memeForm.get('bottomBold').value
         if (bottomBold) {
             formData.append('bottomBold', bottomBold)
@@ -289,6 +331,7 @@ export class MemeGeneratorComponent implements OnInit {
         formData.append('userid', this.lss.getUserID().toString())
         formData.append('username', this.lss.getUsername())
         formData.append('cred', this.lss.getApiKey().toString())
+        formData.append('tags', JSON.stringify(this.tags))
 
         return formData
     }

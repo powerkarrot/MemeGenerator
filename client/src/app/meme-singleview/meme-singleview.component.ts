@@ -8,7 +8,10 @@ import {interval, Subscription} from 'rxjs'
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import {LocalStorageService} from '../localStorage.service'
 import { Userdata } from '../userdata'
+import {Tag} from '../tags'
 import {ToastService} from '../toast-service'
+import {COMMA, SEMICOLON} from '@angular/cdk/keycodes'
+import {MatChipInputEvent} from '@angular/material/chips'
 
 @Component({
     selector: 'ngbd-modal-content',
@@ -62,6 +65,14 @@ export class MemeSingleviewComponent implements OnInit {
     }
     loggedIn = false
 
+    // Tags
+    visible = true;
+    selectable = true;
+    removable = false;
+    addOnBlur = true;
+    readonly separatorKeysCodes: number[] = [COMMA, SEMICOLON];
+    tags: Tag[] = [];
+
     /**
      *
      * @param _http
@@ -82,7 +93,6 @@ export class MemeSingleviewComponent implements OnInit {
      */
     ngOnInit(): void {
         this._route.queryParams.subscribe(params => {
-            console.log(params)
             if(params.autoplay === 'true') {
                 this.model.autoplay = true
                 this.onAutoplayClicked(null)
@@ -93,7 +103,37 @@ export class MemeSingleviewComponent implements OnInit {
         })
         this.getMemes()
         this.loggedIn = this.isLoggedIn()
-        console.log("liked Memes: ", this.localStorageService.getLikedMemes())
+    }
+
+    add(event: MatChipInputEvent): void {
+        const input = event.input
+        const value = event.value
+    
+        if ((value || '').trim()) {
+            const tag = {name: value.trim()}
+            this.tags.push(tag)
+            this.selectedMeme.tags.push(tag)
+            this.memeService.commitTags(this.selectedMeme._id, tag, this.userData._id, this.userData.api_cred).subscribe((data)=>{
+                if(data.status == "ERROR")
+                    this.toastService.showDanger(data.text)
+
+                this.getMemes()
+            })
+        }
+    
+        if (input) {
+            input.value = ''
+        }
+
+        
+    }
+    
+    remove(tags: Tag): void {
+        const index = this.tags.indexOf(tags);
+    
+        if (index >= 0) {
+            this.tags.splice(index, 1);
+        }
     }
 
     /**
@@ -104,7 +144,7 @@ export class MemeSingleviewComponent implements OnInit {
             const id = params['id']
             this.memeService.getMeme(id).subscribe((data) => {
                 // @ts-ignore
-                this.selectedMeme = data
+                this.selectedMeme = <Meme>data
             })
             let options = {
                 limit: 1,
@@ -145,7 +185,6 @@ export class MemeSingleviewComponent implements OnInit {
         this.memeService.voteMeme(this.selectedMeme._id, positive,
                                   this.userData._id, this.userData.username,
                                   this.userData.api_cred).subscribe((data) => {
-            console.log("Voting: ", data)
             if (data.status == 'OK'){
                 this.getMemes()
                 this.localStorageService.updateLocalStorage()
@@ -158,7 +197,6 @@ export class MemeSingleviewComponent implements OnInit {
 
     commentMeme(formdata): void {
         this.memeService.commentMeme(this.selectedMeme._id, this.userData._id, this.userData.username, this.userData.api_cred, this.model.comment).subscribe((data) => {
-            console.log('Comment: ', data)
         })
     }
 

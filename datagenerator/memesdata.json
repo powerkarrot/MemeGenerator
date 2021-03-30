@@ -15,6 +15,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": [
             {
                 "username": "ex3c",
@@ -44,6 +48,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -62,6 +70,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -79,6 +91,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -97,6 +113,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -118,6 +138,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -138,6 +162,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -156,6 +184,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -174,6 +206,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -192,6 +228,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -210,6 +250,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -228,6 +272,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -245,6 +293,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -263,6 +315,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -284,6 +340,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -304,6 +364,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -322,6 +386,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -340,6 +408,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -358,6 +430,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -376,6 +452,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -394,6 +474,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -411,6 +495,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -429,6 +517,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -450,6 +542,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -470,6 +566,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -488,6 +588,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -506,6 +610,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -524,6 +632,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -542,6 +654,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -560,6 +676,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -577,6 +697,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -595,6 +719,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -616,6 +744,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -636,6 +768,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -654,6 +790,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -672,6 +812,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -690,6 +834,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -708,6 +856,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -726,6 +878,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -743,6 +899,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -761,6 +921,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -782,6 +946,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -802,6 +970,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -820,6 +992,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -838,6 +1014,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -856,6 +1036,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -874,6 +1058,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -892,6 +1080,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -909,6 +1101,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -927,6 +1123,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -948,6 +1148,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -968,6 +1172,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -986,6 +1194,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -1004,6 +1216,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     },
     {
@@ -1022,6 +1238,10 @@
         "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
         "votes": 0,
         "views": 0,
+        "visibility": "public",
+        "tags": [
+            {"name": "testTag"}
+        ],
         "comments": []
     }
 ]

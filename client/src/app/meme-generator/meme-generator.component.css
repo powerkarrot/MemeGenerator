@@ -18,7 +18,8 @@ input {
     cursor: pointer;
 }
 .wrapper {
-    width: 60%;
+    width: 80%;
+    background-color: #232323;
 }
 
 .center {
@@ -32,7 +33,20 @@ input {
     color: #fff;
     text-align: center;
 }
+.whiteRadioButton {
+    border-color: #fff;
+}
 
+.mat-chip.mat-standard-chip {
+	background-color: #ff4081;
+	color: rgba(255,255,255,.87);
+}
+.chip-list {
+    width: 100%;
+}
+::placeholder {
+    color: #fff;
+}
 mat-checkbox {
     color: white;
     margin-right: 10px;

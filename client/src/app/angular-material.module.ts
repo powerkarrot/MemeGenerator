@@ -6,7 +6,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatRadioModule} from '@angular/material/radio';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatFormFieldModule} from '@angular/material/form-field';
-
+import {MatChipsModule} from '@angular/material/chips';
 
 const materialModules = [
     MatIconModule,
@@ -14,7 +14,8 @@ const materialModules = [
     MatButtonModule,
     MatProgressSpinnerModule,
     MatRadioModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatChipsModule
 ]
 
 @NgModule({

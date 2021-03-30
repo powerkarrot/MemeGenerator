@@ -4,6 +4,7 @@ import {Meme} from './meme'
 import {HttpClient} from '@angular/common/http'
 import {catchError} from 'rxjs/operators'
 import {environment} from '../environments/environment'
+import {Tag} from './tags'
 
 @Injectable({
     providedIn: 'root'
@@ -78,6 +79,7 @@ export class MemeService {
      */
     getMeme(id): Observable<Object | Meme> {
         let url = environment.apiUrl + '/meme/' + id
+
         return this._http.get(url).pipe(
             catchError(this.handleError<Meme>('getMeme'))
         )
@@ -92,6 +94,33 @@ export class MemeService {
             catchError(this.handleError<Meme>('getRandomMeme'))
         )
     }
+
+    commitTags(id: number, tags: Tag, userid: number, apicred: number): Observable<Object | any> {
+        let url = environment.apiUrl + '/meme/tag/' + id
+        const data = {
+            "_id": id,
+            "tags": tags,
+            "userid": userid,
+            "cred": apicred
+        }
+        this._http.post(url, data).pipe(
+            catchError(this.handleError<any>('commitTags'))
+        )
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<any>('commitTags'))
+        )
+    }
+
+    test(): Observable<any> {
+        if(true) {
+            let url = environment.apiUrl + '/tag'
+            const data = { }
+            return this._http.post(url, data).pipe(
+                catchError(this.handleError<any>('commentMeme'))
+            )
+        }
+    }
+
     /**
      * reads all memes matching the query
      * 

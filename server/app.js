@@ -132,14 +132,18 @@ app.post('/meme', async function (req, res) {
     }
 
     if(hasPermission) {
+        const memeid = new ObjectID()
         const uploads = await upload(req.files)
         if (uploads.length > 0) {
             url = uploads[0].fullPath
-            fileName = uploads[0].fileName
+            fileName = uploads[0].fileName.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = memeid + "." + fileEnd
         } else {
             url = meme.url
-            fileName = url.split('/')
-            fileName = fileName[fileName.length - 1]
+            fileName = url.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = memeid + "." + fileEnd
         }
         memeGenerator.generateMeme({
             topText: meme.topText,
@@ -161,8 +165,7 @@ app.post('/meme', async function (req, res) {
             fs.writeFile('./memes/' + fileName, data, async function (err, result) {
                 if (err) return res.status(400).json({error: err})
                 meme.url = memeBaseUrl + fileName
-                meme._id = new ObjectID()
-                meme.description = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam'
+                meme._id = memeid
                 meme.votes = 0
                 meme.views = 0
                 meme.comments = []
@@ -180,7 +183,7 @@ app.post('/meme', async function (req, res) {
                 }
 
                 await db.collection('users').updateOne({_id: userid}, newValues).then(function(e, r) {
-                    console.log(r)
+                    
                     delete meme.userid
                     delete meme.username
                     delete meme.cred
@@ -247,6 +250,43 @@ app.post('/meme/comment/:id', async function(req, res) {
         res.send(JSON.stringify({status: "ERROR", text:"User not authorized!"}, null, 4))
     }
 
+})
+
+app.get('/meme/tag/:id', async function(req, res){
+    const db = req.app.get('db')
+    const id = ObjectID(req.params.id)
+    const query = {_id: id}
+
+
+    await db.collection('memes').find(query).toArray(function (err, memes) {
+        res.send(JSON.stringify(memes, null, 4))
+    })
+})
+
+app.post('/meme/tag/:id', async function(req, res) {
+    const db = req.app.get('db')
+    const tags = req.body.tags
+    const query = {_id: ObjectID(req.params.id)}
+    const userid = req.body.userid
+    const cred = req.body.cred
+
+    const hasPermission = isAutherized(db, userid, cred)
+
+    if(hasPermission) {
+        const newValues = { 
+            $push: {
+                tags: tags
+            }
+        }
+
+        await db.collection('memes').updateOne(query, newValues, function(err, result){
+            if(err) sendResponse(res, ResponseType.ERROR, "Failed to commit tag!")
+            sendResponse(res, ResponseType.DATA, "Successfully commited tag!")
+        })
+    } else {
+        sendResponse(res, ResponseType.ERROR, "User not authorized!")
+    }
+    
 })
 
 app.post('/meme/vote/:id', async function(req, res) {
@@ -350,11 +390,10 @@ app.post('/meme/:id', async function (req, res) {
     let meme = req.body, url, fileName
     const userid = req.body.userid
     const cred = req.body.cred
+    const tags = JSON.parse(req.body.tags)
     let userdata = {_id: userid, username: req.body.username}
 
     const hasPermission = isAutherized(db, userid, cred)
-
-    console.log(meme.userid)
 
     if(!req.body.cred && !req.body.userid && !req.body.username) {
         console.log("Malformed request body!")
@@ -366,12 +405,16 @@ app.post('/meme/:id', async function (req, res) {
         const uploads = await upload(req.files)
         if (uploads.length > 0 && !meme.url) {
             url = uploads[0].fullPath
-            fileName = uploads[0].fileName
+            fileName = uploads[0].fileName.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = ObjectID(req.params.id) + "." + fileEnd
         } else {
             url = meme.url
-            fileName = url.split('/')
-            fileName = fileName[fileName.length - 1]
+            fileName = url.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = ObjectID(req.params.id) + "." + fileEnd
         }
+
         memeGenerator.generateMeme({
             topText: meme.topText,
             topSize: meme.topSize,
@@ -397,6 +440,7 @@ app.post('/meme/:id', async function (req, res) {
                 meme.views = 0
                 meme.comments = []
                 meme.createdBy = userdata
+                meme.tags = tags
                 delete meme.userid
                 delete meme.username
                 delete meme.cred
@@ -421,12 +465,24 @@ app.get('/meme', async function (req, res) {
     if (query.hasOwnProperty('_id')) {
         if (query._id.hasOwnProperty('$lt')){
             query._id.$lt = ObjectID(query._id.$lt)
+            query = {
+                _id: query._id,
+                visibility: "public"
+            }
         } else if (query._id.hasOwnProperty('$gt')){
             query._id.$gt = ObjectID(query._id.$gt)
+            query = {
+                _id: query._id,
+                visibility: "public"
+            }
         } else if(query._id.hasOwnProperty('$in')) {
             query._id.$in = query._id.$in.map(meme => ObjectID(meme))
         } else {
             query._id = ObjectID(query._id)
+        }
+    } else {
+        query = {
+            visibility: "public"
         }
     }
     const options = JSON.parse(req.query.o)
@@ -434,13 +490,13 @@ app.get('/meme', async function (req, res) {
 
     if (req.query.fu) {
         searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
-        query = {$or:[{title: searchstr}, {tags:searchstr}]}
+        query = {$or:[{title: searchstr}, {tags:searchstr}], visibility: "public"} 
     }
 
     if (req.query.fi) {
         filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
         if (req.query.fu) {
-            query = {title:searchstr, url:filterstr} //{title: /mein/i}, {url: /png/i}
+            query = {title:searchstr, url:filterstr, visibility: "public"} //{title: /mein/i}, {url: /png/i}
         }
     }
 

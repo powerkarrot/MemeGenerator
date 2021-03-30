@@ -50,7 +50,6 @@ export class LocalStorageService {
             const userdata = this.getLocalStorage()
             this.userService.getUserdata(userdata._id, userdata.api_cred).subscribe((res) => {
                 const data = <Userdata>res.data
-                console.log("LocalStorage: ", data)
                 this.deleteLocalStorage()
                 this.storeOnLocalStorage(data)
                 this.userdata = this.getLocalStorage()
