@@ -15,13 +15,16 @@ import {MemeSingleviewComponent} from './meme-singleview/meme-singleview.compone
 import {LoginDropdownComponent} from './login-dropdown/login-dropdown.component'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {AngularMaterialModule} from './angular-material.module'
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { MemeSearchComponent } from './meme-search/meme-search.component'
 import { RegisterComponent } from './register/register.component'
 import {StorageServiceModule} from 'ngx-webstorage-service'
 import {LocalStorageService} from './localStorage.service'
 import {UserPanelComponent} from './user-panel/user-panel.component'
 import {ToastsContainer} from './toasts-container/toasts-container.component'
+import {WebcamModule} from 'ngx-webcam'
+import { ColorPickerModule } from 'ngx-color-picker'
+import {MatCheckboxModule} from "@angular/material/checkbox"
 
 @NgModule({
     declarations: [
@@ -34,10 +37,11 @@ import {ToastsContainer} from './toasts-container/toasts-container.component'
         LoginDropdownComponent,
         RegisterComponent,
         UserPanelComponent,
-        ToastsContainer
+        ToastsContainer,   
     ],
     imports: [
         BrowserModule,
+        WebcamModule,
         AppRoutingModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
@@ -47,7 +51,9 @@ import {ToastsContainer} from './toasts-container/toasts-container.component'
         NgbModule,
         FormsModule,
         StorageServiceModule,
-        AngularMaterialModule
+        AngularMaterialModule,
+        ColorPickerModule,
+        MatCheckboxModule
     ],
     providers: [LocalStorageService],
     bootstrap: [AppComponent, LoginDropdownComponent]

@@ -23,7 +23,6 @@ export class MemeService {
     updateMeme(id, data): Observable<Object | Meme> {
         let url = environment.apiUrl + '/meme'
         if (id !== null) url += '/' + id
-        
         return this._http.post(url, data).pipe(
             catchError(this.handleError<Meme>('updateMeme'))
         )
@@ -44,6 +43,7 @@ export class MemeService {
             )
         }
     }
+    
 
     commentMeme(id: number, userid: number, username: string, apicred: number, comment: string): Observable<any> {
         if(id !== null) {
@@ -154,6 +154,20 @@ export class MemeService {
         let url = environment.apiUrl + '/templates'
         return this._http.get(url).pipe(
             catchError(this.handleError<Meme[]>('loadTemplates', []))
+        )
+    }
+
+    /**
+     *  
+     * Sends a GET request to the imgFlip API
+     * Returns the response 
+     *
+     * @returns 
+     */
+    getImgAPITemplates() : any {
+        let url = "https://api.imgflip.com/get_memes"
+        return this._http.get(url).pipe(
+            catchError(this.handleError<Meme[]>('getImgAPITemplates', []))
         )
     }
 

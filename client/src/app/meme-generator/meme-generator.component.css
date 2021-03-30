@@ -33,7 +33,6 @@ input {
     color: #fff;
     text-align: center;
 }
-
 .whiteRadioButton {
     border-color: #fff;
 }
@@ -47,4 +46,8 @@ input {
 }
 ::placeholder {
     color: #fff;
+}
+mat-checkbox {
+    color: white;
+    margin-right: 10px;
 }

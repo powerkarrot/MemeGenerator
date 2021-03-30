@@ -40,7 +40,7 @@ function MemeGenerator (userConfig = {}) {
  */
 MemeGenerator.prototype.setCanvas = function (options) {
 	const {canvasWidth, canvasHeight} = options
-	const canvas = new Canvas(canvasWidth, canvasHeight)
+	const canvas = Canvas.createCanvas(canvasWidth, canvasHeight)
 	const Image = Canvas.Image
 
 	this.canvas = canvas
@@ -73,15 +73,26 @@ MemeGenerator.prototype.setFontOptions = function (options) {
  * @param {Object} options {topText, bottomText, url}
  */
 MemeGenerator.prototype.setImageOptions = function (options) {
-	const {topText, topX, topY, bottomText, bottomX, bottomY, url} = options
+	const {topText, topSize, topX, topY, topBold, topItalic, topColor,
+		bottomText, bottomSize, bottomX, bottomY, bottomBold, bottomItalic, bottomColor,
+		url} = options
 
 	this.url = url
 	this.topText = topText
+	this.topSize = topSize
 	this.topX = topX
 	this.topY = topY
+	this.topBold = topBold
+	this.topItalic = topItalic
+	this.topColor = topColor
+
 	this.bottomText = bottomText
+	this.bottomSize = bottomSize
 	this.bottomX = bottomX
 	this.bottomY = bottomY
+	this.bottomBold = bottomBold
+	this.bottomItalic = bottomItalic
+	this.bottomColor = bottomColor
 }
 
 /**
@@ -145,11 +156,19 @@ MemeGenerator.prototype.drawMeme = function () {
 		memeWidth,
 		memeHeight,
 		topText,
+		topSize,
 		topX,
 		topY,
+		topBold,
+		topItalic,
+		topColor,
 		bottomText,
+		bottomSize,
 		bottomX,
 		bottomY,
+		bottomBold,
+		bottomItalic,
+		bottomColor,
 		fontSize,
 		fontFamily,
 		lineHeight,
@@ -160,6 +179,11 @@ MemeGenerator.prototype.drawMeme = function () {
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	ctx.drawImage(canvasImg, 0, 0, memeWidth, memeHeight)
 
+	console.log(topSize)
+
+	let topFontSize = topSize ? topSize : fontSize
+	let bottomFontSize = bottomSize ? bottomSize : fontSize
+
 	let x = memeWidth / 2
 	let y
 
@@ -168,7 +192,7 @@ MemeGenerator.prototype.drawMeme = function () {
 		if (topX) x = parseInt(topX)
 		if (topY) y = parseInt(topY)
 		this.ctx.textBaseline = 'top'
-		wrapText(ctx, topText, x, y, memeWidth, lineHeight, false, fontSize, fontFamily)
+		wrapText(ctx, topText, x, y, memeWidth, lineHeight, false, topFontSize, fontFamily, topBold, topItalic, topColor)
 	}
 
 	if (bottomText) {
@@ -177,8 +201,22 @@ MemeGenerator.prototype.drawMeme = function () {
 		else if (topX) x = memeWidth / 2
 		if (bottomY) y = parseInt(bottomY)
 		this.ctx.textBaseline = 'bottom'
-		wrapText(ctx, bottomText, x, y, memeWidth, lineHeight, true, fontSize, fontFamily)
+		wrapText(ctx, bottomText, x, y, memeWidth, lineHeight, true, bottomFontSize, fontFamily, bottomBold, bottomItalic, bottomColor)
 	}
+}
+
+function buildFont(fontSize, fontFamily, bold, italic) {
+	let fontString = `${fontSize}pt ${fontFamily}`
+
+	if(bold) {
+		fontString = 'bold ' + fontString
+	}
+
+	if(italic) {
+		fontString = 'italic ' + fontString
+	}
+
+	return fontString;
 }
 
 /**
@@ -192,15 +230,22 @@ MemeGenerator.prototype.drawMeme = function () {
  * @param fromBottom
  * @param fontSize
  * @param fontFamily
+ * @param bold
+ * @param italic
+ * @param color
  */
 MemeGenerator.prototype.wrapText = function (
-	context, text, x, y, maxWidth, lineHeightRatio, fromBottom, fontSize, fontFamily) {
+	context, text, x, y, maxWidth, lineHeightRatio, fromBottom, fontSize, fontFamily, bold, italic, color) {
 
 	if (!text) {
 		return
 	}
 
-	context.font = `bold ${fontSize}pt ${fontFamily}`
+	context.font = buildFont(fontSize, fontFamily, bold, italic)
+
+	context.fillStyle = color ? color : "#FFFFFF"
+
+	//context.font = `${fontSize}pt ${fontFamily}`
 
 	const pushMethod = fromBottom ? 'unshift' : 'push'
 	const lineHeight = lineHeightRatio * fontSize

@@ -106,13 +106,24 @@ app.get('/templates', async function (req, res) {
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {
+    console.log("posting")
     const db = req.app.get('db')
     let meme = req.body, url, fileName
+    const uploads = await upload(req.files)
     const userid = ObjectID(req.body.userid)
     const cred = req.body.cred
     let userdata = {_id: userid, username: req.body.username}
-
     const hasPermission = isAutherized(db, userid, cred)
+    
+    if (uploads.length > 0) {
+        console.log("uploaded")
+        url = uploads[0].fullPath
+        fileName = uploads[0].fileName
+    } else {
+        url = meme.url
+        fileName = url.split('/')
+        fileName = fileName[fileName.length - 1]
+    }
 
     if(!req.body.cred && !req.body.userid && !req.body.username) {
         console.log("Malformed request body!")
@@ -136,11 +147,19 @@ app.post('/meme', async function (req, res) {
         }
         memeGenerator.generateMeme({
             topText: meme.topText,
+            topSize: meme.topSize,
             topX: meme.topX,
             topY: meme.topY,
+            topBold: meme.topBold,
+            topItalic: meme.topItalic,
+            topColor: meme.topColor,
             bottomText: meme.bottomText,
+            bottomSize: meme.bottomSize,
             bottomX: meme.bottomX,
             bottomY: meme.bottomY,
+            bottomBold: meme.bottomBold,
+            bottomItalic: meme.bottomItalic,
+            bottomColor: meme.bottomColor,
             url: url
         }).then(function (data) {
             fs.writeFile('./memes/' + fileName, data, async function (err, result) {
@@ -151,7 +170,7 @@ app.post('/meme', async function (req, res) {
                 meme.views = 0
                 meme.comments = []
                 meme.createdBy = userdata
-                meme.dateAdded = new Date(Date.now()).toISOString() 
+                meme.dateAdded = new Date(Date.now()).toISOString()
 
                 const data = {
                     memeid: ObjectID(meme._id)
@@ -181,7 +200,7 @@ app.post('/meme', async function (req, res) {
         })
     } else {
         sendResponse(res, ResponseType.ERROR, "Could not create meme! Make sure to login.")
-    }  
+    }
 })
 
 app.post('/meme/comment/:id', async function(req, res) {
@@ -195,7 +214,7 @@ app.post('/meme/comment/:id', async function(req, res) {
     const hasPermission = isAutherized(db, userid, cred)
 
     if(hasPermission){
-        var newValues = { 
+        var newValues = {
             $push: {
                 comments: {
                     userid: ObjectID(userid),
@@ -209,7 +228,7 @@ app.post('/meme/comment/:id', async function(req, res) {
         db.collection('memes').updateOne(query, newValues, function(err, result){
             if (err) res.status(400).json({error: err})
 
-            newValues = { 
+            newValues = {
                 $push: {
                     comments: {
                         memeid: ObjectID(req.params.id),
@@ -220,7 +239,7 @@ app.post('/meme/comment/:id', async function(req, res) {
                     }
                 }
             }
-    
+
             db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
                 if (err) res.status(400).json({error: err})
                 res.send(JSON.stringify({status: "OK", text:"Comment successfully posted!"}, null, 4))
@@ -277,7 +296,7 @@ app.post('/meme/vote/:id', async function(req, res) {
     const userid = req.body.userid
     const cred = req.body.cred
     const query = { _id: ObjectID(req.params.id) }
-    var newValues = { $inc: {votes: votes} }  
+    var newValues = { $inc: {votes: votes} }
 
     const hasPermission = isAutherized(db, userid, cred)
 
@@ -316,7 +335,7 @@ app.post('/meme/vote/:id', async function(req, res) {
                                             votes: votes
                                         }
                                     }
-                    
+
                                     db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
                                         if (err) {
                                             sendResponse(res, ResponseType.ERROR, "Database failure!")
@@ -338,13 +357,13 @@ app.post('/meme/vote/:id', async function(req, res) {
                                     memeid: ObjectID(req.params.id),
                                     isPositive: isPositive
                                 }
-                
+
                                 newValues = {
                                     $push: {
                                         votes: data
                                     }
                                 }
-                
+
                                 db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
                                     if (err) {
                                         sendResponse(res, ResponseType.ERROR, "Database failure!")
@@ -356,7 +375,7 @@ app.post('/meme/vote/:id', async function(req, res) {
                         })
                     }
                 })
-            } 
+            }
         })
     } else {
         sendResponse(res, ResponseType.ERROR, "User not authorized!")
@@ -398,11 +417,19 @@ app.post('/meme/:id', async function (req, res) {
 
         memeGenerator.generateMeme({
             topText: meme.topText,
+            topSize: meme.topSize,
             topX: meme.topX,
             topY: meme.topY,
+            topBold: meme.topBold,
+            topItalic: meme.topItalic,
+            topColor: meme.topColor,
             bottomText: meme.bottomText,
+            bottomSize: meme.bottomSize,
             bottomX: meme.bottomX,
             bottomY: meme.bottomY,
+            bottomBold: meme.bottomBold,
+            bottomItalic: meme.bottomItalic,
+            bottomColor: meme.bottomColor,
             url: url
         }).then(function (data) {
             fs.writeFile('./memes/' + fileName, data, async function (err, result) {
@@ -424,7 +451,7 @@ app.post('/meme/:id', async function (req, res) {
         })
     } else {
         sendResponse(res, ResponseType.ERROR, "Could not create meme! Make sure to login.")
-    } 
+    }
 })
 
 /**
@@ -433,8 +460,8 @@ app.post('/meme/:id', async function (req, res) {
 app.get('/meme', async function (req, res) {
     const db = req.app.get('db')
     let query = JSON.parse(req.query.q)
-    let searchstr 
-    let filterstr 
+    let searchstr
+    let filterstr
     if (query.hasOwnProperty('_id')) {
         if (query._id.hasOwnProperty('$lt')){
             query._id.$lt = ObjectID(query._id.$lt)
@@ -442,7 +469,7 @@ app.get('/meme', async function (req, res) {
                 _id: query._id,
                 visibility: "public"
             }
-        } else if (query._id.hasOwnProperty('$gt')){ 
+        } else if (query._id.hasOwnProperty('$gt')){
             query._id.$gt = ObjectID(query._id.$gt)
             query = {
                 _id: query._id,
@@ -458,16 +485,14 @@ app.get('/meme', async function (req, res) {
             visibility: "public"
         }
     }
-    
     const options = JSON.parse(req.query.o)
     const sort = req.query.s ? JSON.parse(req.query.s) : {}
-    
+
     if (req.query.fu) {
         searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
         query = {$or:[{title: searchstr}, {tags:searchstr}], visibility: "public"} 
-
     }
-    
+
     if (req.query.fi) {
         filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
         if (req.query.fu) {
@@ -475,7 +500,7 @@ app.get('/meme', async function (req, res) {
         }
     }
 
-    await db.collection('memes').find(query, options).sort(sort) 
+    await db.collection('memes').find(query, options).sort(sort)
         .toArray(function (err, memes) {
             res.send(JSON.stringify(memes, null, 4))
         })
@@ -508,11 +533,11 @@ app.get('/meme/:id', async function (req, res) {
 /**
  * API for downloading a set of images as a zip file using search parameters
  * If the max. images is not specified, a maximum of 100 are retrieved
- * 
- * example testings for now: 
+ *
+ * example testings for now:
  * http://localhost:3007/downloads?q={}&o={"limit":3,"skip":0,"sort":{"_id":-1}}&s={}&fu="now"&fi={}
  * http://localhost:3007/downloads?&fu="vodafone"&fi="png"
- * 
+ *
  */
 app.get('/downloads', async function(req, res) {
 
@@ -520,8 +545,8 @@ app.get('/downloads', async function(req, res) {
     let searchstr, filterstr
     let localPath
     let query, options, sort = {}
-    
-    if (req.query.o) options = JSON.parse(req.query.o) 
+
+    if (req.query.o) options = JSON.parse(req.query.o)
     else options = {"limit":100,"skip":0,"sort":{"_id":-1}}
     if (req.query.q) query = JSON.parse(req.query.q)
     if (req.query.s) sort = JSON.parse(req.query.s)
@@ -534,7 +559,7 @@ app.get('/downloads', async function(req, res) {
         if (req.query.fu) query = {title:searchstr, url:filterstr}
     }
 
-    await db.collection('memes').find(query, options).sort(sort) 
+    await db.collection('memes').find(query, options).sort(sort)
         .toArray(function (err, memes) {
 
             localPath = memes.map(b => b.url.replace(/http:\/\/localhost:3007/g, '.'))
@@ -645,14 +670,14 @@ app.get('/auth/delete', async function (req, res) {
     await db.collection('authentication').deleteMany({}).then(function(r){
         res.send(r)
     })
-    
+
 })
 
 app.get('/auth', async function (req, res) {
     const db = req.app.get('db')
     await db.collection('authentication').findOne({}).then(function (meme) {
         res.send(JSON.stringify(meme, null, 4))
-    }) 
+    })
 })
 
 app.post('/logout', async function(req, res) {
@@ -664,7 +689,7 @@ app.post('/logout', async function(req, res) {
         if (err) return res.sendStatus(404)
         res.send(JSON.stringify({status: "OK", text:"User logged out!"}, null, 4))
     })
-    
+
 })
 
 async function sendResponse(response, type = 0, message = "" , data = []) {
@@ -688,7 +713,7 @@ async function isAutherized(db, userid, cred) {
     var authorized = false
     await db.collection('authentication').findOne(query).then(function (auth) {
         authorized = (auth.cred == cred)
-    }) 
+    })
     return authorized
 }
 

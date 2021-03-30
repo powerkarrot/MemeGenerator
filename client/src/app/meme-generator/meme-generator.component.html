@@ -1,7 +1,24 @@
 <div style="padding: 10px;" class="wrapper center" *ngIf="isLoggedIn;else notLoggedIn">
     <h2>Meme Generator</h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
-        <input matInput formControlName="_id" hidden>
+        <input matInput formControlName="_id" hidden>        
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button (click)="loadTemplates()" mat-raised-button color="secondary">
+                Uploaded templates
+            </button>
+        </div>
+        <p>or</p>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button (click)="imgFlipAPITemplates()" mat-raised-button color="secondary">
+                IMGFlip templates
+            </button>
+        </div>
+        <br/>
+        <div *ngIf="templates && (showImgFlipTemplates || showUploadedTemplates)" id="templates">
+            <img *ngFor="let template of templates" src="{{template}}" alt="template"
+                 width="90" height="90" (click)="selectTemplate(template)"/>
+        </div>
+        <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
             <button (click)="hiddenFileInput.click()" mat-raised-button color="secondary">
                 Upload image
@@ -17,14 +34,16 @@
         </div>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="loadTemplates()" mat-raised-button color="secondary">
-                Load templates
+            <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary"> 
+                Webcam
             </button>
         </div>
-        <div *ngIf="templates" id="templates">
-            <img *ngFor="let template of templates" src="{{template}}" alt="template"
-                 width="90" height="90" (click)="selectTemplate(template)"/>
-        </div>
+        <br/>
+        <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam">
+        </webcam>
+        <button class="actionBtn" mat-raised-button color="secondary" (click)="triggerSnapshot();" *ngIf="showWebcam" >
+            Take A Snapshot 
+        </button>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
@@ -58,7 +77,23 @@
                 <mat-label>Top y</mat-label>
                 <input matInput formControlName="topY">
             </mat-form-field>
+            <mat-checkbox formControlName="topBold">Bold</mat-checkbox>
+            <mat-checkbox formControlName="topItalic">Italic</mat-checkbox>
+
+            <mat-form-field color="white">
+                <mat-label>Font size</mat-label>
+                <input formControlName="topSize" matInput type="number" min="10">
+            </mat-form-field>
+
+            <input
+                [value]="memeForm.get('topColor').value"
+                [colorPicker]="memeForm.get('topColor').value"
+                (colorPickerChange)="memeForm.get('topColor').setValue($event)"
+                [style.background]="memeForm.get('topColor').value"
+                class="colorPicker"
+                formControlName="topColor">
         </div>
+
         <div fxLayout="row">
             <mat-form-field>
                 <mat-label>Bottom text</mat-label>
@@ -94,6 +129,24 @@
                         (matChipInputTokenEnd)="add($event)" style="color: #fff;">
                 </mat-chip-list>
             </mat-form-field>
+        </div>
+        <div fxLayout="row">
+            <mat-checkbox formControlName="bottomBold">Bold</mat-checkbox>
+            <mat-checkbox formControlName="bottomItalic">Italic</mat-checkbox>
+
+            <mat-form-field color="white">
+                <mat-label>Font size</mat-label>
+                <input formControlName="bottomSize" matInput type="number" min="10">
+            </mat-form-field>
+
+            <input
+                [value]="memeForm.get('bottomColor').value"
+                [colorPicker]="memeForm.get('bottomColor').value"
+                (colorPickerChange)="memeForm.get('bottomColor').setValue($event)"
+                [style.background]="memeForm.get('bottomColor').value"
+
+                class="colorPicker"
+                formControlName="bottomColor">
         </div>
 
         <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"/>

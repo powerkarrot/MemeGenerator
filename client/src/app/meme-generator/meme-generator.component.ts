@@ -3,6 +3,8 @@ import {FormBuilder, Validators} from '@angular/forms'
 import {Router} from '@angular/router'
 import {debounceTime} from 'rxjs/operators'
 import {MemeService} from '../meme.service'
+import {WebcamImage} from 'ngx-webcam'
+import {Subject, Observable} from 'rxjs'
 import {LocalStorageService} from '../localStorage.service'
 import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
@@ -20,6 +22,11 @@ export class MemeGeneratorComponent implements OnInit {
     meme: any = null
     id = null
     templates = null
+    public webcamImage: WebcamImage = null
+    private trigger: Subject<void> = new Subject<void>()
+    public showWebcam = false;
+    public showImgFlipTemplates = false
+    public showUploadedTemplates = false
     isLoggedIn = false
 
     visible = true;
@@ -36,6 +43,7 @@ export class MemeGeneratorComponent implements OnInit {
      * @param _memeService
      */
     constructor(
+       
         private _formBuilder: FormBuilder,
         private _router: Router,
         private _memeService: MemeService,
@@ -59,6 +67,10 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }, Validators.required],
+            topSize: [{
+                value: null,
+                disabled: false
+            }],
             topX: [{
                 value: null,
                 disabled: false
@@ -67,7 +79,23 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }],
+            topBold: [{
+                value: null,
+                disabled: false
+            }],
+            topItalic: [{
+                value: null,
+                disabled: false
+            }],
+            topColor: [{
+                value: null,
+                disabled: false
+            }],
             bottomText: [{
+                value: null,
+                disabled: false
+            }],
+            bottomSize: [{
                 value: null,
                 disabled: false
             }],
@@ -76,6 +104,18 @@ export class MemeGeneratorComponent implements OnInit {
                 disabled: false
             }],
             bottomY: [{
+                value: null,
+                disabled: false
+            }],
+            bottomBold: [{
+                value: null,
+                disabled: false
+            }],
+            bottomItalic: [{
+                value: null,
+                disabled: false
+            }],
+            bottomColor: [{
                 value: null,
                 disabled: false
             }],
@@ -128,12 +168,40 @@ export class MemeGeneratorComponent implements OnInit {
     }
 
     /**
+     * Toggles template view
+     */
+    public toggleImgFlip(): void {
+        this.showImgFlipTemplates = !this.showImgFlipTemplates;
+    }
+
+    /**
+     * Toggles template view
+     */
+    public toggleUploaded(): void {
+        this.showUploadedTemplates = !this.showUploadedTemplates;
+    }
+
+    /**
      * loads templates (uploaded images)
      */
     loadTemplates(): void {
+        this.toggleUploaded()
+        if(this.showImgFlipTemplates) this.toggleImgFlip()
         this._memeService.loadTemplates().subscribe((templates) => {
             this.templates = templates
             this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i)
+        })
+    }
+
+    /**
+     * Loads templates (downloaded from ImgFlip API)
+     */
+    imgFlipAPITemplates() : void {
+        this.toggleImgFlip()
+        if(this.showUploadedTemplates) this.toggleUploaded()
+        this._memeService.getImgAPITemplates().subscribe((res) => {
+            this.templates = []
+            res.data.memes.forEach(i => this.templates.push(i.url))
         })
     }
 
@@ -160,6 +228,8 @@ export class MemeGeneratorComponent implements OnInit {
             // @ts-ignore
             this.id = meme._id
         })
+
+
     }
 
     /**
@@ -175,7 +245,8 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('file', file)
         }
 
-        const imgUrl = this.memeForm.get('imgUrl').value
+        let imgUrl = this.memeForm.get('imgUrl').value
+    
         if (imgUrl) {
             formData.append('url', imgUrl)
         }
@@ -188,6 +259,11 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('topText', topText)
         }
 
+        const topSize = this.memeForm.get('topSize').value
+        if (topSize) {
+            formData.append('topSize', topSize)
+        }
+
         const topX = this.memeForm.get('topX').value
         if (topX) {
             formData.append('topX', topX)
@@ -198,9 +274,29 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('topY', topX)
         }
 
+        const topBold = this.memeForm.get('topBold').value
+        if (topBold) {
+            formData.append('topBold', topBold)
+        }
+
+        const topItalic = this.memeForm.get('topItalic').value
+        if (topItalic) {
+            formData.append('topItalic', topItalic)
+        }
+
+        const topColor = this.memeForm.get('topColor').value
+        if (topColor) {
+            formData.append('topColor', topColor)
+        }
+
         const bottomText = this.memeForm.get('bottomText').value
         if (bottomText) {
             formData.append('bottomText', bottomText)
+        }
+
+        const bottomSize = this.memeForm.get('bottomSize').value
+        if (bottomSize) {
+            formData.append('bottomSize', bottomSize)
         }
 
         const bottomX = this.memeForm.get('bottomX').value
@@ -212,12 +308,24 @@ export class MemeGeneratorComponent implements OnInit {
         if (bottomY) {
             formData.append('bottomY', bottomY)
         }
-
         const visibility = this.memeForm.get("visibility").value
         if(visibility) {
             formData.append('visibility', visibility)
         } else {
             formData.append('visibility', "public")
+        const bottomBold = this.memeForm.get('bottomBold').value
+        if (bottomBold) {
+            formData.append('bottomBold', bottomBold)
+        }
+
+        const bottomItalic = this.memeForm.get('bottomItalic').value
+        if (bottomItalic) {
+            formData.append('bottomItalic', bottomItalic)
+        }
+
+        const bottomColor = this.memeForm.get('bottomColor').value
+        if (bottomColor) {
+            formData.append('bottomColor', bottomColor)
         }
 
         formData.append('userid', this.lss.getUserID().toString())
@@ -237,6 +345,7 @@ export class MemeGeneratorComponent implements OnInit {
         if (event.target.files.length > 0) {
             const file = event.target.files[0]
             const name = file.name.split('.')[0]
+
             this.memeForm.patchValue({
                 fileSource: file,
                 name: name,
@@ -260,5 +369,68 @@ export class MemeGeneratorComponent implements OnInit {
      */
     finishMeme(): void {
         this._router.navigate(['/meme/' + this.id])
+    }
+
+    /**
+     * Trigger fired to capture and emit image
+     */
+    triggerSnapshot(): void {
+        this.trigger.next();
+    }
+
+    /**
+     * Gets the trigger Observable
+     */
+    public get triggerObservable(): Observable<void> {
+        return this.trigger.asObservable();
+    }
+
+    /**
+     * Toggles webcam visibility
+     */
+    public toggleWebcam(): void {
+        this.showWebcam = !this.showWebcam;
+    }
+
+    /**
+     * Handles captured webcam image
+     * 
+     * @param webcamImage 
+     */
+    handleImage(webcamImage: WebcamImage): void {
+
+        this.webcamImage = webcamImage  
+        let filename =  "webcamImage.jpeg"
+        this.memeForm.patchValue({
+            fileSource: this.dataurlToFile(webcamImage.imageAsDataUrl, filename),
+            name: filename,
+            imgUrl: null
+        })
+    }
+
+    /**
+     * 
+     * @param dataurl 
+     * @param filename 
+     * @returns 
+     * 
+     * Converts DataURl to Blob und Blob to File
+     * Adapted from https://stackoverflow.com/a/29390393 and https://stackoverflow.com/a/30470303
+     * 
+     */
+    dataurlToFile(dataurl, filename) {
+
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        let blob =  new Blob([u8arr], {type:mime});
+
+        var b: any = blob;
+        b.lastModifiedDate = new Date();
+        b.name = filename;
+    
+        return <File>b;
     }
 }
