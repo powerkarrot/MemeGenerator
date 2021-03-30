@@ -252,17 +252,6 @@ app.post('/meme/comment/:id', async function(req, res) {
 
 })
 
-app.get('/meme/tag/:id', async function(req, res){
-    const db = req.app.get('db')
-    const id = ObjectID(req.params.id)
-    const query = {_id: id}
-
-
-    await db.collection('memes').find(query).toArray(function (err, memes) {
-        res.send(JSON.stringify(memes, null, 4))
-    })
-})
-
 app.post('/meme/tag/:id', async function(req, res) {
     const db = req.app.get('db')
     const tags = req.body.tags
