@@ -313,6 +313,7 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('visibility', visibility)
         } else {
             formData.append('visibility', "public")
+        }
         const bottomBold = this.memeForm.get('bottomBold').value
         if (bottomBold) {
             formData.append('bottomBold', bottomBold)

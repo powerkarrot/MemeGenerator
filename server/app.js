@@ -171,6 +171,7 @@ app.post('/meme', async function (req, res) {
                 meme.comments = []
                 meme.createdBy = userdata
                 meme.dateAdded = new Date(Date.now()).toISOString()
+                meme.voteData = []
 
                 const data = {
                     memeid: ObjectID(meme._id)
@@ -250,17 +251,6 @@ app.post('/meme/comment/:id', async function(req, res) {
         res.send(JSON.stringify({status: "ERROR", text:"User not authorized!"}, null, 4))
     }
 
-})
-
-app.get('/meme/tag/:id', async function(req, res){
-    const db = req.app.get('db')
-    const id = ObjectID(req.params.id)
-    const query = {_id: id}
-
-
-    await db.collection('memes').find(query).toArray(function (err, memes) {
-        res.send(JSON.stringify(memes, null, 4))
-    })
 })
 
 app.post('/meme/tag/:id', async function(req, res) {
@@ -572,11 +562,6 @@ app.post('/createMemes', async function (req, res) {
     res.end();
 })
 
-
-async function ichHAsseDichGrad() {
-    
-}
-
 /**
  * gets a random meme
  */
@@ -596,8 +581,26 @@ app.get('/meme/random', async function (req, res) {
  */
 app.get('/meme/:id', async function (req, res) {
     const db = req.app.get('db')
-    await db.collection('memes').findOne({_id: ObjectID(req.params.id)}).then(function (meme) {
-        res.send(JSON.stringify(meme, null, 4))
+    const id = ObjectID(req.params.id)
+    const query = {_id: id}
+
+    await db.collection('memes').findOne(query).then(function (meme) {
+
+        const newValues = { 
+            $inc: {views: 1},
+            $push: {
+                voteData: {
+                    timestamp: new Date(Date.now()).toISOString(),
+                    views: meme.views
+                }
+            }
+         }
+    
+        db.collection('memes').updateOne(query, newValues, function(err, response) {
+            db.collection('memes').findOne(query).then(function (meme) {
+                res.send(JSON.stringify(meme, null, 4))
+            })
+        })
     })
 })
 

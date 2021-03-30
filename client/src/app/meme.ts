@@ -17,6 +17,7 @@ export interface Meme {
     box_count: number
     description: string
     votes: number
+    voteData: any[]
     views: number
     visibility: string
     createdBy: {
