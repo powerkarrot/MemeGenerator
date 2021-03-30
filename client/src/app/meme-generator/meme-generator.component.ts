@@ -153,7 +153,9 @@ export class MemeGeneratorComponent implements OnInit {
      */
     updateMeme(): void {
         const formData = this.generateMemeFormData()
+        console.log(formData)
         this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
+            console.log(meme)
             this.meme = meme
             // @ts-ignore
             this.id = meme._id
@@ -170,8 +172,6 @@ export class MemeGeneratorComponent implements OnInit {
 
         const file = this.memeForm.get('fileSource').value
         if (file) {
-            console.log("Filetype: ", typeof(file))
-            console.log("File is: ", file)
             formData.append('file', file)
         }
 
@@ -214,7 +214,6 @@ export class MemeGeneratorComponent implements OnInit {
         }
 
         const visibility = this.memeForm.get("visibility").value
-        console.log("Visbility: ", visibility)
         if(visibility) {
             formData.append('visibility', visibility)
         } else {
@@ -224,7 +223,6 @@ export class MemeGeneratorComponent implements OnInit {
         formData.append('userid', this.lss.getUserID().toString())
         formData.append('username', this.lss.getUsername())
         formData.append('cred', this.lss.getApiKey().toString())
-        console.log("Tags: ", this.tags)
         formData.append('tags', JSON.stringify(this.tags))
 
         return formData

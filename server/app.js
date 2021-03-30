@@ -121,14 +121,18 @@ app.post('/meme', async function (req, res) {
     }
 
     if(hasPermission) {
+        const memeid = new ObjectID()
         const uploads = await upload(req.files)
         if (uploads.length > 0) {
             url = uploads[0].fullPath
-            fileName = uploads[0].fileName
+            fileName = uploads[0].fileName.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = memeid + "." + fileEnd
         } else {
             url = meme.url
-            fileName = url.split('/')
-            fileName = fileName[fileName.length - 1]
+            fileName = url.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = memeid + "." + fileEnd
         }
         memeGenerator.generateMeme({
             topText: meme.topText,
@@ -142,7 +146,7 @@ app.post('/meme', async function (req, res) {
             fs.writeFile('./memes/' + fileName, data, async function (err, result) {
                 if (err) return res.status(400).json({error: err})
                 meme.url = memeBaseUrl + fileName
-                meme._id = new ObjectID()
+                meme._id = memeid
                 meme.votes = 0
                 meme.views = 0
                 meme.comments = []
@@ -382,11 +386,14 @@ app.post('/meme/:id', async function (req, res) {
         const uploads = await upload(req.files)
         if (uploads.length > 0 && !meme.url) {
             url = uploads[0].fullPath
-            fileName = uploads[0].fileName
+            fileName = uploads[0].fileName.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = ObjectID(req.params.id) + "." + fileEnd
         } else {
             url = meme.url
-            fileName = url.split('/')
-            fileName = fileName[fileName.length - 1]
+            fileName = url.split('.')
+            const fileEnd = fileName[fileName.length - 1]
+            fileName = ObjectID(req.params.id) + "." + fileEnd
         }
 
         memeGenerator.generateMeme({
