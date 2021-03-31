@@ -29,11 +29,7 @@ export class MemeStatsComponent implements OnInit {
     allMemes
     title
 
-
-
     multi: any[]
-
-
 
     view: any[] = [1500, 800];
 
@@ -78,9 +74,6 @@ export class MemeStatsComponent implements OnInit {
     ){
         this.isLoggedIn = lss.hasLocalStorage()
         this.loadMemes()
-
-
-
     }
 
     onSelect(data): void {
@@ -124,34 +117,38 @@ export class MemeStatsComponent implements OnInit {
                 voteDataSeries.map(t => {t.timestamp = new Date (t.timestamp).toString()})
                 viewDataSeries.map(t => {t.timestamp = new Date (t.timestamp).toString()})
 
+                let maxVotes = Math.max.apply(Math, voteDataSeries.map(function(o) { return o.votes; }))
+                let minVotes = Math.min.apply(Math, voteDataSeries.map(function(o) { return o.votes; }))
 
-                for (var i = 0; i < voteDataSeries.length; i++) {
-                    var date = new Date (voteDataSeries[i].timestamp)
+
+
+                for (var i = 0; i < viewDataSeries.length; i++) {
+                    var date = new Date (viewDataSeries[i].timestamp)
                     //console.log(date.toDateString())
                    
                     multi[0].series.push(
                         {
-                            "name": voteDataSeries[i].timestamp,
-                            "value": voteDataSeries[i].views, 
+                            "name": viewDataSeries[i].timestamp,
+                            "value": viewDataSeries[i].views, 
                             "min" : 0,
-                            "max" : this.currentMeme.views
-                        }
+                            "max" : 0
+                        }   
                     )
   
                 }
 
-                for (var i = 0; i < viewDataSeries.length; i++) {
-                    var date = new Date (viewDataSeries[i].timestamp)
-                    console.log("ierative votes are: " + viewDataSeries[i].votes)
+                
+                for (var i = 0; i < voteDataSeries.length; i++) {
+                    console.log("ierative votes are: " + voteDataSeries[i].votes)
                     console.log("all votes are" + this.currentMeme.votes)
 
                    
                     multi[1].series.push(
                         {
-                            "name": viewDataSeries[i].timestamp,
-                            "value": viewDataSeries[i].votes, 
-                            "min" : 0,
-                            "max" : this.currentMeme.votes
+                            "name": voteDataSeries[i].timestamp,
+                            "value": voteDataSeries[i].votes, 
+                            "min" : minVotes,
+                            "max" : maxVotes
                         }
                     )
   

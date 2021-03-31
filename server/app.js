@@ -303,7 +303,7 @@ app.post('/meme/vote/:id', async function(req, res) {
             var newValues = {
                 $inc: {votes: votes},
                 $push: {
-                   viewData: {
+                   voteData: {
                        timestamp: new Date(Date.now()).toISOString(),
                        votes: meme.votes + votes 
                    }
@@ -325,7 +325,7 @@ app.post('/meme/vote/:id', async function(req, res) {
                                     newValues = { 
                                         $inc: {votes: 2} ,
                                         $push: {
-                                            viewData: {
+                                            voteData: {
                                                 timestamp: new Date(Date.now()).toISOString(),
                                                 votes: meme.votes + 2
                                             }
@@ -336,7 +336,7 @@ app.post('/meme/vote/:id', async function(req, res) {
                                     newValues = {
                                          $inc: {votes: -2},
                                          $push: {
-                                            viewData: {
+                                            voteData: {
                                                 timestamp: new Date(Date.now()).toISOString(),
                                                 votes: meme.votes - 2
                                             }
@@ -623,21 +623,20 @@ app.get('/meme/:id', async function (req, res) {
     const query = {_id: id}
 
     await db.collection('memes').findOne(query).then(function (meme) {
-        console.log("ViewDAATA: " + meme.viewData)
 
         let newValues = {}
         //this is a dumb hack but hey.
         //some older memes lack the viewData (votes kek) field.
-        if(meme.viewData == undefined) {
+        if(meme.voteData == undefined) {
             console.log("erm yah?")
             newValues = { 
                 $inc: {views: 1},
                 $push: {
-                    voteData: {
+                    viewData: {
                         timestamp: new Date(Date.now()).toISOString(),
                         views: meme.views
                     },
-                    viewData: {
+                    voteData: {
                         timestamp: new Date(Date.now()).toISOString(),
                         votes: meme.votes
                     }
@@ -647,7 +646,7 @@ app.get('/meme/:id', async function (req, res) {
             newValues = { 
             $inc: {views: 1},
                 $push: {
-                    voteData: {
+                    viewData: {
                         timestamp: new Date(Date.now()).toISOString(),
                         views: meme.views
                     }
