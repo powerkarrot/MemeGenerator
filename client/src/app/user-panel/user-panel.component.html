@@ -85,7 +85,23 @@
                         </div>
                     </div>
                 </ng-template>
-            </li>
+        </li>
+        <li [ngbNavItem]="5">
+            <a ngbNavLink class="header"><b>Drafts</b></a>
+                <ng-template ngbNavContent>
+                    <div  class="content center">
+                        <div class="container-fluid">
+                            <a href="" *ngFor="let draft of drafts" routerLink="/meme-generator/{{draft._id}}">
+                                <div class="img-thumbnail" style="background-image: url('{{draft.url}}');">
+                                    <div class="overlay">
+                                        <div class="text">Continue Draft</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>    
+                    </div>
+            </ng-template>
+        </li>
     </ul>
 </div>
   

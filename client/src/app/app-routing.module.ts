@@ -12,6 +12,7 @@ const routes: Routes = [
     {path: 'register', component: RegisterComponent},
     {path: 'meme-random', component: MemeRandomComponent},
     {path: 'meme-generator', component: MemeGeneratorComponent},
+    {path: 'meme-generator/:id', component: MemeGeneratorComponent},
     {path: 'meme/:id', component: MemeSingleviewComponent},
     {path: 'memes', pathMatch: 'full', component: MemeOverviewComponent},
     {path: '', pathMatch: 'full', component: MemeOverviewComponent},
