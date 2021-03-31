@@ -117,13 +117,17 @@ export class MemeStatsComponent implements OnInit {
                 this.title = this.currentMeme.title //attach to form
 
                 let voteDataSeries = this.currentMeme.voteData
+                let viewDataSeries = this.currentMeme.viewData
                 //multi[0].series[0].name = dataSeries[0].timestamp
                 //multi[0].series[0].value = dataSeries[0].views
 
                 voteDataSeries.map(t => {t.timestamp = new Date (t.timestamp).toString()})
+                viewDataSeries.map(t => {t.timestamp = new Date (t.timestamp).toString()})
+
+
                 for (var i = 0; i < voteDataSeries.length; i++) {
                     var date = new Date (voteDataSeries[i].timestamp)
-                    console.log(date.toDateString())
+                    //console.log(date.toDateString())
                    
                     multi[0].series.push(
                         {
@@ -135,7 +139,24 @@ export class MemeStatsComponent implements OnInit {
                     )
   
                 }
-                console.log(this.currentMeme)
+
+                for (var i = 0; i < viewDataSeries.length; i++) {
+                    var date = new Date (viewDataSeries[i].timestamp)
+                    console.log("ierative votes are: " + viewDataSeries[i].votes)
+                    console.log("all votes are" + this.currentMeme.votes)
+
+                   
+                    multi[1].series.push(
+                        {
+                            "name": viewDataSeries[i].timestamp,
+                            "value": viewDataSeries[i].votes, 
+                            "min" : 0,
+                            "max" : this.currentMeme.votes
+                        }
+                    )
+  
+                }
+                
                 Object.assign(this, {multi});
 
                 console.log("DONE")
