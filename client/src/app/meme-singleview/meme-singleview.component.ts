@@ -161,6 +161,11 @@ export class MemeSingleviewComponent implements OnInit {
         })
     }
 
+    memeStats(): void {
+        
+        this.router.navigate(['/stats/' + this.selectedMeme._id])
+    }
+
     onAutoplayClicked($event): void {
         if (this.model.autoplay == true) {
             this.timer = interval(5000).subscribe((val) => {
@@ -207,7 +212,7 @@ export class MemeSingleviewComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.timer.unsubscribe();
+        if (this.timer != null) this.timer.unsubscribe();
     }
 
     isLoggedIn(): boolean {

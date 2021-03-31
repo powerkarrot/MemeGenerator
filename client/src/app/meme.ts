@@ -18,6 +18,7 @@ export interface Meme {
     description: string
     votes: number
     voteData: any[]
+    viewData: any[]
     views: number
     visibility: string
     createdBy: {
