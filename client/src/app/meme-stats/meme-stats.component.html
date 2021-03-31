@@ -16,3 +16,33 @@
   (deactivate)="onDeactivate($event)"
   >
 </ngx-charts-line-chart>
+
+<div class='parent'>
+
+  <div class='child inline-block-child'> 
+    <ngx-charts-pie-chart
+      [view]="pieView"
+      [scheme]="pieColorScheme"
+      [results]="viewsSingle"
+      [legend]="showLegend"
+      [legendPosition]="legendPosition"
+      [labels]="showLabels"
+      [roundDomains]="roundDomains"     
+      (select)="onSelectPie($event)">
+    </ngx-charts-pie-chart>
+  </div>
+
+  <div class='child inline-block-child'> 
+
+    <ngx-charts-pie-chart
+      [view]="pieView"
+      [scheme]="pieColorScheme2"
+      [results]="votesSingle"
+      [legend]="showLegend"
+      [legendPosition]="legendPosition"
+      [labels]="showLabels"
+      (select)="onSelectPie($event)">
+    </ngx-charts-pie-chart>
+  </div>
+</div>
+
