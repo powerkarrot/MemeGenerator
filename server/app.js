@@ -960,7 +960,8 @@ async function isAutherized(db, userid, cred) {
     const query = {userid: ObjectID(userid)}
     var authorized = false
     await db.collection('authentication').findOne(query).then(function (auth) {
-        authorized = (auth.cred == cred)
+        if(auth)
+            authorized = (auth.cred == cred)
     })
     return authorized
 }
