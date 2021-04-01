@@ -11,6 +11,7 @@ import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {Tag} from '../tags'
 import {Meme} from '../meme'
+import {ToastService} from '../toast-service'
 
 
 @Component({
@@ -53,6 +54,7 @@ export class MemeGeneratorComponent implements OnInit {
         private _memeService: MemeService,
         private lss: LocalStorageService,
         private _route: ActivatedRoute,
+        private toastService: ToastService
     ) {
         this.memeForm = this._formBuilder.group({
             _id: [],
@@ -151,9 +153,7 @@ export class MemeGeneratorComponent implements OnInit {
 
         this._route.params.subscribe(params => {
             if(params.id) {
-                console.log("Continue Draft")
                 const id = params['id']
-                console.log("ID: ", id)
                 this.continueDraft = true
                 this.getDraft(id)
             }
@@ -252,37 +252,23 @@ export class MemeGeneratorComponent implements OnInit {
             const formData = this.generateMemeFormData()
             
             this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
-                console.log(meme)
                 this.meme = meme
                 // @ts-ignore
                 this.id = meme._id
             })
         }
-        console.log("UpdateMeme")
         this.continueDraft = false
     }
 
     getDraft(id): void {
-        console.log("getDraft 01")
-        console.log("getDraft ID: ", id)
         this._memeService.getDrafts({_id: id}).subscribe((draft) => {
-            console.log("Draft: ", draft)
             this.meme = draft[0]
-            console.log("Meme set: ",this.meme)
             
             this.patchMemeData(this.meme.url, this.meme.title, this.meme.description, this.meme.topText, this.meme.topSize, this.meme.topX, this.meme.topY,
                 this.meme.topBold, this.meme.topItalic, this.meme.topColor, this.meme.bottomText, this.meme.bottomSize, this.meme.bottomX,
                 this.meme.bottomY, this.meme.bottomBold, this.meme.bottomItalic, this.meme.bottomColor, this.meme.visibility, this.meme.template)
             this.id = this.meme._id
-            /*
-            this._memeService.updateMeme(id, this.memeForm).subscribe((meme) => {
-                console.log(meme)
-                this.meme = meme
-                this.id = this.meme._id
-            })  
-            */
         })
-        console.log("getDraft 02")
     }
 
     private patchMemeData(imgUrl: string, title: string, description: string,
@@ -451,8 +437,6 @@ export class MemeGeneratorComponent implements OnInit {
             const file = event.target.files[0]
             const name = file.name.split('.')[0]
 
-            console.log("FileEvent: ", file)
-
             this.memeForm.patchValue({
                 fileSource: file,
                 name: name,
@@ -465,8 +449,13 @@ export class MemeGeneratorComponent implements OnInit {
      * deletes current meme and redirect to overview
      */
     discardMeme(): void {
-        this._memeService.deleteDraft(this.id).subscribe((res) => {
-            this._router.navigate(['/memes'])
+        this._memeService.deleteDraft(this.id, this.lss.getUserID(), this.lss.getApiKey()).subscribe((res) => {
+            if(res.status == "ERROR")
+            {
+                this.toastService.showDanger(res.text)
+            } else {
+                this._router.navigate(['/memes'])
+            }
         })
     }
 
@@ -480,7 +469,6 @@ export class MemeGeneratorComponent implements OnInit {
         this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
             this.meme = <Meme>meme
             this.id = this.meme._id
-            console.log(this.meme)
             this._router.navigate(['/meme/' + this.id])
         })
     }

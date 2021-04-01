@@ -77,9 +77,15 @@ export class MemeService {
      *
      * @param id
      */
-    deleteDraft(id): Observable<any> {
-        let url = environment.apiUrl + '/draft/' + id
-        return this._http.delete(url).pipe(
+    deleteDraft(id, userid: number, cred: number): Observable<any> {
+        let url = environment.apiUrl + '/draft/delete/' + id
+
+        const data = {
+            userid: userid,
+            cred: cred
+        }
+
+        return this._http.post(url, data).pipe(
             catchError(this.handleError<any>('deleteMeme'))
         )
     }

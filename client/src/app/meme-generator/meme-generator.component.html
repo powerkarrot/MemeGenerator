@@ -160,7 +160,7 @@
 
         <div fxLayout="row" style="margin-top: 10px">
             <button mat-raised-button color="accent" (click)="discardMeme()">
-                Discard Meme
+                Delete Draft
             </button>
             <button mat-raised-button color="primary" (click)="saveDraft()">
                 Save Draft
@@ -171,7 +171,7 @@
         </div>
     </form>
 </div>
-
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 <ng-template #notLoggedIn>
     <div class="wrapper center">
         <h3 class="text">Please sign in or create a account to create a meme!</h3>
