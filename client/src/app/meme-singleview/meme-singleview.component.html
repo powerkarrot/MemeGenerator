@@ -32,7 +32,7 @@
                     <mat-icon>share</mat-icon>
                 </button>
             </div>
-            <div class="element">
+            <div class="element" *ngIf="loggedIn">
                 <button mat-icon-button color="warn" aria-label="Stats" (click)="memeStats()">
                     <mat-icon>analytics</mat-icon>
                 </button>

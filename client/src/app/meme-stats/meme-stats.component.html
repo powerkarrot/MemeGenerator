@@ -1,48 +1,62 @@
-<ngx-charts-line-chart
-  [view]="view"
-  [scheme]="colorScheme"
-  [legend]="legend"
-  [showXAxisLabel]="showXAxisLabel"
-  [showYAxisLabel]="showYAxisLabel"
-  [xAxis]="xAxis"
-  [yAxis]="yAxis"
-  [xAxisLabel]="xAxisLabel"
-  [yAxisLabel]="yAxisLabel"
-  [timeline]="timeline"
-  [results]="multi"
-  [showGridLines] = "showGridLines"
-  (select)="onSelect($event)"
-  (activate)="onActivate($event)"
-  (deactivate)="onDeactivate($event)"
-  >
-</ngx-charts-line-chart>
-
-<div class='parent'>
-
-  <div class='child inline-block-child'> 
-    <ngx-charts-pie-chart
-      [view]="pieView"
-      [scheme]="pieColorScheme"
-      [results]="viewsSingle"
-      [legend]="showLegend"
-      [legendPosition]="legendPosition"
-      [labels]="showLabels"
-      [roundDomains]="roundDomains"     
-      (select)="onSelectPie($event)">
-    </ngx-charts-pie-chart>
-  </div>
-
-  <div class='child inline-block-child'> 
-
-    <ngx-charts-pie-chart
-      [view]="pieView"
-      [scheme]="pieColorScheme2"
-      [results]="votesSingle"
-      [legend]="showLegend"
-      [legendPosition]="legendPosition"
-      [labels]="showLabels"
-      (select)="onSelectPie($event)">
-    </ngx-charts-pie-chart>
+<h1>Stats</h1>
+<div  *ngIf="isLoggedIn;else notLoggedIn">
+  <h2><a [href]="'http://localhost:4200/meme/' + memeID">{{title}}</a></h2>
+  <div class="chart-container">
+    <div class="line-chart">
+      <ngx-charts-line-chart
+        [scheme]="colorScheme"
+        [legend]="legend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxis]="xAxis"
+        [yAxis]="yAxis"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [timeline]="timeline"
+        [results]="multi"
+        [showGridLines] = "showGridLines"
+      >
+      </ngx-charts-line-chart>
+      <div class='parent'>
+        <div class='child block-child'> 
+          <div class="pie-chart">
+            <div class='child inline-block-child'> 
+              <ngx-charts-pie-chart
+                [scheme]="pieColorScheme"
+                [results]="viewsSingle"
+                [legend]="showLegend"
+                [legendPosition]="legendPosition"
+                [labels]="showLabels"
+              >
+              </ngx-charts-pie-chart>
+            </div>
+            <div class='child inline-block-child'> 
+              <ngx-charts-pie-chart
+                [scheme]="pieColorScheme2"
+                [results]="votesSingle"
+                [legend]="showLegend"
+                [legendPosition]="legendPosition"
+                [labels]="showLabels"
+              >
+              </ngx-charts-pie-chart>
+            </div>
+            <div class='child inline-block-child'> 
+                <ngx-charts-linear-gauge
+                  [scheme]="colorSchemeComments"
+                  [value]="numComments"
+                  [previousValue]="previousValue"
+                  [units]="units">
+                </ngx-charts-linear-gauge>
+            </div>
+          </div>
+        </div>
+     </div>
+    </div>
   </div>
 </div>
+
+<ng-template #notLoggedIn>
+    <h3>Please sign in or create a account to view stats!</h3>
+</ng-template>
+
 

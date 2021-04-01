@@ -161,6 +161,9 @@ export class MemeSingleviewComponent implements OnInit {
         })
     }
 
+    /**
+     * Navigate to stats view
+     */
     memeStats(): void {
         
         this.router.navigate(['/stats/' + this.selectedMeme._id])

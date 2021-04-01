@@ -171,10 +171,13 @@ app.post('/meme', async function (req, res) {
                 meme.comments = []
                 meme.createdBy = userdata
                 meme.dateAdded = new Date(Date.now()).toISOString()
-                meme.voteData = []
+                meme.voteData = [{
+                    timestamp: new Date(Date.now()).toISOString(),
+                    votes: 0
+                }]
                 meme.viewData = [{
                         timestamp: new Date(Date.now()).toISOString(),
-                        votes: meme.votes
+                        views: 0
                 }]
 
                 const data = {
@@ -628,7 +631,6 @@ app.get('/meme/:id', async function (req, res) {
         //this is a dumb hack but hey.
         //some older memes lack the viewData (votes kek) field.
         if(meme.voteData == undefined) {
-            console.log("erm yah?")
             newValues = { 
                 $inc: {views: 1},
                 $push: {
