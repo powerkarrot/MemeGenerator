@@ -31,6 +31,13 @@
                 class="form-control"
                 style="display: none"
                 (change)="onFileChange($event)">
+            <input
+                #hiddenFileInput
+                formControlName="template"
+                id="template"
+                type="template"
+                class="form-control"
+                style="display: none">
         </div>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">

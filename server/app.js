@@ -115,6 +115,7 @@ app.post('/meme', async function (req, res) {
     let userdata = {_id: userid, username: req.body.username}
     const hasPermission = isAutherized(db, userid, cred)
     
+    /*
     if (uploads.length > 0) {
         url = uploads[0].fullPath
         fileName = uploads[0].fileName
@@ -123,6 +124,7 @@ app.post('/meme', async function (req, res) {
         fileName = url.split('/')
         fileName = fileName[fileName.length - 1]
     }
+    */
 
     if(!req.body.cred && !req.body.userid && !req.body.username) {
         console.log("Malformed request body!")
@@ -139,6 +141,7 @@ app.post('/meme', async function (req, res) {
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd
         } else {
+            console.log("Template:", meme.template)
             url = meme.url
             fileName = url.split('.')
             const fileEnd = fileName[fileName.length - 1]
@@ -171,6 +174,7 @@ app.post('/meme', async function (req, res) {
                 meme.createdBy = userdata
                 meme.dateAdded = new Date(Date.now()).toISOString()
                 meme.voteData = []
+                meme.template = url
 
                 const data = {
                     memeid: ObjectID(meme._id)
@@ -220,10 +224,10 @@ app.post('/meme', async function (req, res) {
 
                         db.collection('drafts').insertOne(meme, function (err, r) {
                             if (err) return res.status(400).json({error: err})
-                            console.log("Draft created")
                             res.json({
                                 _id: meme._id,
-                                url: meme.url
+                                url: meme.url,
+                                template: meme.template
                             })
                         })
                     })
@@ -431,11 +435,13 @@ app.post('/meme/:id', async function (req, res) {
             const fileEnd = fileName[fileName.length - 1]
             fileName = ObjectID(req.params.id) + "." + fileEnd
         } else {
-            url = meme.url
+            url = meme.template
             fileName = url.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = ObjectID(req.params.id) + "." + fileEnd
         }
+
+        
 
         memeGenerator.generateMeme({
             topText: meme.topText,
@@ -470,31 +476,29 @@ app.post('/meme/:id', async function (req, res) {
 
                 if(draft == "false"){
                     db.collection('memes').insertOne(meme, function (err, r) {
-                        console.log("476 - Meme eingefügt!")
                         // Delete draft from db
                         db.collection('drafts').deleteOne({_id: ObjectID(req.params.id)}).then(function (e, r) {
-                            
-                            console.log("Draft deleted")
-                            console.log("Userdata: ", userdata)
-
                             db.collection('users').findOne({_id: ObjectID(userid)}, function(err, userdata) {
                                 if (err) {
                                     sendResponse(res, ResponseType.ERROR, "Database failure!")
                                 }
 
                                 var drafts = userdata.drafts
+                                var newDrafts = []
+                                console.log("Drafts before: ", drafts)
 
-                                drafts.some(function(d, index) {
-                                    if(d.memeid == req.params.id) {
-                                        delete d
-                                        return true
+                                for(var i = 0; i < drafts.length; i++)
+                                {   
+                                    if(drafts[i].memeid != req.params.id) {
+                                        newDrafts.push(drafts[i]);
                                     }
-                                })
+                                }
 
+                                console.log("Drafts after: ", newDrafts)
 
                                 const newValues = {
                                     $set: {
-                                        drafts: drafts
+                                        drafts: newDrafts
                                     }
                                 }
 
@@ -602,6 +606,7 @@ app.get('/meme', async function (req, res) {
  app.get('/drafts', async function (req, res) {
     const db = req.app.get('db')
     let query = JSON.parse(req.query.q)
+
     let searchstr
     let filterstr
     if (query.hasOwnProperty('_id')) {

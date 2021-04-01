@@ -32,6 +32,7 @@ export interface Meme {
         _id: number
         username: string
     }
+    template: string
     comments: Comment[]
     tags: Tag[]
 }
