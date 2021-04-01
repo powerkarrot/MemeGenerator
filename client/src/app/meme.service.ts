@@ -72,6 +72,24 @@ export class MemeService {
         )
     }
 
+        /**
+     * deletes draft
+     *
+     * @param id
+     */
+    deleteDraft(id, userid: number, cred: number): Observable<any> {
+        let url = environment.apiUrl + '/draft/delete/' + id
+
+        const data = {
+            userid: userid,
+            cred: cred
+        }
+
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<any>('deleteMeme'))
+        )
+    }
+
     /**
      * reads meme by id
      *
@@ -133,6 +151,31 @@ export class MemeService {
      */
     getMemes(query = {}, options = {}, sort = null, search = null, filter = null): Observable<Object | Meme[]> {
         let url = environment.apiUrl + '/meme?q=' + JSON.stringify(query) + '&o=' + JSON.stringify(options) 
+        
+        if(sort) 
+            url += '&s=' + JSON.stringify(sort)  
+        if(search)
+            url += '&fu=' + JSON.stringify(search)
+        if(filter)
+            url += '&fi=' + JSON.stringify(filter)
+         
+        return this._http.get(url).pipe(
+            catchError(this.handleError<Meme[]>('getMemes', []))
+        )
+    }
+
+    /**
+     * reads all drafts matching the query
+     * 
+     * @param query 
+     * @param options 
+     * @param sort 
+     * @param search 
+     * @param filter 
+     * @returns 
+     */
+    getDrafts(query = {}, options = {}, sort = null, search = null, filter = null): Observable<Object | Meme[]> {
+        let url = environment.apiUrl + '/drafts?q=' + JSON.stringify(query) + '&o=' + JSON.stringify(options) 
         
         if(sort) 
             url += '&s=' + JSON.stringify(sort)  

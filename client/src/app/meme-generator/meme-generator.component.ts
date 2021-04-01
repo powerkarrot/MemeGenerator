@@ -6,9 +6,12 @@ import {MemeService} from '../meme.service'
 import {WebcamImage} from 'ngx-webcam'
 import {Subject, Observable} from 'rxjs'
 import {LocalStorageService} from '../localStorage.service'
+import {ActivatedRoute} from '@angular/router'
 import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {Tag} from '../tags'
+import {Meme} from '../meme'
+import {ToastService} from '../toast-service'
 
 
 @Component({
@@ -28,6 +31,8 @@ export class MemeGeneratorComponent implements OnInit {
     public showImgFlipTemplates = false
     public showUploadedTemplates = false
     isLoggedIn = false
+    private isDraft = true
+    private continueDraft = false
 
     visible = true;
     selectable = true;
@@ -47,11 +52,17 @@ export class MemeGeneratorComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _router: Router,
         private _memeService: MemeService,
-        private lss: LocalStorageService
+        private lss: LocalStorageService,
+        private _route: ActivatedRoute,
+        private toastService: ToastService
     ) {
         this.memeForm = this._formBuilder.group({
             _id: [],
             imgUrl: [{
+                value: null,
+                disabled: false
+            }],
+            template: [{
                 value: null,
                 disabled: false
             }],
@@ -139,11 +150,22 @@ export class MemeGeneratorComponent implements OnInit {
      * watches meme for changes and updates it
      */
     ngOnInit(): void {
+
+        this._route.params.subscribe(params => {
+            if(params.id) {
+                const id = params['id']
+                this.continueDraft = true
+                this.getDraft(id)
+            }
+        })
+
         this.memeForm.valueChanges
             .pipe(debounceTime(500))
             .subscribe(formData => {
                 this.updateMeme()
             })
+        
+       
     }
 
     add(event: MatChipInputEvent): void {
@@ -213,23 +235,85 @@ export class MemeGeneratorComponent implements OnInit {
     selectTemplate(url): void {
         this.memeForm.patchValue({
             imgUrl: url,
+            template: url,
         })
+        /*this.memeForm.patchValue({
+            template: url,
+        })*/
+        //this.memeForm.append('template', url)
     }
 
     /**
      * updates the meme
      */
     updateMeme(): void {
-        const formData = this.generateMemeFormData()
-        console.log(formData)
-        this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
-            console.log(meme)
-            this.meme = meme
-            // @ts-ignore
-            this.id = meme._id
+        if(!this.continueDraft) {
+            
+            const formData = this.generateMemeFormData()
+            
+            this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
+                this.meme = meme
+                // @ts-ignore
+                this.id = meme._id
+            })
+        }
+        this.continueDraft = false
+    }
+
+    getDraft(id): void {
+        this._memeService.getDrafts({_id: id}).subscribe((draft) => {
+            this.meme = draft[0]
+            
+            this.patchMemeData(this.meme.url, this.meme.title, this.meme.description, this.meme.topText, this.meme.topSize, this.meme.topX, this.meme.topY,
+                this.meme.topBold, this.meme.topItalic, this.meme.topColor, this.meme.bottomText, this.meme.bottomSize, this.meme.bottomX,
+                this.meme.bottomY, this.meme.bottomBold, this.meme.bottomItalic, this.meme.bottomColor, this.meme.visibility, this.meme.template)
+            this.id = this.meme._id
         })
+    }
 
+    private patchMemeData(imgUrl: string, title: string, description: string,
+        topText: string, topSize: string, topX: string, topY: string, topBold: string, topItalic: string, topColor: string,
+        bottomText: string, bottomSize: string, bottomX: string, bottomY: string, bottomBold, bottomItalic: string,bottomColor: string,
+        visibility: string, template: string): void {
 
+            if(imgUrl)
+                this.memeForm.patchValue({imgUrl: imgUrl})
+            if(template)
+                this.memeForm.patchValue({template: template})
+            if(title)
+                this.memeForm.patchValue({title: title})
+            if(description)
+                this.memeForm.patchValue({description: description})
+            if(topText)
+                this.memeForm.patchValue({topText: topText})
+            if(topSize)
+                this.memeForm.patchValue({topSize: topSize})
+            if(topX)
+                this.memeForm.patchValue({topX: topX})
+            if(topY)
+                this.memeForm.patchValue({topY: topY})
+            if(topBold)
+                this.memeForm.patchValue({topBold: topBold})
+            if(topItalic)
+                this.memeForm.patchValue({topItalic: topItalic})
+            if(topColor)
+                this.memeForm.patchValue({topColor: topColor})
+            if(bottomText)
+                this.memeForm.patchValue({bottomText: bottomText})
+            if(bottomSize)
+                this.memeForm.patchValue({bottomSize: bottomSize})
+            if(bottomX)
+                this.memeForm.patchValue({bottomX: bottomX})
+            if(bottomY)
+                this.memeForm.patchValue({bottomY: bottomY})
+            if(bottomBold)
+                this.memeForm.patchValue({bottomBold: bottomBold})
+            if(bottomItalic)
+                this.memeForm.patchValue({bottomItalic: bottomItalic})
+            if(bottomColor)
+                this.memeForm.patchValue({bottomColor: bottomColor})
+            if(visibility)
+                this.memeForm.patchValue({visibility: visibility})
     }
 
     /**
@@ -243,6 +327,11 @@ export class MemeGeneratorComponent implements OnInit {
         const file = this.memeForm.get('fileSource').value
         if (file) {
             formData.append('file', file)
+        }
+
+        const template = this.memeForm.get('template').value
+        if(template) {
+            formData.append('template', template)
         }
 
         let imgUrl = this.memeForm.get('imgUrl').value
@@ -333,6 +422,7 @@ export class MemeGeneratorComponent implements OnInit {
         formData.append('username', this.lss.getUsername())
         formData.append('cred', this.lss.getApiKey().toString())
         formData.append('tags', JSON.stringify(this.tags))
+        formData.append('draft', "" + this.isDraft)
 
         return formData
     }
@@ -359,17 +449,36 @@ export class MemeGeneratorComponent implements OnInit {
      * deletes current meme and redirect to overview
      */
     discardMeme(): void {
-        this._memeService.deleteMeme(this.id).subscribe((res) => {
-            this._router.navigate(['/memes'])
+        this._memeService.deleteDraft(this.id, this.lss.getUserID(), this.lss.getApiKey()).subscribe((res) => {
+            if(res.status == "ERROR")
+            {
+                this.toastService.showDanger(res.text)
+            } else {
+                this._router.navigate(['/memes'])
+            }
         })
     }
 
     /**
-     * redirects to memes overview
-     * (since it has been already saved)
+     * Saves the final draft and redirects to the meme-singleview
      */
     finishMeme(): void {
-        this._router.navigate(['/meme/' + this.id])
+        this.isDraft = false
+        const formData = this.generateMemeFormData()
+        
+        this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
+            this.meme = <Meme>meme
+            this.id = this.meme._id
+            this._router.navigate(['/meme/' + this.id])
+        })
+    }
+
+    /**
+     * Since memes get created as draft by default only navigate to the overview
+     */
+    saveDraft(): void {
+        this.lss.updateLocalStorage()
+        this._router.navigate(['/memes'])
     }
 
     /**

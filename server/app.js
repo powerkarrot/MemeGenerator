@@ -106,24 +106,14 @@ app.get('/templates', async function (req, res) {
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {
-    console.log("posting")
     const db = req.app.get('db')
     let meme = req.body, url, fileName
     const uploads = await upload(req.files)
     const userid = ObjectID(req.body.userid)
     const cred = req.body.cred
+    const draft = req.body.draft
     let userdata = {_id: userid, username: req.body.username}
     const hasPermission = isAutherized(db, userid, cred)
-    
-    if (uploads.length > 0) {
-        console.log("uploaded")
-        url = uploads[0].fullPath
-        fileName = uploads[0].fileName
-    } else {
-        url = meme.url
-        fileName = url.split('/')
-        fileName = fileName[fileName.length - 1]
-    }
 
     if(!req.body.cred && !req.body.userid && !req.body.username) {
         console.log("Malformed request body!")
@@ -171,6 +161,8 @@ app.post('/meme', async function (req, res) {
                 meme.comments = []
                 meme.createdBy = userdata
                 meme.dateAdded = new Date(Date.now()).toISOString()
+
+                meme.template = url
                 meme.voteData = [{
                     timestamp: new Date(Date.now()).toISOString(),
                     votes: 0
@@ -184,26 +176,38 @@ app.post('/meme', async function (req, res) {
                     memeid: ObjectID(meme._id)
                 }
 
-                const newValues = {
-                    $push: {
-                        memes: data
+                if(draft == "false") {
+
+                    const newValues = {
+                        $push: {
+                            memes: data
+                        }
                     }
-                }
+                } else {
 
-                await db.collection('users').updateOne({_id: userid}, newValues).then(function(e, r) {
-                    
-                    delete meme.userid
-                    delete meme.username
-                    delete meme.cred
+                    const newValues = {
+                        $push: {
+                            drafts: data
+                        }
+                    }
 
-                    db.collection('memes').insertOne(meme, function (err, r) {
-                        if (err) return res.status(400).json({error: err})
-                        res.json({
-                            _id: meme._id,
-                            url: meme.url
+                    await db.collection('users').updateOne({_id: userid}, newValues).then(function(e, r) {
+                        
+                        delete meme.userid
+                        delete meme.username
+                        delete meme.cred
+                        delete meme.draft
+
+                        db.collection('drafts').insertOne(meme, function (err, r) {
+                            if (err) return res.status(400).json({error: err})
+                            res.json({
+                                _id: meme._id,
+                                url: meme.url,
+                                template: meme.template
+                            })
                         })
                     })
-                })
+                }
             })
         })
     } else {
@@ -422,6 +426,7 @@ app.post('/meme/:id', async function (req, res) {
     const userid = req.body.userid
     const cred = req.body.cred
     const tags = JSON.parse(req.body.tags)
+    const draft = req.body.draft
     let userdata = {_id: userid, username: req.body.username}
 
     const hasPermission = isAutherized(db, userid, cred)
@@ -440,11 +445,13 @@ app.post('/meme/:id', async function (req, res) {
             const fileEnd = fileName[fileName.length - 1]
             fileName = ObjectID(req.params.id) + "." + fileEnd
         } else {
-            url = meme.url
+            url = meme.template
             fileName = url.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = ObjectID(req.params.id) + "." + fileEnd
         }
+
+        
 
         memeGenerator.generateMeme({
             topText: meme.topText,
@@ -475,15 +482,78 @@ app.post('/meme/:id', async function (req, res) {
                 delete meme.userid
                 delete meme.username
                 delete meme.cred
-                await db.collection('memes').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
-                    res.send(JSON.stringify(meme, null, 4))
-                })
+                delete meme.draft
+
+                if(draft == "false"){
+                    db.collection('memes').insertOne(meme, function (err, r) {
+                        // Delete draft from db
+                        db.collection('drafts').deleteOne({_id: ObjectID(req.params.id)}).then(function (e, r) {
+                            db.collection('users').findOne({_id: ObjectID(userid)}, function(err, userdata) {
+                                if (err) {
+                                    sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                }
+
+                                var drafts = userdata.drafts
+                                var newDrafts = []
+
+                                for(var i = 0; i < drafts.length; i++)
+                                {   
+                                    if(drafts[i].memeid != req.params.id) {
+                                        newDrafts.push(drafts[i]);
+                                    }
+                                }
+
+                                const newValues = {
+                                    $set: {
+                                        drafts: newDrafts
+                                    }
+                                }
+
+
+                                db.collection('users').updateOne({_id: userdata._id}, newValues).then(function(e, r) {
+                                    res.send(JSON.stringify(meme, null, 4))
+                                })
+
+                            })
+                        })
+                    })
+                } else {
+                    await db.collection('drafts').updateOne({_id: ObjectID(req.params.id)}, {$set: meme}).then(function (e, r) {
+                        res.send(JSON.stringify(meme, null, 4))
+                    })
+                }
             })
         })
     } else {
         sendResponse(res, ResponseType.ERROR, "Could not create meme! Make sure to login.")
     }
 })
+
+app.get('/draft', async function(req, res){
+    const db = req.app.get('db')
+    
+    await db.collection('drafts').find({}).toArray(function (err, drafts) {
+            res.send(JSON.stringify(drafts, null, 4))
+    })
+})
+
+app.get('/draft/user', async function(req, res){
+    const db = req.app.get('db')
+    
+    await db.collection('users').find({}).toArray(function (err, drafts) {
+            res.send(JSON.stringify(drafts, null, 4))
+    })
+})
+
+app.delete('/draft', async function(req, res){
+    const db = req.app.get('db')
+
+    await db.collection('drafts').deleteMany({}).then(function(r){
+        res.send(r)
+    })
+})
+
+
 
 /**
  * reads memes from database matching query, sort and options
@@ -532,6 +602,59 @@ app.get('/meme', async function (req, res) {
     }
 
     await db.collection('memes').find(query, options).sort(sort)
+        .toArray(function (err, memes) {
+            res.send(JSON.stringify(memes, null, 4))
+        })
+})
+
+/**
+ * reads drafts from database matching query, sort and options
+ */
+ app.get('/drafts', async function (req, res) {
+    const db = req.app.get('db')
+    let query = JSON.parse(req.query.q)
+
+    let searchstr
+    let filterstr
+    if (query.hasOwnProperty('_id')) {
+        if (query._id.hasOwnProperty('$lt')){
+            query._id.$lt = ObjectID(query._id.$lt)
+            query = {
+                _id: query._id,
+                visibility: "public"
+            }
+        } else if (query._id.hasOwnProperty('$gt')){
+            query._id.$gt = ObjectID(query._id.$gt)
+            query = {
+                _id: query._id,
+                visibility: "public"
+            }
+        } else if(query._id.hasOwnProperty('$in')) {
+            query._id.$in = query._id.$in.map(meme => ObjectID(meme))
+        } else {
+            query._id = ObjectID(query._id)
+        }
+    } else {
+        query = {
+            visibility: "public"
+        }
+    }
+    const options = JSON.parse(req.query.o)
+    const sort = req.query.s ? JSON.parse(req.query.s) : {}
+
+    if (req.query.fu) {
+        searchstr = new RegExp(JSON.parse(req.query.fu), 'i')
+        query = {$or:[{title: searchstr}, {tags:searchstr}], visibility: "public"} 
+    }
+
+    if (req.query.fi) {
+        filterstr = new RegExp(JSON.parse(req.query.fi), 'i')
+        if (req.query.fu) {
+            query = {title:searchstr, url:filterstr, visibility: "public"} //{title: /mein/i}, {url: /png/i}
+        }
+    }
+
+    await db.collection('drafts').find(query, options).sort(sort)
         .toArray(function (err, memes) {
             res.send(JSON.stringify(memes, null, 4))
         })
@@ -719,6 +842,58 @@ app.delete('/meme/:id', async function(req, res) {
     })
 })
 
+/**
+ * deletes meme by id
+ */
+ app.post('/draft/delete/:id', async function(req, res) {
+    const db = req.app.get('db')
+    const userid = req.body.userid
+    const cred = req.body.cred
+    const draftID = ObjectID(req.params.id)
+
+    if(userid && cred){
+        const hasPermission = isAutherized(db, userid, cred)
+
+        if (hasPermission) {
+            await db.collection('drafts').deleteOne({_id: draftID}, function(err, obj) {
+                if (err) return res.sendStatus(404)
+        
+                db.collection('users').findOne({_id: ObjectID(userid)}, function(err, userdata) {
+                    if (err) {
+                        sendResponse(res, ResponseType.ERROR, "Database failure!")
+                    }
+
+                    var drafts = userdata.drafts
+                    var newDrafts = []
+
+                    for(var i = 0; i < drafts.length; i++)
+                    {   
+                        if(drafts[i].memeid != req.params.id) {
+                            newDrafts.push(drafts[i]);
+                        }
+                    }
+
+                    const newValues = {
+                        $set: {
+                            drafts: newDrafts
+                        }
+                    }
+
+                    db.collection('users').updateOne({_id: userdata._id}, newValues).then(function(e, r) {
+                        sendResponse(res, ResponseType.DATA, "Success")
+                    })
+                })
+            })
+        } else {
+            sendResponse(res, ResponseType.ERROR, "Could not delete meme! Make sure to login.")
+        }
+    } else {
+        console.log("Userid: ", userid)
+        console.log("cred: ", cred)
+        sendResponse(res, ResponseType.ERROR, "Too few parameters")
+    }
+})
+
 app.post('/login', async function(req, res) {
     const db = req.app.get('db')
     const username = req.body.user
@@ -846,7 +1021,8 @@ async function isAutherized(db, userid, cred) {
     const query = {userid: ObjectID(userid)}
     var authorized = false
     await db.collection('authentication').findOne(query).then(function (auth) {
-        authorized = (auth.cred == cred)
+        if(auth)
+            authorized = (auth.cred == cred)
     })
     return authorized
 }
@@ -858,6 +1034,7 @@ async function createUserdata(user, cred) {
         api_cred: cred,
         votes: user.votes,
         memes: user.memes,
+        drafts: user.drafts,
         comments: user.comments
     }
     return userdata

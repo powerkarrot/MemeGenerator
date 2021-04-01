@@ -18,15 +18,18 @@ export class UserPanelComponent implements OnInit {
     memes : Meme[]
     likedMemes : Meme[]
     dislikedMemes : Meme[]
+    drafts: Meme[]
 
     constructor(private lss: LocalStorageService, private memeService: MemeService) { }
 
     ngOnInit(): void {
         this.userData = this.lss.getLocalStorage()
+        console.log(this.userData)
         this.calcVotes()
         this.getMemes()
         this.getLikedMemes()
         this.getDislikedMemes()
+        this.getDrafts()
     }
 
     calcVotes(): void {
@@ -91,6 +94,27 @@ export class UserPanelComponent implements OnInit {
 
         this.memeService.getMemes(query).subscribe((memes) => {
             this.dislikedMemes = <Meme[]> memes
+        })
+    }
+
+    getDrafts(){
+        var memeids = []
+        if(this.userData.drafts){
+            this.userData.drafts.forEach(function(draft){
+                memeids.push(draft.memeid)
+            })
+        }
+
+        console.log("Query for: ", memeids)
+
+        const query = {
+            '_id': {
+                '$in': memeids
+            }
+        }
+        this.memeService.getDrafts(query).subscribe((drafts) => {
+            this.drafts = <Meme[]> drafts
+            console.log("Drafts: ", drafts)
         })
     }
     

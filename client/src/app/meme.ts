@@ -6,11 +6,19 @@ export interface Meme {
     dateAdded: string
     title: string
     topText: string
+    topSize: number
     topX: number
     topY: number
+    topBold: boolean
+    topItalic: boolean
+    topColor: boolean
     bottomText: string
+    bottomSize: number
     bottomX: number
     bottomY: number
+    bottomBold: boolean
+    bottomItalic: boolean
+    bottomColor: boolean
     url: string
     width: number
     height: number
@@ -25,6 +33,7 @@ export interface Meme {
         _id: number
         username: string
     }
+    template: string
     comments: Comment[]
     tags: Tag[]
 }
