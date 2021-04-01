@@ -17,6 +17,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {AngularMaterialModule} from './angular-material.module'
 import { FormsModule } from '@angular/forms';
 import { MemeSearchComponent } from './meme-search/meme-search.component'
+import {MemeStatsComponent} from './meme-stats/meme-stats.component'
 import { RegisterComponent } from './register/register.component'
 import {StorageServiceModule} from 'ngx-webstorage-service'
 import {LocalStorageService} from './localStorage.service'
@@ -25,6 +26,8 @@ import {ToastsContainer} from './toasts-container/toasts-container.component'
 import {WebcamModule} from 'ngx-webcam'
 import { ColorPickerModule } from 'ngx-color-picker'
 import {MatCheckboxModule} from "@angular/material/checkbox"
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 
 @NgModule({
     declarations: [
@@ -38,6 +41,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox"
         RegisterComponent,
         UserPanelComponent,
         ToastsContainer,   
+        MemeStatsComponent
     ],
     imports: [
         BrowserModule,
@@ -53,7 +57,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox"
         StorageServiceModule,
         AngularMaterialModule,
         ColorPickerModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        NgxChartsModule
     ],
     providers: [LocalStorageService],
     bootstrap: [AppComponent, LoginDropdownComponent]

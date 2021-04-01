@@ -33,6 +33,11 @@
                 </button>
             </div>
             <div class="element" *ngIf="loggedIn">
+                <button mat-icon-button color="warn" aria-label="Stats" (click)="memeStats()">
+                    <mat-icon>analytics</mat-icon>
+                </button>
+            </div>
+            <div class="element" *ngIf="loggedIn">
                 <button mat-icon-button color="warn" aria-label="Downvote meme" (click)="vote(false)">
                     <mat-icon>thumb_down</mat-icon>
                 </button>
@@ -76,6 +81,7 @@
             </mat-form-field>
         </form>      
     </div>
+    
     <div class="comments" *ngIf="selectedMeme">
         <h4>Comments</h4>
         <h5 *ngIf="selectedMeme.comments.length == 0">No comments yet!</h5>

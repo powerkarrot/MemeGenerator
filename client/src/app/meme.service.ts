@@ -171,6 +171,14 @@ export class MemeService {
         )
     }
 
+    getMemeStats(id): Observable<Object | Meme> {
+        let url = environment.apiUrl + '/stats/' + id
+
+        return this._http.get(url).pipe(
+            catchError(this.handleError<Meme>('getMemeStats'))
+        )
+    }
+
     /**
      * Tests the /createMemes route
      * 

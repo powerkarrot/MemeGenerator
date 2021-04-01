@@ -171,7 +171,14 @@ app.post('/meme', async function (req, res) {
                 meme.comments = []
                 meme.createdBy = userdata
                 meme.dateAdded = new Date(Date.now()).toISOString()
-                meme.voteData = []
+                meme.voteData = [{
+                    timestamp: new Date(Date.now()).toISOString(),
+                    votes: 0
+                }]
+                meme.viewData = [{
+                        timestamp: new Date(Date.now()).toISOString(),
+                        views: 0
+                }]
 
                 const data = {
                     memeid: ObjectID(meme._id)
@@ -286,46 +293,105 @@ app.post('/meme/vote/:id', async function(req, res) {
     const userid = req.body.userid
     const cred = req.body.cred
     const query = { _id: ObjectID(req.params.id) }
-    var newValues = { $inc: {votes: votes} }
 
     const hasPermission = isAutherized(db, userid, cred)
 
     if(hasPermission) {
-        db.collection('users').findOne({_id: ObjectID(userid)}, function(err, userdata) {
+        db.collection('memes').findOne(query, function(err, meme) {
+
             if (err) {
                 sendResponse(res, ResponseType.ERROR, "Database failure!")
             }
-            const votes = userdata.votes
-            if(votes) {
-                findVote(votes, req.params.id).then((vote) => {
-                    // User has already voted
-                    if(vote && vote.length != 0){
-                        if (vote.isPositive != isPositive) {
-                            // Swap votes
-                            if(isPositive) {
-                                newValues = { $inc: {votes: 2} }
-                            } else {
-                                newValues = { $inc: {votes: -2} }
-                            }
 
+            var newValues = {
+                $inc: {votes: votes},
+                $push: {
+                   voteData: {
+                       timestamp: new Date(Date.now()).toISOString(),
+                       votes: meme.votes + votes 
+                   }
+               }
+           }
+
+            db.collection('users').findOne({_id: ObjectID(userid)}, function(err, userdata) {
+                if (err) {
+                    sendResponse(res, ResponseType.ERROR, "Database failure!")
+                }
+                const votes = userdata.votes
+                if(votes) {
+                    findVote(votes, req.params.id).then((vote) => {
+                        // User has already voted
+                        if(vote && vote.length != 0){
+                            if (vote.isPositive != isPositive) {
+                                // Swap votes
+                                if(isPositive) {
+                                    newValues = { 
+                                        $inc: {votes: 2} ,
+                                        $push: {
+                                            voteData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                votes: meme.votes + 2
+                                            }
+                                        }
+                                    }
+    
+                                } else {
+                                    newValues = {
+                                         $inc: {votes: -2},
+                                         $push: {
+                                            voteData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                votes: meme.votes - 2
+                                            }
+                                        }
+                                    }
+                                }    
+    
+                                db.collection('memes').updateOne(query, newValues, function(err, result) {
+                                    if (err) {
+                                        sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                    } else {
+    
+                                        votes.some(function(v, index) {
+                                            if(v.memeid == req.params.id) {
+                                                v.isPositive = isPositive
+                                                return true
+                                            }
+                                        })
+                                        newValues = {
+                                            $set: {votes: votes}
+                                        }
+    
+                                        db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
+                                            if (err) {
+                                                sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                            } else {
+                                                sendResponse(res, ResponseType.DATA, "Successfully voted!")
+                                            }
+                                        })
+                                    }
+                                })
+                            } else {
+                                sendResponse(res, ResponseType.ERROR, "User already voted!")
+                            }
+    
+                        //User hasn't voted yet
+                        } else {
                             db.collection('memes').updateOne(query, newValues, function(err, result) {
                                 if (err) {
                                     sendResponse(res, ResponseType.ERROR, "Database failure!")
                                 } else {
-
-                                    votes.some(function(v, index) {
-                                        if(v.memeid == req.params.id) {
-                                            v.isPositive = isPositive
-                                            return true
-                                        }
-                                    })
-
+                                    const data = {
+                                        memeid: ObjectID(req.params.id),
+                                        isPositive: isPositive
+                                    }
+                                    
                                     newValues = {
-                                        $set: {
-                                            votes: votes
+                                        $push: {
+                                            votes: data
                                         }
                                     }
-
+    
                                     db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
                                         if (err) {
                                             sendResponse(res, ResponseType.ERROR, "Database failure!")
@@ -335,38 +401,13 @@ app.post('/meme/vote/:id', async function(req, res) {
                                     })
                                 }
                             })
-                        } else {
-                            sendResponse(res, ResponseType.ERROR, "User already voted!")
                         }
-                    } else {
-                        db.collection('memes').updateOne(query, newValues, function(err, result) {
-                            if (err) {
-                                sendResponse(res, ResponseType.ERROR, "Database failure!")
-                            } else {
-                                const data = {
-                                    memeid: ObjectID(req.params.id),
-                                    isPositive: isPositive
-                                }
-
-                                newValues = {
-                                    $push: {
-                                        votes: data
-                                    }
-                                }
-
-                                db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, result){
-                                    if (err) {
-                                        sendResponse(res, ResponseType.ERROR, "Database failure!")
-                                    } else {
-                                        sendResponse(res, ResponseType.DATA, "Successfully voted!")
-                                    }
-                                })
-                            }
-                        })
-                    }
-                })
-            }
+                    })
+                }
+            })
         })
+
+        
     } else {
         sendResponse(res, ResponseType.ERROR, "User not authorized!")
     }
@@ -586,15 +627,34 @@ app.get('/meme/:id', async function (req, res) {
 
     await db.collection('memes').findOne(query).then(function (meme) {
 
-        const newValues = { 
+        let newValues = {}
+        //this is a dumb hack but hey.
+        //some older memes lack the viewData (votes kek) field.
+        if(meme.voteData == undefined) {
+            newValues = { 
+                $inc: {views: 1},
+                $push: {
+                    viewData: {
+                        timestamp: new Date(Date.now()).toISOString(),
+                        views: meme.views
+                    },
+                    voteData: {
+                        timestamp: new Date(Date.now()).toISOString(),
+                        votes: meme.votes
+                    }
+                }
+             }
+        } else { 
+            newValues = { 
             $inc: {views: 1},
-            $push: {
-                voteData: {
-                    timestamp: new Date(Date.now()).toISOString(),
-                    views: meme.views
+                $push: {
+                    viewData: {
+                        timestamp: new Date(Date.now()).toISOString(),
+                        views: meme.views
+                    }
                 }
             }
-         }
+        }
     
         db.collection('memes').updateOne(query, newValues, function(err, response) {
             db.collection('memes').findOne(query).then(function (meme) {
