@@ -1,0 +1,58 @@
+h1 {
+    text-align:center;
+    padding: 20px auto;
+    color:#ff4081
+}
+
+h2 {
+    text-align:center;
+    padding: 20px auto;
+    color:rgb(181, 207, 255);    
+}
+
+h3 {
+    text-align:center;
+    padding: 20px auto;
+    color:rgb(255, 255, 255);    
+}
+
+.chart-container {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.line-chart {
+    position:absolute;
+    height: 50%;
+    width: 100%;
+}
+
+.pie-chart {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    float: left;
+}
+
+.inline-block-child {
+    display: inline-block;
+    padding: 25px;
+}
+
+::ng-deep .ngx-charts { 
+    text{
+        fill: #ff4081 !important; 
+    }
+    text.units{
+        fill: #ff4800 !important; 
+    }
+    text.value{
+        fill: rgba(240, 192, 164, 0.788) !important; 
+    }
+    span.legend-title-text {
+        fill:#fff !important; 
+    }
+}
+
+
+
