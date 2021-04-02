@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Template {{data.template.title}}</h1>
+<div mat-dialog-content>
+  <p>BlaBlaBla</p>
+  <div class="image-container">
+    
+    <img [src]="data.template.url" alt="data.template.title">
+   
+</div>
+  <mat-form-field>
+    <mat-label>Text text</mat-label>
+    <input matInput [(ngModel)]="data.template.title">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.template" cdkFocusInitial>Ok</button>
+</div>

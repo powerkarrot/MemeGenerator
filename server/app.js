@@ -103,6 +103,37 @@ app.get('/templates', async function (req, res) {
 })
 
 /**
+ * Upserts a template and increments views
+ */
+ app.post('/template', async function (req, res) {
+
+    const db = req.app.get('db')
+    const template = req.body
+    const query = {url: JSON.stringify(template.url)}
+    console.log("Request is " + JSON.stringify(req.body))
+
+    await db.collection('templates').findOneAndUpdate(
+        //filter
+        { "url" : JSON.stringify(template.url) },
+         //update or create
+        {                                        
+            $set:{ 
+                "url" : JSON.stringify(template.url) ,
+                "title":JSON.stringify(template.url),
+            },
+            $inc: {
+                "views" : 1 
+            }
+        },
+        //options
+        { upsert:true, returnOriginal:false }) 
+        .then(function(template) {  
+            res.send(JSON.stringify(template.value))
+    })
+})
+
+
+/**
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {

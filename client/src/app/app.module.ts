@@ -26,8 +26,10 @@ import {ToastsContainer} from './toasts-container/toasts-container.component'
 import {WebcamModule} from 'ngx-webcam'
 import { ColorPickerModule } from 'ngx-color-picker'
 import {MatCheckboxModule} from "@angular/material/checkbox"
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts'
+import {MatCardModule} from '@angular/material/card'
+import {MatDialogModule} from '@angular/material/dialog';
+import {TemplateViewerComponent} from './template-viewer/template-viewer.component' 
 
 @NgModule({
     declarations: [
@@ -41,7 +43,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
         RegisterComponent,
         UserPanelComponent,
         ToastsContainer,   
-        MemeStatsComponent
+        MemeStatsComponent,
+        TemplateViewerComponent
     ],
     imports: [
         BrowserModule,
@@ -58,7 +61,9 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
         AngularMaterialModule,
         ColorPickerModule,
         MatCheckboxModule,
-        NgxChartsModule
+        NgxChartsModule,
+        MatCardModule,
+        MatDialogModule
     ],
     providers: [LocalStorageService],
     bootstrap: [AppComponent, LoginDropdownComponent]

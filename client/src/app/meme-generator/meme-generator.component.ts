@@ -11,8 +11,15 @@ import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {Tag} from '../tags'
 import {Meme} from '../meme'
+import {Template} from '../template'
 import {ToastService} from '../toast-service'
+import { TemplateViewerComponent } from '../template-viewer/template-viewer.component' 
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
+export interface DialogData {
+    animal: string;
+    name: string;
+  }
 
 @Component({
     selector: 'app-meme-generator',
@@ -21,8 +28,13 @@ import {ToastService} from '../toast-service'
 })
 export class MemeGeneratorComponent implements OnInit {
 
+
+    animal: string;
+    name: string;
+
     memeForm: any
     meme: any = null
+    template: any = {}
     id = null
     templates = null
     public webcamImage: WebcamImage = null
@@ -54,7 +66,9 @@ export class MemeGeneratorComponent implements OnInit {
         private _memeService: MemeService,
         private lss: LocalStorageService,
         private _route: ActivatedRoute,
-        private toastService: ToastService
+        private toastService: ToastService,
+        public dialog: MatDialog
+
     ) {
         this.memeForm = this._formBuilder.group({
             _id: [],
@@ -144,6 +158,9 @@ export class MemeGeneratorComponent implements OnInit {
             }],
         })
         this.isLoggedIn = lss.hasLocalStorage()
+        
+        
+        
     }
 
     /**
@@ -167,6 +184,7 @@ export class MemeGeneratorComponent implements OnInit {
         
        
     }
+
 
     add(event: MatChipInputEvent): void {
         const input = event.input;
@@ -235,13 +253,45 @@ export class MemeGeneratorComponent implements OnInit {
     selectTemplate(url): void {
         this.memeForm.patchValue({
             imgUrl: url,
-            template: url,
+            template: url
         })
-        /*this.memeForm.patchValue({
-            template: url,
-        })*/
-        //this.memeForm.append('template', url)
+        this.updateTemplate(url)
     }
+
+    /**
+     * updates a template
+     * @param url 
+     */
+    updateTemplate(url) {
+        this.template.url = url 
+        this.template.title = url
+        this._memeService.updateTemplate(this.template).subscribe((template) =>
+        {
+            console.log("template server res " + JSON.stringify(template))
+            
+            this.template = template
+            this.template.url = url
+        })
+    }
+
+    openDialog(): void {
+        console.log("clicked")
+        console.log(this.template)
+
+        const dialogRef = this.dialog.open(TemplateViewerComponent, {
+          width: '40%',
+          data: {template : this.template}
+        });
+
+    
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed');
+          //this.template = result;
+          console.log("Dialog returned " + JSON.stringify(this.template))
+
+        });
+
+      }
 
     /**
      * updates the meme

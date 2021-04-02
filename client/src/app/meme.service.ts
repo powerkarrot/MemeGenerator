@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core'
 import {Observable, of} from 'rxjs'
 import {Meme} from './meme'
+import {Template} from './template'
 import {HttpClient} from '@angular/common/http'
 import {catchError} from 'rxjs/operators'
 import {environment} from '../environments/environment'
@@ -25,6 +26,20 @@ export class MemeService {
         if (id !== null) url += '/' + id
         return this._http.post(url, data).pipe(
             catchError(this.handleError<Meme>('updateMeme'))
+        )
+    }
+
+    /**
+     * MAke template service kek
+     * @param id 
+     * @param data 
+     * @returns 
+     */
+    updateTemplate(data): Observable<Object | Template> {
+        let url = environment.apiUrl + '/template'
+        //if (id !== null) url += '/' + id
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<Template>('updateTemplate'))
         )
     }
 
