@@ -1,16 +1,17 @@
 <div class="container-fluid" infinite-scroll [infiniteScrollDistance]="scrollDistance"
      [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="loadMemes()">
-    <a href="" *ngFor="let meme of memes" routerLink="/meme/{{meme._id}}">
+    <a href="" *ngFor="let meme of memes" routerLink="/meme/{{meme._id}}" role="navigation" aria-labelledby="{{meme._id}}" aria-label="Meme: {{meme.title}} with {{meme.views}} views and {{meme.votes}} Votes"> 
         <div class="img-thumbnail" style="background-image: url('{{meme.url}}');">
-            <div class="overlay">
+            <div class="overlay" aria-label="Meme: {{meme.title}}">
                 <div class="text">{{meme.title}}</div>
-                <div class="views">{{meme.views}}
+                <div class="views" aria-label="{{meme.views}} views" role="note" aria-roledescription="slide">{{meme.views}}
                     <mat-icon id="icon warn">people</mat-icon>
                 </div>
-                <div class="upvotes">{{meme.votes}}
+                <div class="upvotes" aria-label="{{meme.votes}} Votes" role="note">{{meme.votes}}
                     <mat-icon id="icon">favorite</mat-icon>
                 </div>
             </div>
         </div>
     </a>
+    
 </div>
