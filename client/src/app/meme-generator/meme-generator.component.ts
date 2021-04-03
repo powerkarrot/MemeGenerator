@@ -265,19 +265,15 @@ export class MemeGeneratorComponent implements OnInit {
     updateTemplate(url) {
         this.template.url = url 
         this.template.title = url
-        this._memeService.updateTemplate(this.template).subscribe((template) =>
-        {
-            console.log("template server res " + JSON.stringify(template))
-            
+        this._memeService.updateTemplate(this.template, false).subscribe((template) =>
+        {            
             this.template = template
             this.template.url = url
         })
     }
 
     openDialog(): void {
-        console.log("clicked")
-        console.log(this.template)
-
+        
         const dialogRef = this.dialog.open(TemplateViewerComponent, {
           width: '40%',
           data: {template : this.template}
@@ -285,12 +281,8 @@ export class MemeGeneratorComponent implements OnInit {
 
     
         dialogRef.afterClosed().subscribe(result => {
-          console.log('The dialog was closed');
-          //this.template = result;
-          console.log("Dialog returned " + JSON.stringify(this.template))
-
+          this.template = result;
         });
-
       }
 
     /**
@@ -511,11 +503,16 @@ export class MemeGeneratorComponent implements OnInit {
 
     /**
      * Saves the final draft and redirects to the meme-singleview
+     * Updates template information
      */
     finishMeme(): void {
         this.isDraft = false
         const formData = this.generateMemeFormData()
-        
+
+        this._memeService.updateTemplate(this.template, true).subscribe((template) => { 
+            this.template = template
+        })
+              
         this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
             this.meme = <Meme>meme
             this.id = this.meme._id

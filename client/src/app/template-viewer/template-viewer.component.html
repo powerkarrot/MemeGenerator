@@ -11,6 +11,46 @@
     <input matInput [(ngModel)]="data.template.title">
   </mat-form-field>
 </div>
+<div class="passive-information" >
+  <div class="wrapper center actionbar">
+     
+      <div class="element">
+          <a href="{{data.template.url}}" mat-icon-button color="warn" target="_blank">
+              <mat-icon>download</mat-icon>
+          </a>
+      </div>
+      <div class="element">
+          <button mat-icon-button color="warn" aria-label="Share" (click)="share()">
+              <mat-icon>share</mat-icon>
+          </button>
+      </div>
+      <div class="element" *ngIf="loggedIn">
+          <button mat-icon-button color="warn" aria-label="Stats" (click)="templateStats()">
+              <mat-icon>analytics</mat-icon>
+          </button>
+      </div>
+      <div class="element" *ngIf="loggedIn">
+          <button mat-icon-button color="warn" aria-label="Downvote meme" (click)="vote(false)">
+              <mat-icon>thumb_down</mat-icon>
+          </button>
+      </div>
+      <div class="element" *ngIf="loggedIn">
+          <button mat-icon-button color="warn" aria-label="Upvote meme" (click)="vote(true)">
+              <mat-icon>thumb_up</mat-icon>
+          </button>
+      </div>
+      <div class="element">
+          <h5>Votes: {{data.template.votes}}</h5>
+      </div>
+              
+      <div class="element"><h5>Views: {{data.template.views}}</h5></div>
+  </div>
+
+  <div class="wrapper center">
+      <div class="element"><h5>Description: {{data.template.description}}</h5></div>
+  </div>
+  
+</div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
   <button mat-button [mat-dialog-close]="data.template" cdkFocusInitial>Ok</button>

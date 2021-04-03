@@ -132,6 +132,166 @@ app.get('/templates', async function (req, res) {
     })
 })
 
+app.post('/template/generated', async function (req, res) {
+
+    const db = req.app.get('db')
+    const template = req.body
+    generatedInc = template.generated === undefined ? 1 : (template.generated + 1)
+
+    await db.collection('templates').findOneAndUpdate(
+        //filter
+        { "url" : JSON.stringify(template.url) },
+         //update or create
+        {                                        
+            $inc: {
+                generated : 1 ,
+            },
+            $push: {
+                generatedData: {
+                    timestamp: new Date(Date.now()).toISOString(),
+                    generated: generatedInc
+                }
+            }
+        },
+        //options: upsert is not necessary here; return new document
+        { upsert:true, returnOriginal:false }) 
+        .then(function(template) {  
+            res.send(JSON.stringify(template.value))
+    })
+})
+
+app.post('/template/vote/:id', async function(req, res) {
+    const db = req.app.get('db')
+    const votes = req.body.vote < 0 ? -1 : 1
+    const isPositive = votes > 0 ? true : false
+    const userid = req.body.userid
+    const cred = req.body.cred
+    const query = { _id: ObjectID(req.params.id) }
+
+    const hasPermission = isAutherized(db, userid, cred)
+
+    if(hasPermission) {
+        db.collection('templates').findOne(query, function(err, meme) {
+
+            if (err) {
+                sendResponse(res, ResponseType.ERROR, "Database failure!")
+            }
+
+            var newValues = {
+                $inc: {votes: votes},
+                $push: {
+                   voteData: {
+                       timestamp: new Date(Date.now()).toISOString(),
+                       votes: meme.votes + votes 
+                   }
+               }
+           }
+
+            db.collection('users').findOne({_id: ObjectID(userid)}, function(err, userdata) {
+                if (err) {
+                    sendResponse(res, ResponseType.ERROR, "Database failure!")
+                }
+                const votes = userdata.votes
+                if(votes) {
+                    findVote(votes, req.params.id).then((vote) => {
+                        // User has already voted
+                        if(vote && vote.length != 0){
+                            if (vote.isPositive != isPositive) {
+                                // Swap votes
+                                if(isPositive) {
+                                    newValues = { 
+                                        $inc: {votes: 2} ,
+                                        $push: {
+                                            voteData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                votes: meme.votes + 2
+                                            }
+                                        }
+                                    }
+    
+                                } else {
+                                    newValues = {
+                                         $inc: {votes: -2},
+                                         $push: {
+                                            voteData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                votes: meme.votes - 2
+                                            }
+                                        }
+                                    }
+                                }    
+    
+                                db.collection('templates').findOneAndUpdate(query, newValues, {returnOriginal:false}, function(err, result) {
+                                    if (err) { 
+                                        sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                    } else {
+                                        console.log("Result is " + JSON.stringify(result.value))
+    
+                                        votes.some(function(v, index) {
+                                            if(v.memeid == req.params.id) {
+                                                v.isPositive = isPositive
+                                                return true
+                                            }
+                                        })
+                                        newValues = {
+                                            $set: {votes: votes}
+                                        }
+    
+                                        db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, resu){
+                                            if (err) {
+                                                sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                            } else {
+                                                
+                                                res.send(result.value)
+
+                                            }
+                                        })
+                                    }
+                                })
+                            } else {
+                                sendResponse(res, ResponseType.ERROR, "User already voted!")
+                            }
+    
+                        //User hasn't voted yet
+                        } else {
+                            db.collection('templates').findOneAndUpdate(query, newValues, {returnOriginal:false},function(err, result) {
+                                if (err) {
+                                    sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                } else {
+                                    console.log("Result is " + JSON.stringify(result.value))
+
+                                    const data = {
+                                        memeid: ObjectID(req.params.id),
+                                        isPositive: isPositive
+                                    }
+                                    
+                                    newValues = {
+                                        $push: {
+                                            votes: data
+                                        }
+                                    }
+    
+                                    db.collection('users').updateOne({_id: ObjectID(userid)}, newValues, function(err, resu){
+                                        if (err) {
+                                            sendResponse(res, ResponseType.ERROR, "Database failure!")
+                                        } else {
+                                            res.send(result.value)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        })
+
+        
+    } else {
+        sendResponse(res, ResponseType.ERROR, "User not authorized!")
+    }
+})
+
 
 /**
  * creates a meme and gives it an id

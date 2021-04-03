@@ -1,0 +1,56 @@
+.singleview-container {
+    margin-left: 20%;
+    margin-right: 20%;
+    background-color: #0f0f0f;
+    color: white;
+}
+.image-container {
+    text-align: center;
+}
+img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.passive-information {
+    text-align: center;
+}
+
+.image-downvote {
+    fill: #d23c22;
+    stroke: #d23c22;
+    color: #d23c22;
+}
+
+.row {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.row2 {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.block {
+    margin-left: 5px;
+    margin-top: auto;
+}
+.wrapper {
+    overflow: hidden;
+    width:fit-content;
+}
+.element {
+    float: left;
+    margin-left: 10px;
+}
