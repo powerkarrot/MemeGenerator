@@ -109,21 +109,26 @@ app.get('/templates', async function (req, res) {
 
     const db = req.app.get('db')
     const template = req.body
-    const path = require('path')
-
+    query = {url : JSON.stringify(req.body.url)}
+    
     //Regex adapted from :https://stackoverflow.com/a/55975214
     const title = template.url.split(/[\\\/]/).pop().split(".").shift()
-
-    viewsInc = (template.views == null || template.views == undefined ) ? 1 : template.views + 1
-    gen = (template.generated === undefined || template.generated === null)? 0 : template.generated
-    v = (template.votes === undefined || template.votes === null)? 0 : template.votes
-
     let date = new Date(Date.now()).toISOString()
+    viewsInc = 1
+    gen = 0
+    v = 0
 
-    await db.collection('templates').findOneAndUpdate(
+    db.collection('templates').findOne(query, function(err, t) {
+        if(t != null) {
+            viewsInc = t.views + 1
+            gen =  (t.generated === undefined || t.generated === null) ? 0 : t.generated
+            v = (t.votes === undefined || t.votes === null) ? 0 : t.votes
+        }
+
+        db.collection('templates').findOneAndUpdate(
         //filter
         { "url" : JSON.stringify(template.url) },
-         //update or create
+            //update or create
         {                                        
             $set:{ 
                 "url" : JSON.stringify(template.url) ,
@@ -148,15 +153,15 @@ app.get('/templates', async function (req, res) {
             }
         },
         //options
-        { upsert:true, returnOriginal:false }) 
-        .then(function(template) {  
-            console.log(JSON.stringify(template.value))
-            res.send(JSON.stringify(template.value))
-    })
+        { upsert:true, returnOriginal:false }, function(err, ret) {
+            res.send(JSON.stringify(ret.value))
+        }) 
+    }) 
 })
 
+
 /**
- * 
+ * Updates template description
  * 
  */
 app.post('/template/description', async function (req, res) {
@@ -167,7 +172,7 @@ app.post('/template/description', async function (req, res) {
     await db.collection('templates').findOneAndUpdate(
         //filter
         { "url" : JSON.stringify(template.url) },
-         //replace
+         //update
         {                                        
             $set:{ 
                 "description" : template.description ,
@@ -180,6 +185,9 @@ app.post('/template/description', async function (req, res) {
     })
 })
 
+/**
+ * Updates template generated count
+ */
 app.post('/template/generated', async function (req, res) {
 
     const db = req.app.get('db')
@@ -187,9 +195,7 @@ app.post('/template/generated', async function (req, res) {
     generatedInc = (template.generated === undefined || template.generated === null) ? 0 : (template.generated + 1)
     v = (template.votes === undefined || template.votes === null)? 0 : template.votes
 
-
     let date = new Date(Date.now()).toISOString()
-
 
     await db.collection('templates').findOneAndUpdate(
         //filter
@@ -214,13 +220,16 @@ app.post('/template/generated', async function (req, res) {
                 }
             }
         },
-        //options: upsert is not necessary here; return new document
+        // return new document
         { upsert:true, returnOriginal:false }) 
         .then(function(template) {  
             res.send(JSON.stringify(template.value))
     })
 })
 
+/**
+ * Updates template votes
+ */
 app.post('/template/vote/:id', async function(req, res) {
     const db = req.app.get('db')
     const votes = req.body.vote < 0 ? -1 : 1
@@ -230,12 +239,10 @@ app.post('/template/vote/:id', async function(req, res) {
     const query = { _id: ObjectID(req.params.id) }
 
     const hasPermission = isAutherized(db, userid, cred)
-    votesInc = votes 
-    gen = (req.body.template.generated === undefined || req.body.template.generated === null)? 0 : req.body.template.generated
 
+    let votesInc = votes 
+    let gen = 0
     let date = new Date(Date.now()).toISOString()
-
-
 
     if(hasPermission) {
         db.collection('templates').findOne(query, function(err, meme) {
@@ -243,6 +250,8 @@ app.post('/template/vote/:id', async function(req, res) {
             if (err) {
                 sendResponse(res, ResponseType.ERROR, "Database failure!")
             }
+            gen = (meme.generated === undefined || meme.generated === null)? 0 : meme.generated
+
 
             var newValues = {
                 $inc: {votes: votes},
@@ -316,7 +325,6 @@ app.post('/template/vote/:id', async function(req, res) {
                                     if (err) { 
                                         sendResponse(res, ResponseType.ERROR, "Database failure!")
                                     } else {
-                                        console.log("Result is " + JSON.stringify(result.value))
     
                                         votes.some(function(v, index) {
                                             if(v.memeid == req.params.id) {
@@ -349,8 +357,7 @@ app.post('/template/vote/:id', async function(req, res) {
                                 if (err) {
                                     sendResponse(res, ResponseType.ERROR, "Database failure!")
                                 } else {
-                                    console.log("Result is " + JSON.stringify(result.value))
-
+                        
                                     const data = {
                                         memeid: ObjectID(req.params.id),
                                         isPositive: isPositive

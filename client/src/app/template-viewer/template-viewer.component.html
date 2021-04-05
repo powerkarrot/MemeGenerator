@@ -1,81 +1,72 @@
 <h1 mat-dialog-title class="center">{{data.template.title}}</h1>
 
 <div mat-dialog-content>
-  <div class="image-container">
-    <img [src]="data.template.url" alt="data.template.title">
-</div>
-  <mat-form-field  class="center">
-    <mat-label>Description</mat-label>
-    <input matInput [(ngModel)]="data.template.description">
-  </mat-form-field>
-</div>
+    <div class="image-container">
+      <img [src]="data.template.url" alt="data.template.title">
+    </div>
 
+    <mat-form-field  class="center">
+      <mat-label>Description</mat-label>
+      <input matInput [(ngModel)]="data.template.description">
+    </mat-form-field>
 
-<div class="passive-information" >
-  <div class="wrapper center actionbar">
-     
-      <div class="element">
-          <a href="{{data.template.url}}" mat-icon-button color="warn" target="_blank">
-              <mat-icon>download</mat-icon>
-          </a>
-      </div>
-      <div class="element">
-          <button mat-icon-button color="warn" aria-label="Share" (click)="share()">
-              <mat-icon>share</mat-icon>
-          </button>
-      </div>
-      <div class="element" *ngIf="loggedIn">
-          <button mat-icon-button color="warn" aria-label="Stats" (click)="templateStats()">
-              <mat-icon>analytics</mat-icon>
-          </button>
-      </div>
-      <div class="element" *ngIf="loggedIn">
-          <button mat-icon-button color="warn" aria-label="Downvote meme" (click)="vote(false)">
-              <mat-icon>thumb_down</mat-icon>
-          </button>
-      </div>
-      <div class="element" *ngIf="loggedIn">
-          <button mat-icon-button color="warn" aria-label="Upvote meme" (click)="vote(true)">
-              <mat-icon>thumb_up</mat-icon>
-          </button>
-      </div>
+    <div class="passive-information" >
+      <div class="wrapper center actionbar">
+        
+          <div class="element">
+              <a href="{{data.template.url}}" mat-icon-button color="warn" target="_blank">
+                  <mat-icon>download</mat-icon>
+              </a>
+          </div>
+          <div class="element">
+              <button mat-icon-button color="warn" aria-label="Share" (click)="share()">
+                  <mat-icon>share</mat-icon>
+              </button>
+          </div>
+          <div class="element" *ngIf="loggedIn">
+              <button mat-icon-button color="warn" aria-label="Downvote meme" (click)="vote(false)">
+                  <mat-icon>thumb_down</mat-icon>
+              </button>
+          </div>
+          <div class="element" *ngIf="loggedIn">
+              <button mat-icon-button color="warn" aria-label="Upvote meme" (click)="vote(true)">
+                  <mat-icon>thumb_up</mat-icon>
+              </button>
+          </div>
+      </div> <!--- wrapper center actionbar end-->
 
-    </div> <!--- wrapper center actionbar end-->
+      <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+            </mat-panel-title>
+            <mat-panel-description>
+            {{panelOpenState ? 'Hide' : 'Show'}} stats
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p>Statistics</p>
+          <!--- Stats go here-->
 
+          <ngx-charts-line-chart class="line-chart"
+            [scheme]="colorScheme"
+            [legend]="legend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxis]="xAxis"
+            [yAxis]="yAxis"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [timeline]="timeline"
+            [results]="multi"
+            [showGridLines] = "showGridLines">
+          </ngx-charts-line-chart>
 
-  <mat-accordion>
-    <mat-expansion-panel (opened)="panelOpenState = true"
-                         (closed)="panelOpenState = false">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-        </mat-panel-title>
-        <mat-panel-description>
-        {{panelOpenState ? '' : 'Show stats'}}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <p>Here go stats beeshes</p>
-      <!--- Stats go here-->
+        </mat-expansion-panel>
 
-      <ngx-charts-line-chart
-        [scheme]="colorScheme"
-        [legend]="legend"
-        [showXAxisLabel]="showXAxisLabel"
-        [showYAxisLabel]="showYAxisLabel"
-        [xAxis]="xAxis"
-        [yAxis]="yAxis"
-        [xAxisLabel]="xAxisLabel"
-        [yAxisLabel]="yAxisLabel"
-        [timeline]="timeline"
-        [results]="multi"
-        [showGridLines] = "showGridLines">
-      </ngx-charts-line-chart>
-
-
-    </mat-expansion-panel>
-
-  </mat-accordion>
-
-
+      </mat-accordion>
+    </div> <!--- passive information end-->
+  </div><!--- content  end-->
   <div class="wrapper center actionbar">
     <div class="element"><h5>Votes: {{data.template.votes}}</h5></div>       
     <div class="element"><h5>Views: {{data.template.views}}</h5></div>
@@ -84,10 +75,6 @@
   <div class="wrapper center">
       <div class="element"><h5>Description: {{data.template.description}}</h5></div>
   </div>
-
-
-</div> <!--- passive information end-->
-
 
 <div mat-dialog-actions align="end">
   <button mat-button (click)="onNoClick()">Cancel</button>

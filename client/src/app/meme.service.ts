@@ -29,40 +29,6 @@ export class MemeService {
         )
     }
 
-    /**
-     * MAke template service kek
-     * @param id 
-     * @param data 
-     * @returns 
-     */
-    updateTemplate(data, generated:boolean): Observable<Object | Template> {
-        let url = environment.apiUrl + '/template'
-        //if (id !== null) url += '/' + id
-        if (generated) url = url + "/generated"
-        return this._http.post(url, data).pipe(
-            catchError(this.handleError<Template>('updateTemplate'))
-        )
-    }
-    /**
-     * Todo change name
-     * 
-     * @param data 
-     * @returns 
-     */
-    replaceTemplate(data): Observable<Object | Template> {
-        let url = environment.apiUrl + '/template/description'
-        //if (id !== null) url += '/' + id
-        return this._http.post(url, data).pipe(
-            catchError(this.handleError<Template>('replaceTemplate'))
-        )
-    }
-
-    getTemplate(data): Observable<Object | Template> {
-        let url = environment.apiUrl + '/template'
-        return this._http.get(url, data).pipe(
-            catchError(this.handleError<Template>('getTemplate'))
-        )
-    }
     voteMeme(id: number, isUpvote : boolean, userid: number, username: string, apicred: number): Observable<any> {
         if (id !== null) {
             let url = environment.apiUrl + '/meme/vote/' + id
@@ -79,6 +45,35 @@ export class MemeService {
         }
     }
     
+    /**
+     * Upserts a template
+     * returns updated template
+     * @param id 
+     * @param data 
+     * @returns 
+     */
+       updateTemplate(data, generated:boolean, description:boolean): Observable<Object | Template> {
+        let url = environment.apiUrl + '/template'
+        if (generated) url = url + "/generated"
+        else if (description) url = url + "/description"
+
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<Template>('updateTemplate'))
+        )
+    }
+
+    /**
+     * vote for template
+     * returns updated template
+     * 
+     * @param id 
+     * @param isUpvote 
+     * @param userid 
+     * @param username 
+     * @param apicred 
+     * @param template 
+     * @returns 
+     */
     voteTemplate(id: number, isUpvote : boolean, userid: number, username: string, apicred: number, template): Observable<any> {
         if (id !== null) {
             let url = environment.apiUrl + '/template/vote/' + id

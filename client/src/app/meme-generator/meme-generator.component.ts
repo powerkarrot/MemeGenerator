@@ -259,36 +259,22 @@ export class MemeGeneratorComponent implements OnInit {
     }
 
     /**
-     * updates a template
+     * updates selected template
      * @param url 
      */
     updateTemplate(url) {
-        //this.template = {}
         this.template.url = url
-/*
-        this._memeService.getTemplate(this.template).subscribe((template) =>
-        { 
 
-            if(template != {} || this.template != null || template == undefined) this.template = template
-            this.template.url = url
-
-            this._memeService.updateTemplate(this.template, false).subscribe((t) =>
-            {     
-                this.template = t
-                this.template.url = url
-            })
-
-        })*/
-
-        this._memeService.updateTemplate(this.template, false).subscribe((t) =>
+        this._memeService.updateTemplate(this.template, false, false).subscribe((t) =>
         {     
             this.template = t
             this.template.url = url
-        })
-
-       
+        })      
     }
 
+    /**
+     * opens dialog to view and edit the selected template
+    */
     openDialog(): void {
 
         const dialogRef = this.dialog.open(TemplateViewerComponent, {
@@ -299,7 +285,7 @@ export class MemeGeneratorComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if(result !== undefined) {
                 this.template = result;
-                this._memeService.replaceTemplate(this.template).subscribe((template) => {
+                this._memeService.updateTemplate(this.template, false, true).subscribe((template) => {
                 })
             }
         });
@@ -529,7 +515,7 @@ export class MemeGeneratorComponent implements OnInit {
         this.isDraft = false
         const formData = this.generateMemeFormData()
 
-        this._memeService.updateTemplate(this.template, true).subscribe((template) => { 
+        this._memeService.updateTemplate(this.template, true, false).subscribe((template) => { 
             this.template = template
         })
               
