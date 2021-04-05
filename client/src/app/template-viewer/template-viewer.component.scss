@@ -1,0 +1,51 @@
+
+.image-container {
+    text-align: center;
+}
+
+img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.passive-information {
+    text-align: center;
+}
+
+.image-downvote {
+    fill: #d23c22;
+    stroke: #d23c22;
+    color: #d23c22;
+}
+
+.wrapper {
+    overflow: hidden;
+    width:fit-content;
+}
+
+.element {
+    float: left;
+    margin-left: 10px;
+}
+
+::ng-deep .mat-dialog-container { 
+    background: rgb(243, 220, 209)!important;
+}
+
+::ng-deep .mat-expansion-panel-body { 
+    background: rgb(243, 220, 209)!important;
+}
+::ng-deep .mat-expansion-panel-header { 
+    background: rgb(243, 203, 184)!important;
+}
+
+.mat-form-field .mat-form-field {
+    margin-left: 8px;
+  }

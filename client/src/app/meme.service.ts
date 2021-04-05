@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core'
 import {Observable, of} from 'rxjs'
 import {Meme} from './meme'
+import {Template} from './template'
 import {HttpClient} from '@angular/common/http'
 import {catchError} from 'rxjs/operators'
 import {environment} from '../environments/environment'
@@ -44,6 +45,51 @@ export class MemeService {
         }
     }
     
+    /**
+     * Upserts a template
+     * returns updated template
+     * @param id 
+     * @param data 
+     * @returns 
+     */
+       updateTemplate(data, generated:boolean, description:boolean): Observable<Object | Template> {
+        let url = environment.apiUrl + '/template'
+        if (generated) url = url + "/generated"
+        else if (description) url = url + "/description"
+
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<Template>('updateTemplate'))
+        )
+    }
+
+    /**
+     * vote for template
+     * returns updated template
+     * 
+     * @param id 
+     * @param isUpvote 
+     * @param userid 
+     * @param username 
+     * @param apicred 
+     * @param template 
+     * @returns 
+     */
+    voteTemplate(id: number, isUpvote : boolean, userid: number, username: string, apicred: number, template): Observable<any> {
+        if (id !== null) {
+            let url = environment.apiUrl + '/template/vote/' + id
+            const vote = isUpvote ? 1 : -1
+            const data = {
+                "userid": userid,
+                "username": username,
+                "cred": apicred,
+                "vote": vote,
+                "template": template
+            }
+            return this._http.post(url, data).pipe(
+                catchError(this.handleError<any>('voteTemplate'))
+            )
+        }
+    }
 
     commentMeme(id: number, userid: number, username: string, apicred: number, comment: string): Observable<any> {
         if(id !== null) {

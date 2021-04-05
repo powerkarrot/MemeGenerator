@@ -55,7 +55,7 @@
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
                 <mat-label>Image URL</mat-label>
-                <input matInput formControlName="imgUrl">
+                <input matInput formControlName="imgUrl" >
             </mat-form-field>
         </div>
         <div fxLayout="row" style="margin-top: 10px">
@@ -156,8 +156,12 @@
                 formControlName="bottomColor">
         </div>
 
-        <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"/>
-
+        <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" />
+        <div fxLayout="row" style="margin-top: 10px">
+            <button mat-raised-button color="primary" (click)="openDialog()" *ngIf="meme">
+                View/edit template
+            </button>
+        </div>
         <div fxLayout="row" style="margin-top: 10px">
             <button mat-raised-button color="accent" (click)="discardMeme()">
                 Delete Draft
