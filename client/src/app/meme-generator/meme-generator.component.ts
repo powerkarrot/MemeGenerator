@@ -255,7 +255,7 @@ export class MemeGeneratorComponent implements OnInit {
             imgUrl: url,
             template: url
         })
-        this.updateTemplate(url)
+     this.updateTemplate(url)
     }
 
     /**
@@ -263,25 +263,45 @@ export class MemeGeneratorComponent implements OnInit {
      * @param url 
      */
     updateTemplate(url) {
-        this.template.url = url 
-        this.template.title = url
-        this._memeService.updateTemplate(this.template, false).subscribe((template) =>
-        {            
-            this.template = template
+        //this.template = {}
+        this.template.url = url
+/*
+        this._memeService.getTemplate(this.template).subscribe((template) =>
+        { 
+
+            if(template != {} || this.template != null || template == undefined) this.template = template
+            this.template.url = url
+
+            this._memeService.updateTemplate(this.template, false).subscribe((t) =>
+            {     
+                this.template = t
+                this.template.url = url
+            })
+
+        })*/
+
+        this._memeService.updateTemplate(this.template, false).subscribe((t) =>
+        {     
+            this.template = t
             this.template.url = url
         })
+
+       
     }
 
     openDialog(): void {
-        
+
         const dialogRef = this.dialog.open(TemplateViewerComponent, {
           width: '40%',
           data: {template : this.template}
         });
 
-    
         dialogRef.afterClosed().subscribe(result => {
-          this.template = result;
+            if(result !== undefined) {
+                this.template = result;
+                this._memeService.replaceTemplate(this.template).subscribe((template) => {
+                })
+            }
         });
       }
 

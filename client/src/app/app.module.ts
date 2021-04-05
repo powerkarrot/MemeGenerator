@@ -30,6 +30,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts'
 import {MatCardModule} from '@angular/material/card'
 import {MatDialogModule} from '@angular/material/dialog';
 import {TemplateViewerComponent} from './template-viewer/template-viewer.component' 
+import {MatExpansionModule} from '@angular/material/expansion'
+
 
 @NgModule({
     declarations: [
@@ -63,7 +65,8 @@ import {TemplateViewerComponent} from './template-viewer/template-viewer.compone
         MatCheckboxModule,
         NgxChartsModule,
         MatCardModule,
-        MatDialogModule
+        MatDialogModule,
+        MatExpansionModule
     ],
     providers: [LocalStorageService],
     bootstrap: [AppComponent, LoginDropdownComponent]

@@ -109,8 +109,16 @@ app.get('/templates', async function (req, res) {
 
     const db = req.app.get('db')
     const template = req.body
-    const query = {url: JSON.stringify(template.url)}
-    console.log("Request is " + JSON.stringify(req.body))
+    const path = require('path')
+
+    //Regex adapted from :https://stackoverflow.com/a/55975214
+    const title = template.url.split(/[\\\/]/).pop().split(".").shift()
+
+    viewsInc = (template.views == null || template.views == undefined ) ? 1 : template.views + 1
+    gen = (template.generated === undefined || template.generated === null)? 0 : template.generated
+    v = (template.votes === undefined || template.votes === null)? 0 : template.votes
+
+    let date = new Date(Date.now()).toISOString()
 
     await db.collection('templates').findOneAndUpdate(
         //filter
@@ -119,10 +127,50 @@ app.get('/templates', async function (req, res) {
         {                                        
             $set:{ 
                 "url" : JSON.stringify(template.url) ,
-                "title":JSON.stringify(template.url),
+                "title": title,
             },
             $inc: {
                 "views" : 1 
+            },
+            $push: {
+                viewData: {
+                    timestamp: date,
+                    views: viewsInc
+                },
+                voteData: {
+                    timestamp: date,
+                    votes: v
+                },
+                generatedData: {
+                    timestamp: date,
+                    generated: gen
+                }
+            }
+        },
+        //options
+        { upsert:true, returnOriginal:false }) 
+        .then(function(template) {  
+            console.log(JSON.stringify(template.value))
+            res.send(JSON.stringify(template.value))
+    })
+})
+
+/**
+ * 
+ * 
+ */
+app.post('/template/description', async function (req, res) {
+
+    const db = req.app.get('db')
+    const template = req.body
+
+    await db.collection('templates').findOneAndUpdate(
+        //filter
+        { "url" : JSON.stringify(template.url) },
+         //replace
+        {                                        
+            $set:{ 
+                "description" : template.description ,
             }
         },
         //options
@@ -136,19 +184,32 @@ app.post('/template/generated', async function (req, res) {
 
     const db = req.app.get('db')
     const template = req.body
-    generatedInc = template.generated === undefined ? 1 : (template.generated + 1)
+    generatedInc = (template.generated === undefined || template.generated === null) ? 0 : (template.generated + 1)
+    v = (template.votes === undefined || template.votes === null)? 0 : template.votes
+
+
+    let date = new Date(Date.now()).toISOString()
+
 
     await db.collection('templates').findOneAndUpdate(
         //filter
         { "url" : JSON.stringify(template.url) },
-         //update or create
+         //update 
         {                                        
             $inc: {
                 generated : 1 ,
             },
             $push: {
+                viewData: {
+                    timestamp: date,
+                    views: template.views
+                },
+                voteData: {
+                    timestamp: date,
+                    votes: v
+                },
                 generatedData: {
-                    timestamp: new Date(Date.now()).toISOString(),
+                    timestamp: date,
                     generated: generatedInc
                 }
             }
@@ -169,6 +230,12 @@ app.post('/template/vote/:id', async function(req, res) {
     const query = { _id: ObjectID(req.params.id) }
 
     const hasPermission = isAutherized(db, userid, cred)
+    votesInc = votes 
+    gen = (req.body.template.generated === undefined || req.body.template.generated === null)? 0 : req.body.template.generated
+
+    let date = new Date(Date.now()).toISOString()
+
+
 
     if(hasPermission) {
         db.collection('templates').findOne(query, function(err, meme) {
@@ -181,8 +248,16 @@ app.post('/template/vote/:id', async function(req, res) {
                 $inc: {votes: votes},
                 $push: {
                    voteData: {
-                       timestamp: new Date(Date.now()).toISOString(),
-                       votes: meme.votes + votes 
+                       timestamp: date,
+                       votes: votesInc
+                   },
+                   viewData: {
+                        timestamp: date,
+                        views: req.body.template.views
+                   },
+                   generatedData: {
+                        timestamp: date,
+                        generated: gen
                    }
                }
            }
@@ -205,7 +280,15 @@ app.post('/template/vote/:id', async function(req, res) {
                                             voteData: {
                                                 timestamp: new Date(Date.now()).toISOString(),
                                                 votes: meme.votes + 2
-                                            }
+                                            },
+                                            viewData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                views: req.body.template.views
+                                            },
+                                            generatedData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                generated: gen
+                                           }
                                         }
                                     }
     
@@ -216,7 +299,15 @@ app.post('/template/vote/:id', async function(req, res) {
                                             voteData: {
                                                 timestamp: new Date(Date.now()).toISOString(),
                                                 votes: meme.votes - 2
-                                            }
+                                            },
+                                            viewData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                views: req.body.template.views
+                                            },
+                                            generatedData: {
+                                                timestamp: new Date(Date.now()).toISOString(),
+                                                generated: gen
+                                           }
                                         }
                                     }
                                 }    

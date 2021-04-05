@@ -43,7 +43,26 @@ export class MemeService {
             catchError(this.handleError<Template>('updateTemplate'))
         )
     }
+    /**
+     * Todo change name
+     * 
+     * @param data 
+     * @returns 
+     */
+    replaceTemplate(data): Observable<Object | Template> {
+        let url = environment.apiUrl + '/template/description'
+        //if (id !== null) url += '/' + id
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<Template>('replaceTemplate'))
+        )
+    }
 
+    getTemplate(data): Observable<Object | Template> {
+        let url = environment.apiUrl + '/template'
+        return this._http.get(url, data).pipe(
+            catchError(this.handleError<Template>('getTemplate'))
+        )
+    }
     voteMeme(id: number, isUpvote : boolean, userid: number, username: string, apicred: number): Observable<any> {
         if (id !== null) {
             let url = environment.apiUrl + '/meme/vote/' + id
@@ -60,7 +79,7 @@ export class MemeService {
         }
     }
     
-    voteTemplate(id: number, isUpvote : boolean, userid: number, username: string, apicred: number): Observable<any> {
+    voteTemplate(id: number, isUpvote : boolean, userid: number, username: string, apicred: number, template): Observable<any> {
         if (id !== null) {
             let url = environment.apiUrl + '/template/vote/' + id
             const vote = isUpvote ? 1 : -1
@@ -68,7 +87,8 @@ export class MemeService {
                 "userid": userid,
                 "username": username,
                 "cred": apicred,
-                "vote": vote
+                "vote": vote,
+                "template": template
             }
             return this._http.post(url, data).pipe(
                 catchError(this.handleError<any>('voteTemplate'))

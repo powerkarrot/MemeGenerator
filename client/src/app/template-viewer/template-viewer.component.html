@@ -1,16 +1,16 @@
-<h1 mat-dialog-title>Template {{data.template.title}}</h1>
+<h1 mat-dialog-title class="center">{{data.template.title}}</h1>
+
 <div mat-dialog-content>
-  <p>BlaBlaBla</p>
   <div class="image-container">
-    
     <img [src]="data.template.url" alt="data.template.title">
-   
 </div>
-  <mat-form-field>
-    <mat-label>Text text</mat-label>
-    <input matInput [(ngModel)]="data.template.title">
+  <mat-form-field  class="center">
+    <mat-label>Description</mat-label>
+    <input matInput [(ngModel)]="data.template.description">
   </mat-form-field>
 </div>
+
+
 <div class="passive-information" >
   <div class="wrapper center actionbar">
      
@@ -39,19 +39,57 @@
               <mat-icon>thumb_up</mat-icon>
           </button>
       </div>
-      <div class="element">
-          <h5>Votes: {{data.template.votes}}</h5>
-      </div>
-              
-      <div class="element"><h5>Views: {{data.template.views}}</h5></div>
+
+    </div> <!--- wrapper center actionbar end-->
+
+
+  <mat-accordion>
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+        </mat-panel-title>
+        <mat-panel-description>
+        {{panelOpenState ? '' : 'Show stats'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>Here go stats beeshes</p>
+      <!--- Stats go here-->
+
+      <ngx-charts-line-chart
+        [scheme]="colorScheme"
+        [legend]="legend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxis]="xAxis"
+        [yAxis]="yAxis"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [timeline]="timeline"
+        [results]="multi"
+        [showGridLines] = "showGridLines">
+      </ngx-charts-line-chart>
+
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+
+  <div class="wrapper center actionbar">
+    <div class="element"><h5>Votes: {{data.template.votes}}</h5></div>       
+    <div class="element"><h5>Views: {{data.template.views}}</h5></div>
   </div>
 
   <div class="wrapper center">
       <div class="element"><h5>Description: {{data.template.description}}</h5></div>
   </div>
-  
-</div>
-<div mat-dialog-actions>
+
+
+</div> <!--- passive information end-->
+
+
+<div mat-dialog-actions align="end">
   <button mat-button (click)="onNoClick()">Cancel</button>
   <button mat-button [mat-dialog-close]="data.template" cdkFocusInitial>Ok</button>
 </div>
