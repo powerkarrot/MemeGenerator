@@ -10,6 +10,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "mongodb": "^3.6.3",
+    "puppeteer": "^8.0.0",
     "request": "^2.88.2"
   },
   "devDependencies": {

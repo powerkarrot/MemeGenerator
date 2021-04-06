@@ -58,6 +58,17 @@
                 <input matInput formControlName="imgUrl" >
             </mat-form-field>
         </div>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button class="actionBtn" (click)="toggleScreenshot();" mat-raised-button color="secondary"> 
+                Take Screenshot from URL
+            </button>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <input class="wrapper" [(ngModel)]="screenhotURL" *ngIf="showScreenshot" [ngModelOptions]="{standalone: true}">
+            </div>
+            <button class="actionBtn" (click)="takeScreenshot();" mat-raised-button color="secondary"  *ngIf="showScreenshot"> 
+                Capture
+            </button>
+        </div>
         <div fxLayout="row" style="margin-top: 10px">
             <mat-form-field>
                 <mat-label>Title</mat-label>

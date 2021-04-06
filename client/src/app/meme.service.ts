@@ -44,6 +44,17 @@ export class MemeService {
             )
         }
     }
+
+    takeScreenshot(link) : Observable<any>{
+        let url = environment.apiUrl + '/screenshot' 
+        const data = {
+            "url": link,
+        }
+        console.log(JSON.stringify(data))
+        return this._http.post(url, data).pipe(
+            catchError(this.handleError<any>('takeScreenshot'))
+        )
+    }
     
     /**
      * Upserts a template

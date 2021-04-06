@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
+const puppeteer = require('puppeteer'); 
 const memeLib = require('./meme-generator')
 const fs = require('fs')
 var AdmZip = require("adm-zip");
@@ -87,6 +88,37 @@ async function upload(files) {
     }
     return uploads
 }
+
+app.post('/screenshot', async function (req, res) {
+    
+    url = req.body.url
+    console.log("ERM")
+    //const url = "https://dishantagnihotri.com";
+    console.log("Req was" + JSON.stringify(req.body.url))
+    let browser = await puppeteer.launch({ headless: true,  args: ['--no-sandbox']});
+    let page = await browser.newPage();
+    await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
+    await page.setViewport({ width: 1024, height: 800 });
+    title = url.replace(/(^\w+:|^)\/\//, '')
+
+    filepathname = __dirname + '/uploads/' + title + '.jpg'
+    
+    await page.screenshot({
+     //path: __dirname + '/uploads/' + "test.screenshot.jpg",
+     path: filepathname,
+     type: "jpeg",
+     fullPage: true
+   });
+   //fileName = '/uploads/' + "screenshot.jpg"
+   
+   await page.close();
+   await browser.close();
+   //res.send(JSON.stringify(__dirname + '/uploads/' + 'test.screenshot.jpg'))
+   console.log(JSON.stringify(filepathname))
+
+   res.send(JSON.stringify(filepathname))
+
+})
 
 app.get('/', function (req, res) {
     res.send('OMM WS21 - Meme Generator - API running')
@@ -418,8 +450,10 @@ app.post('/meme', async function (req, res) {
             fileName = uploads[0].fileName.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd
+            console.log("filename is " + url)
         } else {
             url = meme.url
+            console.log("filename is " + url)
             fileName = url.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd

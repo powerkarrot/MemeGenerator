@@ -39,12 +39,14 @@ export class MemeGeneratorComponent implements OnInit {
     templates = null
     public webcamImage: WebcamImage = null
     private trigger: Subject<void> = new Subject<void>()
-    public showWebcam = false;
+    public showWebcam = false
+    public showScreenshot = false
     public showImgFlipTemplates = false
     public showUploadedTemplates = false
     isLoggedIn = false
     private isDraft = true
     private continueDraft = false
+    screenhotURL
 
     visible = true;
     selectable = true;
@@ -251,6 +253,7 @@ export class MemeGeneratorComponent implements OnInit {
      * @param url
      */
     selectTemplate(url): void {
+        console.log("selected template: " + url)
         this.memeForm.patchValue({
             imgUrl: url,
             template: url
@@ -554,6 +557,26 @@ export class MemeGeneratorComponent implements OnInit {
     public toggleWebcam(): void {
         this.showWebcam = !this.showWebcam;
     }
+
+    /**
+     * Toggles webcam visibility
+     */
+     public toggleScreenshot(): void {
+        this.showScreenshot = !this.showScreenshot;
+    }
+
+    /**
+     * Takes screenshot
+     */
+    public takeScreenshot(): void {
+        this._memeService.takeScreenshot(this.screenhotURL).subscribe(screenshot => {
+            console.log("screenshot is " + screenshot)
+            //this.loadTemplates()
+            this.selectTemplate(screenshot)
+
+        })
+    }
+
 
     /**
      * Handles captured webcam image
