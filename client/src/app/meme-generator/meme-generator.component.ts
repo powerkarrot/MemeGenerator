@@ -253,12 +253,11 @@ export class MemeGeneratorComponent implements OnInit {
      * @param url
      */
     selectTemplate(url): void {
-        console.log("selected template: " + url)
         this.memeForm.patchValue({
             imgUrl: url,
             template: url
         })
-     this.updateTemplate(url)
+        this.updateTemplate(url)
     }
 
     /**
@@ -570,10 +569,9 @@ export class MemeGeneratorComponent implements OnInit {
      */
     public takeScreenshot(): void {
         this._memeService.takeScreenshot(this.screenhotURL).subscribe(screenshot => {
-            console.log("screenshot is " + screenshot)
-            //this.loadTemplates()
-            this.selectTemplate(screenshot)
 
+            //this.template.title = screenshot.title
+            this.selectTemplate(screenshot.url)
         })
     }
 

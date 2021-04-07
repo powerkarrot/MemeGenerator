@@ -50,7 +50,6 @@ export class MemeService {
         const data = {
             "url": link,
         }
-        console.log(JSON.stringify(data))
         return this._http.post(url, data).pipe(
             catchError(this.handleError<any>('takeScreenshot'))
         )

@@ -7,8 +7,6 @@ import { Userdata } from '../userdata';
 import { ToastService } from '../toast-service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { NgbdModalContent } from '../meme-singleview/meme-singleview.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { multi } from '../meme-stats/data';
 
 export interface DialogData {
   template: any
@@ -151,7 +149,6 @@ export class TemplateViewerComponent implements OnInit {
 
     //Graph data
     for (var i = 0; i < this.viewDataSeries.length; i++) {
-      console.log(i + 1)
 
       this.multi[0].series.push(
         {

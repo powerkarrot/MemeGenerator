@@ -89,35 +89,40 @@ async function upload(files) {
     return uploads
 }
 
+/**
+ * Handles screenshots
+ */
 app.post('/screenshot', async function (req, res) {
     
     url = req.body.url
-    console.log("ERM")
-    //const url = "https://dishantagnihotri.com";
-    console.log("Req was" + JSON.stringify(req.body.url))
+
     let browser = await puppeteer.launch({ headless: true,  args: ['--no-sandbox']});
     let page = await browser.newPage();
     await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
     await page.setViewport({ width: 1024, height: 800 });
-    title = url.replace(/(^\w+:|^)\/\//, '')
+    
+    //let title = url.replace(/(^\w+:|^)\/\//, '')
+    let title = JSON.stringify(new ObjectID())
+    let name = url.split(/[\\\/]/).pop().split(".").shift()
 
     filepathname = __dirname + '/uploads/' + title + '.jpg'
     
     await page.screenshot({
-     //path: __dirname + '/uploads/' + "test.screenshot.jpg",
      path: filepathname,
      type: "jpeg",
      fullPage: true
    });
-   //fileName = '/uploads/' + "screenshot.jpg"
    
    await page.close();
    await browser.close();
-   //res.send(JSON.stringify(__dirname + '/uploads/' + 'test.screenshot.jpg'))
    console.log(JSON.stringify(filepathname))
 
-   res.send(JSON.stringify(filepathname))
-
+   data = {
+       path : title + '.jpg',
+       url : "http://localhost:3007/uploads/" + title + '.jpg',
+       title: name
+   }
+   res.send(JSON.stringify(data))
 })
 
 app.get('/', function (req, res) {
