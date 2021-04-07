@@ -39,6 +39,7 @@
                 class="form-control"
                 style="display: none">
         </div>
+        <br/>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
             <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary"> 
@@ -51,6 +52,19 @@
         <button class="actionBtn" mat-raised-button color="secondary" (click)="triggerSnapshot();" *ngIf="showWebcam" >
             Take A Snapshot 
         </button>
+        <p>or</p>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button class="actionBtn" (click)="toggleScreenshot();" mat-raised-button color="secondary"> 
+                Take Screenshot from URL
+            </button>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <input class="wrapper" [(ngModel)]="screenhotURL" *ngIf="showScreenshot" [ngModelOptions]="{standalone: true}">
+            </div>
+            <button class="actionBtn" (click)="takeScreenshot();" mat-raised-button color="secondary"  *ngIf="showScreenshot"> 
+                Capture
+            </button>
+        </div>
+        <br/>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
@@ -155,7 +169,6 @@
                 class="colorPicker"
                 formControlName="bottomColor">
         </div>
-
         <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" />
         <div fxLayout="row" style="margin-top: 10px">
             <button mat-raised-button color="primary" (click)="openDialog()" *ngIf="meme">

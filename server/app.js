@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
+const puppeteer = require('puppeteer'); 
 const memeLib = require('./meme-generator')
 const fs = require('fs')
 var AdmZip = require("adm-zip");
@@ -87,6 +88,42 @@ async function upload(files) {
     }
     return uploads
 }
+
+/**
+ * Handles screenshots
+ */
+app.post('/screenshot', async function (req, res) {
+    
+    url = req.body.url
+
+    let browser = await puppeteer.launch({ headless: true,  args: ['--no-sandbox']});
+    let page = await browser.newPage();
+    await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
+    await page.setViewport({ width: 1024, height: 800 });
+    
+    //let title = url.replace(/(^\w+:|^)\/\//, '')
+    let title = JSON.stringify(new ObjectID())
+    let name = url.split(/[\\\/]/).pop().split(".").shift()
+
+    filepathname = __dirname + '/uploads/' + title + '.jpg'
+    
+    await page.screenshot({
+     path: filepathname,
+     type: "jpeg",
+     fullPage: true
+   });
+   
+   await page.close();
+   await browser.close();
+   console.log(JSON.stringify(filepathname))
+
+   data = {
+       path : title + '.jpg',
+       url : "http://localhost:3007/uploads/" + title + '.jpg',
+       title: name
+   }
+   res.send(JSON.stringify(data))
+})
 
 app.get('/', function (req, res) {
     res.send('OMM WS21 - Meme Generator - API running')
@@ -418,8 +455,10 @@ app.post('/meme', async function (req, res) {
             fileName = uploads[0].fileName.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd
+            console.log("filename is " + url)
         } else {
             url = meme.url
+            console.log("filename is " + url)
             fileName = url.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd
