@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core'
+import {Component, OnInit, Inject} from '@angular/core'
 import {FormBuilder, Validators} from '@angular/forms'
 import {Router} from '@angular/router'
 import {debounceTime} from 'rxjs/operators'
 import {MemeService} from '../meme.service'
 import {WebcamImage} from 'ngx-webcam'
-import {Subject, Observable} from 'rxjs'
+import {Subject, Observable, merge} from 'rxjs'
 import {LocalStorageService} from '../localStorage.service'
 import {ActivatedRoute} from '@angular/router'
 import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
@@ -14,7 +14,11 @@ import {Meme} from '../meme'
 import {Template} from '../template'
 import {ToastService} from '../toast-service'
 import { TemplateViewerComponent } from '../template-viewer/template-viewer.component' 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog'
+import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
+    SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech';
+import {filter, mapTo, repeat, retry, share} from 'rxjs/operators';
+import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk';
 
 export interface DialogData {
     animal: string;
@@ -46,12 +50,85 @@ export class MemeGeneratorComponent implements OnInit {
     private isDraft = true
     private continueDraft = false
 
-    visible = true;
-    selectable = true;
-    removable = true;
-    addOnBlur = true;
-    readonly separatorKeysCodes: number[] = [COMMA];
-    tags: Tag[] = [];
+    visible = true
+    selectable = true
+    removable = true
+    addOnBlur = true
+    readonly separatorKeysCodes: number[] = [COMMA]
+    tags: Tag[] = []
+
+    // Test
+    text = "Hit play/pause to speak this text"
+    paused = true
+    voice = null
+    result: Observable<SpeechRecognitionResult[]>
+    
+    readonly nameExtractor = ({
+        $implicit,
+    }: TuiContextWithImplicit<SpeechSynthesisVoice>) => $implicit.name;
+
+    onEnd(): void {
+        console.log('Speech synthesis ended');
+    }
+    test() {
+        this.result$.pipe(
+            retry(),
+            repeat(),
+            skipUntilSaid('Okay Angular'),
+            takeUntilSaid('Thank you Angular'),
+            repeat(),
+            final(),
+            continuous(),
+        ).subscribe((result) => {
+            console.log(result)
+        })
+    }
+
+    onClick() {
+        this.paused = !this.paused;
+        // Re-trigger utterance pipe:
+        this.text = this.paused ? this.text + ' ' : this.text;
+    }
+
+    voiceByName(_: number, {name}: SpeechSynthesisVoice): string {
+        return name;
+    }
+
+    get options(): SpeechSynthesisUtteranceOptions {
+        return this.getOptions(this.voice);
+    }
+
+    @tuiPure
+    get record$(): Observable<SpeechRecognitionResult[]> {
+        return this.result$.pipe(
+            skipUntilSaid('Okay Angular'),
+            takeUntilSaid('Thank you Angular'),
+            repeat(),
+            continuous(),
+        );
+    }
+
+    @tuiPure
+    get open$(): Observable<boolean> {
+        return merge(
+            this.result$.pipe(filter(isSaid('Show sidebar')), mapTo(true)),
+            this.result$.pipe(filter(isSaid('Hide sidebar')), mapTo(false)),
+        );
+    }
+
+    @tuiPure
+    private get result$(): Observable<SpeechRecognitionResult[]> {
+        return this.recognition$.pipe(retry(), repeat(), share());
+    }
+
+    @tuiPure
+    private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
+        return {
+            lang: 'en-US',
+            voice,
+        };
+    }
+
 
     /**
      *
@@ -67,7 +144,11 @@ export class MemeGeneratorComponent implements OnInit {
         private lss: LocalStorageService,
         private _route: ActivatedRoute,
         private toastService: ToastService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        @Inject(SPEECH_SYNTHESIS_VOICES)
+        readonly voices$: Observable<ReadonlyArray<SpeechSynthesisVoice>>,
+        @Inject(SpeechRecognitionService)
+        private readonly recognition$: Observable<SpeechRecognitionResult[]>,
 
     ) {
         this.memeForm = this._formBuilder.group({
@@ -158,9 +239,6 @@ export class MemeGeneratorComponent implements OnInit {
             }],
         })
         this.isLoggedIn = lss.hasLocalStorage()
-        
-        
-        
     }
 
     /**
@@ -184,6 +262,7 @@ export class MemeGeneratorComponent implements OnInit {
         
        
     }
+
 
 
     add(event: MatChipInputEvent): void {

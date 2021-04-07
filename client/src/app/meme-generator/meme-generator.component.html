@@ -175,6 +175,22 @@
         </div>
     </form>
 </div>
+<textarea class="textarea"
+[(ngModel)]="text"
+[waTextToSpeech]="text | waUtterance: options"
+[waTextToSpeechPaused]="paused"
+(waTextToSpeechEnd)="onEnd()">
+
+</textarea>
+<button mat-raised-button color="primary" type="button" (click)="onClick()">{{paused ? 'Play' : 'Paused'}}</button>
+
+<div class="text">
+    <button mat-raised-button color="primary" type="button" (click)="test()">Record</button>
+    <span *ngFor="let result of result" class="transcript" [class.transcript_final]="result.isFinal">
+    {{ result[0].transcript }}>
+    </span>
+</div>
+
 <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 <ng-template #notLoggedIn>
     <div class="wrapper center">

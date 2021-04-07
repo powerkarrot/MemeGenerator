@@ -31,6 +31,7 @@ import {MatCardModule} from '@angular/material/card'
 import {MatDialogModule} from '@angular/material/dialog';
 import {TemplateViewerComponent} from './template-viewer/template-viewer.component' 
 import {MatExpansionModule} from '@angular/material/expansion'
+import {SpeechSynthesisModule} from '@ng-web-apis/speech'
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import {MatExpansionModule} from '@angular/material/expansion'
         NgxChartsModule,
         MatCardModule,
         MatDialogModule,
+        SpeechSynthesisModule,
         MatExpansionModule
     ],
     providers: [LocalStorageService],
