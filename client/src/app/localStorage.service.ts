@@ -6,6 +6,13 @@ import {UserService} from './user.service'
 
 // Key used to access local data
 const STORAGE_KEY = 'local_userdata'
+// Key used for app settings
+const SETTINGS_KEY = 'app_settings'
+
+export interface Setting {
+    key: string
+    value: any
+}
 
 @Injectable()
 export class LocalStorageService {
@@ -43,6 +50,25 @@ export class LocalStorageService {
     public deleteLocalStorage(): boolean {
         this.storage.remove(STORAGE_KEY)
         return this.hasLocalStorage()
+    }
+
+    private saveSetting(setting: Setting): void {
+        let oldSettings = this.storage.get(setting.key) || {}
+        oldSettings["value"] = setting.value
+        this.storage.set(setting.key, oldSettings)
+    }
+
+    private getSetting(setting: Setting): any {
+        return this.storage.get(setting.key) || {}   
+    }
+
+    public setVoiceControlStatus(status: boolean): void {
+        this.saveSetting({key: "VoiceControl", value: status})
+    }
+
+    public getVoiceControlStatus(): boolean {
+        let setting = this.getSetting({key: "VoiceControl", value: null})
+        return setting ? setting.value : false
     }
 
     public updateLocalStorage(): boolean {

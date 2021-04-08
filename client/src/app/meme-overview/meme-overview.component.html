@@ -1,8 +1,10 @@
+<input matInput [(ngModel)]="text" [waTextToSpeech]="text | waUtterance: options" [waTextToSpeechPaused]="paused" hidden>
+
 <div class="container-fluid" infinite-scroll [infiniteScrollDistance]="scrollDistance"
      [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="loadMemes()">
     <a href="" *ngFor="let meme of memes" routerLink="/meme/{{meme._id}}">
         <div class="img-thumbnail" style="background-image: url('{{meme.url}}');">
-            <div class="overlay">
+            <div class="overlay" ng-keydown="sayMeme(event, meme)">
                 <div class="text">{{meme.title}}</div>
                 <div class="views">{{meme.views}}
                     <mat-icon id="icon warn">people</mat-icon>

@@ -1,7 +1,12 @@
 <div style="padding: 10px;" class="wrapper center" *ngIf="isLoggedIn;else notLoggedIn">
-    <h2>Meme Generator</h2>
+    <h2>Meme Generator
+        <button mat-icon-button color="warn" aria-label="Record title" (click)="activateVoiceControl()">
+            <mat-icon>record_voice_over</mat-icon>
+        </button>
+    </h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
-        <input matInput formControlName="_id" hidden>        
+        <input matInput formControlName="_id" hidden>
+        <input matInput formControlName="voiceAssistant" [(ngModel)]="text" [waTextToSpeech]="text | waUtterance: options" [waTextToSpeechPaused]="paused" (waTextToSpeechEnd)="onEnd()" hidden>        
         <div fxLayout="row" fxLayoutAlign="start start">
             <button (click)="loadTemplates()" mat-raised-button color="secondary">
                 Uploaded templates
@@ -175,21 +180,7 @@
         </div>
     </form>
 </div>
-<textarea class="textarea"
-[(ngModel)]="text"
-[waTextToSpeech]="text | waUtterance: options"
-[waTextToSpeechPaused]="paused"
-(waTextToSpeechEnd)="onEnd()">
 
-</textarea>
-<button mat-raised-button color="primary" type="button" (click)="onClick()">{{paused ? 'Play' : 'Paused'}}</button>
-
-<div class="text">
-    <button mat-raised-button color="primary" type="button" (click)="test()">Record</button>
-    <span *ngFor="let result of result" class="transcript" [class.transcript_final]="result.isFinal">
-    {{ result[0].transcript }}>
-    </span>
-</div>
 
 <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 <ng-template #notLoggedIn>

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core'
+import {Component, OnInit, Input, Inject} from '@angular/core'
 import {Meme} from '../meme'
 import {HttpClient} from '@angular/common/http'
 import {ActivatedRoute} from '@angular/router'
@@ -12,6 +12,11 @@ import {Tag} from '../tags'
 import {ToastService} from '../toast-service'
 import {COMMA, SEMICOLON} from '@angular/cdk/keycodes'
 import {MatChipInputEvent} from '@angular/material/chips'
+import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
+    SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech'
+import {filter, mapTo, repeat, retry, share} from 'rxjs/operators'
+import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk'
+import {Subject, Observable, merge} from 'rxjs'
 
 @Component({
     selector: 'ngbd-modal-content',
@@ -73,6 +78,12 @@ export class MemeSingleviewComponent implements OnInit {
     readonly separatorKeysCodes: number[] = [COMMA, SEMICOLON];
     tags: Tag[] = [];
 
+    
+    // Voice recognition
+    text = ""
+    paused = false
+    voice = null
+
     /**
      *
      * @param _http
@@ -85,7 +96,11 @@ export class MemeSingleviewComponent implements OnInit {
                 private router: Router,
                 private modalService: NgbModal,
                 private localStorageService: LocalStorageService,
-                private toastService: ToastService) {
+                private toastService: ToastService,
+                @Inject(SPEECH_SYNTHESIS_VOICES)
+                readonly voices$: Observable<ReadonlyArray<SpeechSynthesisVoice>>,
+                @Inject(SpeechRecognitionService)
+                private readonly recognition$: Observable<SpeechRecognitionResult[]>,) {
     }
 
     /**
@@ -127,6 +142,53 @@ export class MemeSingleviewComponent implements OnInit {
 
         
     }
+
+    onVoiceControlClicked($event): void {
+        this.getVoiceCommand("Next meme").subscribe((res) => {
+            if(this.nextMeme) {
+                this.text = "Next meme"
+                const url = '/meme/' + this.nextMeme._id
+                this.router.navigateByUrl(url)
+            } else {
+                this.text = "There is no next meme"
+            }
+        })
+
+        this.getVoiceCommand("Previous meme").subscribe((res) => {
+            if(this.prevMeme) {
+                this.text = "Previous meme"
+                const url = '/meme/' + this.prevMeme._id
+                this.router.navigateByUrl(url)
+            } else {
+                this.text = "There is no previous meme"
+            }
+        })
+
+        this.getVoiceCommand("Describe meme").subscribe((res) => {
+            this.sayMeme(this.selectedMeme)
+        })
+
+        this.getVoiceCommand("Like meme").subscribe((res) => {
+            this.text = "Me likey this meme, yahyahyahyahyahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+            this.vote(true)
+        })
+
+        this.getVoiceCommand("Dislike meme").subscribe((res) => {
+            this.text = "Yo asshole i dislike your mother"
+            this.vote(false)
+        })
+        
+        
+    }
+
+    getVoiceCommand(command: string): Observable<string> {
+        return this.result$.pipe(filter(isSaid(command)), mapTo(command))
+    }
+
+    @tuiPure
+    private get result$(): Observable<SpeechRecognitionResult[]> {
+        return this.recognition$.pipe(retry(), repeat(), share());
+    }
     
     remove(tags: Tag): void {
         const index = this.tags.indexOf(tags);
@@ -145,6 +207,7 @@ export class MemeSingleviewComponent implements OnInit {
             this.memeService.getMeme(id).subscribe((data) => {
                 // @ts-ignore
                 this.selectedMeme = <Meme>data
+                //this.sayMeme(this.selectedMeme)
                 console.log(this.selectedMeme)
             })
             let options = {
@@ -224,5 +287,29 @@ export class MemeSingleviewComponent implements OnInit {
             return true
         }
         return false
+    }
+
+    sayMeme(meme: Meme): void {
+        this.paused = false
+        this.text = this.describeMeme(meme)
+        console.log("sayMeme: ", meme)
+    }
+
+    onEnd() {
+        this.paused = !this.paused;
+        // Re-trigger utterance pipe:
+        this.text = this.paused ? this.text + ' ' : this.text;
+    }
+
+    describeMeme(meme: Meme): string {
+        let text = "The title of the meme is: " + meme.title + " and has a description stating: " + meme.description
+        if(meme.topText) {
+            text += ", having a top text with caption: " + meme.topText
+        }
+        if(meme.bottomText) {
+            text += " and a bottom caption stating: " + meme.bottomText
+        }
+        text += ", this meme has " + meme.views + " views and " + meme.votes + " votes."
+        return text
     }
 }

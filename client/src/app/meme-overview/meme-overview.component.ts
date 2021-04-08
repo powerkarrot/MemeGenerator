@@ -2,6 +2,11 @@ import {Component, OnInit} from '@angular/core'
 import {MemeService} from '../meme.service'
 import {ActivatedRoute} from '@angular/router'
 import {Meme} from '../meme'
+import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
+    SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech'
+import {filter, mapTo, repeat, retry, share} from 'rxjs/operators'
+import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk'
+import {Subject, Observable, merge} from 'rxjs'
 
 
 
@@ -23,6 +28,11 @@ export class MemeOverviewComponent implements OnInit {
     category
     search 
     filter
+
+    // Voice recognition
+    text = ""
+    paused = false
+    voice = null
 
     /**
      *
@@ -68,6 +78,24 @@ export class MemeOverviewComponent implements OnInit {
         })
         this.loadMemes()
 
+    }
+
+    sayMeme(event, meme: Meme): void {
+        this.text = ""
+        this.text = this.describeMeme(meme)
+        console.log("sayMeme: ", meme)
+    }
+
+    describeMeme(meme: Meme): string {
+        let text = "The title of the meme is: " + meme.title + " and has a description stating: " + meme.description
+        if(meme.topText) {
+            text += ", having a top text with caption: " + meme.topText
+        }
+        if(meme.bottomText) {
+            text += " and a bottom caption stating: " + meme.bottomText
+        }
+        text += ", this meme has " + meme.views + " views and " + meme.votes + " votes."
+        return text
     }
 
     /**
