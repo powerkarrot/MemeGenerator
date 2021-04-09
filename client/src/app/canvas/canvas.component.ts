@@ -23,7 +23,6 @@ export class CanvasComponent implements AfterViewInit {
     public ngAfterViewInit() {
         const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
         this.cx = canvasEl.getContext("2d");
-        this.d = this.cx
 
         canvasEl.width = this.width;
         canvasEl.height = this.height;
@@ -53,8 +52,8 @@ export class CanvasComponent implements AfterViewInit {
         const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
         var image = new Image();
 	    image.src = canvasEl.toDataURL("image/png");
-        image.id = "canvas.png"
-        image.name = "canvas.png"
+        image.id = "canvas_" + Math.floor((Math.random()*10000000)+1).toString() + ".png"
+
         this.testdata = image
     }
 
