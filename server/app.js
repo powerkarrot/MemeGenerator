@@ -82,6 +82,7 @@ async function upload(files) {
                 const filePath = path + fileObject.name
                 // eslint-disable-next-line no-await-in-loop
                 await fileObject.mv(filePath)
+                console.log(fileObject.name)
                 uploads.push({fullPath: filePath, fileName: fileObject.name})
             }
         }

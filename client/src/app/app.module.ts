@@ -31,6 +31,7 @@ import {MatCardModule} from '@angular/material/card'
 import {MatDialogModule} from '@angular/material/dialog';
 import {TemplateViewerComponent} from './template-viewer/template-viewer.component' 
 import {MatExpansionModule} from '@angular/material/expansion'
+import { CanvasComponent } from './canvas/canvas.component'
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import {MatExpansionModule} from '@angular/material/expansion'
         UserPanelComponent,
         ToastsContainer,   
         MemeStatsComponent,
-        TemplateViewerComponent
+        TemplateViewerComponent,
+        CanvasComponent
     ],
     imports: [
         BrowserModule,

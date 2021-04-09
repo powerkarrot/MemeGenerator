@@ -15,6 +15,7 @@ import {Template} from '../template'
 import {ToastService} from '../toast-service'
 import { TemplateViewerComponent } from '../template-viewer/template-viewer.component' 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { CanvasComponent } from '../canvas/canvas.component'
 
 export interface DialogData {
     animal: string;
@@ -290,6 +291,25 @@ export class MemeGeneratorComponent implements OnInit {
                 this._memeService.updateTemplate(this.template, false, true).subscribe((template) => {
                 })
             }
+        });
+      }
+
+      openCanvas() {
+        const dialogRef = this.dialog.open(CanvasComponent, {restoreFocus: false});
+    
+        // Manually restore focus to the menu trigger since the element that
+        // opens the dialog won't be in the DOM any more when the dialog closes.
+        dialogRef.afterClosed().subscribe(result => {
+            //this.selectTemplate(result.src)
+
+            let filename =  "canvas.png"
+
+
+            this.memeForm.patchValue({
+                fileSource: this.dataurlToFile(result.src, filename),
+                name: filename,
+                imgUrl: null
+            })
         });
       }
 
@@ -614,6 +634,7 @@ export class MemeGeneratorComponent implements OnInit {
         var b: any = blob;
         b.lastModifiedDate = new Date();
         b.name = filename;
+        console.log("converted is " + JSON.stringify(<File>b))
     
         return <File>b;
     }
