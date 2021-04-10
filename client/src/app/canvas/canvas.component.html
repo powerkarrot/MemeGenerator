@@ -1,0 +1,9 @@
+<mat-dialog-content>
+  Draw 
+</mat-dialog-content>
+<canvas #canvas></canvas>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="testdata" cdkFocusInitial>Ok</button>
+</div>

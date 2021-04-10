@@ -21,7 +21,7 @@ export class MemeService {
      * @param id
      * @param data
      */
-    updateMeme(id, data): Observable<Object | Meme> {
+    updateMeme(id, data): Observable<any | Meme> {
         let url = environment.apiUrl + '/meme'
         if (id !== null) url += '/' + id
         return this._http.post(url, data).pipe(
@@ -54,6 +54,12 @@ export class MemeService {
         }
     }
 
+    /**
+
+     * takes a screenshot from url link and returns the link to the generated image
+     * @param link 
+     * @returns 
+     */
     takeScreenshot(link) : Observable<any>{
         let url = environment.apiUrl + '/screenshot' 
         const data = {
@@ -70,7 +76,7 @@ export class MemeService {
      * @param data 
      * @returns updated template
      */
-       updateTemplate(data, generated:boolean, description:boolean): Observable<Object | Template> {
+    updateTemplate(data, generated:boolean, description:boolean): Observable<Object | Template> {
         let url = environment.apiUrl + '/template'
         if (generated) url = url + "/generated"
         else if (description) url = url + "/description"

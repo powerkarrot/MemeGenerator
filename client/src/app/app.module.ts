@@ -37,6 +37,7 @@ import {MatCardModule} from '@angular/material/card'
 import {MatDialogModule} from '@angular/material/dialog';
 import {TemplateViewerComponent} from './template-viewer/template-viewer.component' 
 import {MatExpansionModule} from '@angular/material/expansion'
+import { CanvasComponent } from './canvas/canvas.component'
 // Speech recognition and text to speech
 import {SpeechSynthesisModule} from '@ng-web-apis/speech'
 
@@ -54,7 +55,8 @@ import {SpeechSynthesisModule} from '@ng-web-apis/speech'
         UserPanelComponent,
         ToastsContainer,   
         MemeStatsComponent,
-        TemplateViewerComponent
+        TemplateViewerComponent,
+        CanvasComponent
     ],
     imports: [
         BrowserModule,

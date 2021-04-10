@@ -73,6 +73,13 @@
         </div>
         <br/>
         <p>or</p>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <button class="actionBtn" (click)="openCanvas();" mat-raised-button color="secondary"> 
+                Canvas
+            </button>
+        </div>
+        <br/>
+        <p>or</p>
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field>
                 <mat-label>Image URL</mat-label>
@@ -176,7 +183,7 @@
                 class="colorPicker"
                 formControlName="bottomColor">
         </div>
-        <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" />
+        <img style="background-color: #F4F4F7;" *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" id = "generatedImg"/>
         <div fxLayout="row" style="margin-top: 10px">
             <button mat-raised-button color="primary" (click)="openDialog()" *ngIf="meme">
                 View/edit template

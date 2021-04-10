@@ -14,6 +14,7 @@ import {Meme} from '../meme'
 import {Template} from '../template'
 import {ToastService} from '../toast-service'
 import { TemplateViewerComponent } from '../template-viewer/template-viewer.component' 
+import { CanvasComponent } from '../canvas/canvas.component'
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog'
 import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
     SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech';
@@ -433,6 +434,7 @@ export class MemeGeneratorComponent implements OnInit {
             }],
         })
         this.isLoggedIn = lss.hasLocalStorage()
+
         this.currentCommand = Command.STOP
         if(this.lss.getVoiceControlStatus()) {
             this.activateVoiceControl()
@@ -568,6 +570,26 @@ export class MemeGeneratorComponent implements OnInit {
         });
       }
 
+      openCanvas() {
+        const dialogRef = this.dialog.open(CanvasComponent, {restoreFocus: false});
+    
+        // Manually restore focus to the menu trigger since the element that
+        // opens the dialog won't be in the DOM any more when the dialog closes.
+        dialogRef.afterClosed().subscribe(result => {
+
+            let file = this.dataurlToFile(result.src, result.id)
+
+            this.memeForm.patchValue({
+                fileSource: file,
+                name: file.name,
+                imgUrl: null
+            })
+            let name = result.id
+            this.template.url = "http://localhost:3007/uploads/" + name
+            this.selectTemplate(this.template.url)
+        });
+      }
+
     /**
      * updates the meme
      */
@@ -575,11 +597,14 @@ export class MemeGeneratorComponent implements OnInit {
         if(!this.continueDraft) {
             
             const formData = this.generateMemeFormData()
-            
+    
             this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
                 this.meme = meme
                 // @ts-ignore
                 this.id = meme._id
+                //let name = meme.template.split("/").pop()
+                //this.template.url = "http://localhost:3007/uploads/" + name
+                this.updateTemplate(meme.template)
             })
         }
         this.continueDraft = false
@@ -651,7 +676,8 @@ export class MemeGeneratorComponent implements OnInit {
 
         const file = this.memeForm.get('fileSource').value
         if (file) {
-            formData.append('file', file)
+            //formData.append('file', file)
+            formData.append('file', file, file.name);
         }
 
         const template = this.memeForm.get('template').value
@@ -845,11 +871,9 @@ export class MemeGeneratorComponent implements OnInit {
     public takeScreenshot(): void {
         this._memeService.takeScreenshot(this.screenhotURL).subscribe(screenshot => {
 
-            //this.template.title = screenshot.title
             this.selectTemplate(screenshot.url)
         })
     }
-
 
     /**
      * Handles captured webcam image
@@ -859,12 +883,17 @@ export class MemeGeneratorComponent implements OnInit {
     handleImage(webcamImage: WebcamImage): void {
 
         this.webcamImage = webcamImage  
-        let filename =  "webcamImage.jpeg"
+        //let filename =  "webcamImage.jpeg"
+        let filename = "webcamImage_" + Math.floor((Math.random()*10000000)+1).toString() + ".jpeg"
+
         this.memeForm.patchValue({
             fileSource: this.dataurlToFile(webcamImage.imageAsDataUrl, filename),
             name: filename,
             imgUrl: null
         })
+        this.template.url = "http://localhost:3007/uploads/" + filename
+        this.selectTemplate(this.template.url)
+
     }
 
     /**
@@ -889,7 +918,7 @@ export class MemeGeneratorComponent implements OnInit {
         var b: any = blob;
         b.lastModifiedDate = new Date();
         b.name = filename;
-    
+
         return <File>b;
     }
 }

@@ -73,12 +73,14 @@ async function upload(files) {
         if (!fs.existsSync(path)) fs.mkdirSync(path, {recursive: true})
         for (let i = 0; i < fileFields.length; i++) {
             fileField = files[fileFields[i]]
+
             // workaround for dealing with one file only
             let len = fileField.length, isArray = Array.isArray(fileField)
             if (!isArray) len = 1
             for (let j = 0; j < len; j++) {
                 if (!isArray) fileObject = fileField
                 else fileObject = fileField[j]
+
                 const filePath = path + fileObject.name
                 // eslint-disable-next-line no-await-in-loop
                 await fileObject.mv(filePath)
@@ -420,7 +422,6 @@ app.post('/template/vote/:id', async function(req, res) {
                 }
             })
         })
-
         
     } else {
         sendResponse(res, ResponseType.ERROR, "User not authorized!")
@@ -434,6 +435,7 @@ app.post('/template/vote/:id', async function(req, res) {
 app.post('/meme', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
+    //console.log("files req name " + JSON.stringify(req.files))
     const uploads = await upload(req.files)
     const userid = ObjectID(req.body.userid)
     const cred = req.body.cred
@@ -455,10 +457,9 @@ app.post('/meme', async function (req, res) {
             fileName = uploads[0].fileName.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd
-            console.log("filename is " + url)
+
         } else {
             url = meme.url
-            console.log("filename is " + url)
             fileName = url.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd
@@ -490,7 +491,9 @@ app.post('/meme', async function (req, res) {
                 meme.createdBy = userdata
                 meme.dateAdded = new Date(Date.now()).toISOString()
 
-                meme.template = url
+                let name = url.split("/").pop()
+                meme.template = "http://localhost:3007/uploads/" + name
+                //meme.template = url
                 meme.voteData = [{
                     timestamp: new Date(Date.now()).toISOString(),
                     votes: 0

@@ -16,7 +16,9 @@ input {
 
 #templates img {
     cursor: pointer;
+    background-color: white;
 }
+
 .wrapper {
     width: 80%;
     background-color: #232323;
