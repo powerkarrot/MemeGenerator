@@ -85,10 +85,16 @@ export class MemeSingleviewComponent implements OnInit {
     voice = null
 
     /**
-     *
-     * @param _http
-     * @param _route
-     * @param memeService
+     * 
+     * @param _http 
+     * @param _route 
+     * @param memeService 
+     * @param router 
+     * @param modalService 
+     * @param localStorageService 
+     * @param toastService 
+     * @param voices$ 
+     * @param recognition$ 
      */
     constructor(private _http: HttpClient,
                 private _route: ActivatedRoute, 

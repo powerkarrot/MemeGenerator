@@ -20,11 +20,9 @@ import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecogn
     SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech';
 import {filter, mapTo, repeat, retry, share} from 'rxjs/operators';
 import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk';
+import { NgbdModalContent } from '../meme-singleview/meme-singleview.component'
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 
-export interface DialogData {
-    animal: string;
-    name: string;
-  }
 
 enum Command {
     TITLE = 1,
@@ -44,10 +42,6 @@ enum Command {
     styleUrls: ['./meme-generator.component.css']
 })
 export class MemeGeneratorComponent implements OnInit {
-
-
-    animal: string;
-    name: string;
 
     memeForm: any
     meme: any = null
@@ -322,13 +316,20 @@ export class MemeGeneratorComponent implements OnInit {
 
 
     /**
-     *
-     * @param _formBuilder
-     * @param _router
-     * @param _memeService
+     * 
+     * @param modalService 
+     * @param _formBuilder 
+     * @param _router 
+     * @param _memeService 
+     * @param lss 
+     * @param _route 
+     * @param toastService 
+     * @param dialog 
+     * @param voices$ 
+     * @param recognition$ 
      */
     constructor(
-       
+        private modalService: NgbModal,
         private _formBuilder: FormBuilder,
         private _router: Router,
         private _memeService: MemeService,
@@ -920,5 +921,13 @@ export class MemeGeneratorComponent implements OnInit {
         b.name = filename;
 
         return <File>b;
+    }
+
+      /**
+     * Opens a share meme modal
+     */
+       share(): void {
+        const modalRef = this.modalService.open(NgbdModalContent)
+        modalRef.componentInstance.url = this.meme.url
     }
 }
