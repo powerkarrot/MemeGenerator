@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core'
+import {Component, OnInit, Inject} from '@angular/core'
 import {FormBuilder, Validators} from '@angular/forms'
 import {Router} from '@angular/router'
 import {debounceTime} from 'rxjs/operators'
 import {MemeService} from '../meme.service'
 import {WebcamImage} from 'ngx-webcam'
-import {Subject, Observable} from 'rxjs'
+import {Subject, Observable, merge} from 'rxjs'
 import {LocalStorageService} from '../localStorage.service'
 import {ActivatedRoute} from '@angular/router'
 import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
@@ -14,13 +14,29 @@ import {Meme} from '../meme'
 import {Template} from '../template'
 import {ToastService} from '../toast-service'
 import { TemplateViewerComponent } from '../template-viewer/template-viewer.component' 
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { CanvasComponent } from '../canvas/canvas.component'
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog'
+import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
+    SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech';
+import {filter, mapTo, repeat, retry, share} from 'rxjs/operators';
+import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk';
 
 export interface DialogData {
     animal: string;
     name: string;
   }
+
+enum Command {
+    TITLE = 1,
+    TOP_TEXT,
+    BOTTOM_TEXT,
+    DESCRIPTION,
+    TOP_X,
+    TOP_Y,
+    BOTTOM_X,
+    BOTTOM_Y,
+    STOP
+}
 
 @Component({
     selector: 'app-meme-generator',
@@ -49,12 +65,261 @@ export class MemeGeneratorComponent implements OnInit {
     private continueDraft = false
     screenhotURL
 
-    visible = true;
-    selectable = true;
-    removable = true;
-    addOnBlur = true;
-    readonly separatorKeysCodes: number[] = [COMMA];
-    tags: Tag[] = [];
+    visible = true
+    selectable = true
+    removable = true
+    addOnBlur = true
+    readonly separatorKeysCodes: number[] = [COMMA]
+    tags: Tag[] = []
+    
+
+    // Used for voice recognition
+    text = ""
+    paused = true
+    voice = null
+    result: Observable<SpeechRecognitionResult[]>
+    currentCommand : Command
+    templateIndex = -1
+    
+    readonly nameExtractor = ({
+        $implicit,
+    }: TuiContextWithImplicit<SpeechSynthesisVoice>) => $implicit.name;
+
+    onEnd(): void {
+        console.log('Speech synthesis ended');
+    }
+
+    getCommandText(command: Command): string {
+        switch(command) {
+            case Command.TITLE:
+                return "Title"
+            case Command.DESCRIPTION:
+                return "Description"
+            case Command.TOP_TEXT:
+                return "Top text"
+            case Command.TOP_X:
+                return "Top X"
+            case Command.TOP_Y:
+                return "Top Y"
+            case Command.BOTTOM_TEXT:
+                return "Bottom text"
+            case Command.BOTTOM_X:
+                return "Bottom X"
+            case Command.BOTTOM_Y:
+                return "Bottom Y"
+        }
+    }
+
+    speakText(text: string): void {
+        // Re-trigger utterance pipe:
+        this.text = ''
+        this.text = text
+    }
+
+    activateVoiceControl() {
+        this.paused = false
+        this.getVoiceCommand("Show all memes").subscribe((res) => {
+            this.text = "Navigating to memes overview"
+            this._router.navigate(['/memes/'])
+        })
+
+        this.getVoiceCommand("Select templates").subscribe((res) => {
+            this.speakText("Select templates")
+            this.loadTemplates()
+        })
+
+        this.getVoiceCommand("Select image flip").subscribe((res) => {
+            this.speakText("Select image flip")
+            this.imgFlipAPITemplates()
+        })
+
+        this.getVoiceCommand("Use Webcam").subscribe((res) => {
+            this.speakText("Webcam toggled")
+            this.toggleWebcam()
+        })
+
+        this.getVoiceCommand("Take snapshot").subscribe((res) => {
+            this.speakText("Snapshot taken")
+            this.triggerSnapshot()
+        })
+        // Geht theoretisch aber bin anscheinend zu schlecht in der Aussprache...
+        this.getVoiceCommand("Top bold").subscribe((res) => {
+            const topBold = this.memeForm.get('topBold').value
+            if (topBold) {
+                this.speakText("Making bottom text bold")
+                this.memeForm.patchValue({topBold: !topBold})
+            }
+        })
+
+        this.getVoiceCommand("Make private").subscribe((res) => {
+            this.speakText("Meme is now private")
+            this.memeForm.patchValue({visibility: 'private'})
+        })
+
+        this.getVoiceCommand("Make public").subscribe((res) => {
+            this.speakText("Meme is now public")
+            this.memeForm.patchValue({visibility: 'public'})
+        })
+
+        this.getVoiceCommand("Make unlisted").subscribe((res) => {
+            this.speakText("Meme is now unlisted")
+            this.memeForm.patchValue({visibility: 'unlisted'})
+        })
+
+        this.getVoiceCommand("Delete Draft").subscribe((res) => {
+            this.speakText("Deleting Draft")
+            this.discardMeme()
+        })
+        
+        this.getVoiceCommand("Save Draft").subscribe((res) => {
+            this.speakText("Saving Draft")
+            this.saveDraft()
+        })
+
+        this.getVoiceCommand("finish meme").subscribe((res) => {
+            this.speakText("Finishing Meme")
+            this.finishMeme()
+        })
+
+        this.getVoiceCommand("Next template").subscribe((res) => {
+            if(this.templateIndex < this.templates.length) {
+                this.templateIndex++
+            }
+            this.speakText("Next template")
+            this.selectTemplate(this.templates[this.templateIndex])
+            
+        })
+
+        this.getVoiceCommand("Previous template").subscribe((res) => {
+            if(this.templateIndex > 0) {
+                this.templateIndex--
+            }
+            this.speakText("Previous template")
+            this.selectTemplate(this.templates[this.templateIndex])
+        })
+
+        this.command$.subscribe((command) => {
+            this.currentCommand = command
+
+            this.text = this.getCommandText(command) + " selected"
+
+            if(command != Command.STOP) {
+                this.getVoiceCommand("Begin " + this.getCommandText(command)).subscribe((res) => {
+                    this.text = res
+                }) 
+
+                this.getVoiceCommand("Stop").subscribe((res) => {
+                    this.text = res + " " + this.getCommandText(command)
+                }) 
+
+                this.result$.pipe(skipUntilSaid("Begin " + this.getCommandText(command)) ,takeUntilSaid('Stop'), repeat(), continuous()).subscribe((res) =>{
+                    let text = res.pop()
+                    if(text && text.isFinal) {
+             
+                        switch(command){
+                            case Command.TITLE: {
+                                this.memeForm.patchValue({title: text[0].transcript})
+                                break
+                            }
+                            case Command.DESCRIPTION: {
+                                this.memeForm.patchValue({description: text[0].transcript})
+                                break
+                            }
+                            case Command.TOP_TEXT: {
+                                this.memeForm.patchValue({topText: text[0].transcript})
+                                break
+                            }
+                            case Command.TOP_X: {
+                                this.memeForm.patchValue({topX: text[0].transcript})
+                                break
+                            }
+                            case Command.TOP_Y: {
+                                this.memeForm.patchValue({topY: text[0].transcript})
+                                break
+                            }
+                            case Command.BOTTOM_TEXT: {
+                                this.memeForm.patchValue({bottomText: text[0].transcript})
+                                break
+                            }
+                            case Command.BOTTOM_X: {
+                                this.memeForm.patchValue({bottomX: text[0].transcript})
+                                break
+                            }
+                            case Command.BOTTOM_Y: {
+                                this.memeForm.patchValue({bottomY: text[0].transcript})
+                                break
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    getVoiceCommand(command: string): Observable<string> {
+        return this.result$.pipe(filter(isSaid(command)), mapTo(command))
+    }
+
+    @tuiPure
+    get command$(): Observable<Command> {
+        return merge(
+            this.result$.pipe(filter(isSaid('Select title')), mapTo(Command.TITLE)),
+            this.result$.pipe(filter(isSaid('Select description')), mapTo(Command.DESCRIPTION)),
+            this.result$.pipe(filter(isSaid('Select top text')), mapTo(Command.TOP_TEXT)),
+            this.result$.pipe(filter(isSaid('Select bottom text')), mapTo(Command.BOTTOM_TEXT)),
+            this.result$.pipe(filter(isSaid('Select top x')), mapTo(Command.TOP_X)),
+            this.result$.pipe(filter(isSaid('Select top y')), mapTo(Command.TOP_Y)),
+            this.result$.pipe(filter(isSaid('Select bottom x')), mapTo(Command.BOTTOM_X)),
+            this.result$.pipe(filter(isSaid('Select bottom y')), mapTo(Command.BOTTOM_Y)),
+            this.result$.pipe(filter(isSaid('Stop listening')), mapTo(Command.STOP)),
+        );
+    }
+
+    onClick() {
+        this.paused = !this.paused;
+        // Re-trigger utterance pipe:
+        this.text = this.paused ? this.text + ' ' : this.text;
+    }
+
+    voiceByName(_: number, {name}: SpeechSynthesisVoice): string {
+        return name;
+    }
+
+    get options(): SpeechSynthesisUtteranceOptions {
+        return this.getOptions(this.voice);
+    }
+
+    @tuiPure
+    get record$(): Observable<SpeechRecognitionResult[]> {
+        return this.result$.pipe(
+            skipUntilSaid('Start'),
+            takeUntilSaid('Stop'),
+            repeat(),
+            continuous(),
+        );
+    }
+
+    @tuiPure
+    get open$(): Observable<boolean> {
+        return merge(
+            this.result$.pipe(filter(isSaid('Show sidebar')), mapTo(true)),
+            this.result$.pipe(filter(isSaid('Hide sidebar')), mapTo(false)),
+        );
+    }
+
+    @tuiPure
+    private get result$(): Observable<SpeechRecognitionResult[]> {
+        return this.recognition$.pipe(retry(), repeat(), share());
+    }
+
+    @tuiPure
+    private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
+        return {
+            lang: 'en-US',
+            voice,
+        };
+    }
+
 
     /**
      *
@@ -70,12 +335,20 @@ export class MemeGeneratorComponent implements OnInit {
         private lss: LocalStorageService,
         private _route: ActivatedRoute,
         private toastService: ToastService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        @Inject(SPEECH_SYNTHESIS_VOICES)
+        readonly voices$: Observable<ReadonlyArray<SpeechSynthesisVoice>>,
+        @Inject(SpeechRecognitionService)
+        private readonly recognition$: Observable<SpeechRecognitionResult[]>,
 
     ) {
         this.memeForm = this._formBuilder.group({
             _id: [],
             imgUrl: [{
+                value: null,
+                disabled: false
+            }],
+            voiceAssistant: [{
                 value: null,
                 disabled: false
             }],
@@ -161,7 +434,11 @@ export class MemeGeneratorComponent implements OnInit {
             }],
         })
         this.isLoggedIn = lss.hasLocalStorage()
-        
+
+        this.currentCommand = Command.STOP
+        if(this.lss.getVoiceControlStatus()) {
+            this.activateVoiceControl()
+        }
     }
 
     /**
@@ -185,6 +462,7 @@ export class MemeGeneratorComponent implements OnInit {
         
        
     }
+
 
 
     add(event: MatChipInputEvent): void {

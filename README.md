@@ -41,3 +41,7 @@ Our client is built on Angular. In order to start it, run the following commands
 
 `ng serve`
 
+## Voice Control
+
+Voice control is build into the client. In order to use it you need to have Chrome though.
+

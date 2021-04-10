@@ -1,5 +1,8 @@
 import { Injectable, TemplateRef} from '@angular/core'
 
+/**
+ * Global service used to display toast notifications
+ */
 @Injectable({ providedIn: 'root' })
 export class ToastService {
     toasts: any[] = []

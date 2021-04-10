@@ -1,3 +1,4 @@
+<input matInput [(ngModel)]="text" [waTextToSpeech]="text | waUtterance: options" [waTextToSpeechPaused]="paused" (waTextToSpeechEnd)="onEnd()" hidden>
 <div class="singleview-container">
     <div class="image-container">
         <a class="carousel-control-prev" routerLink="/meme/{{prevMeme._id}}" *ngIf="prevMeme;else emptySpaceLeft">
@@ -20,7 +21,12 @@
                     <label class="btn-primary accent" ngbButtonLabel>
                       <input type="checkbox" ngbButton [(ngModel)]="model.random"> Random
                     </label>
-                </div>  
+                </div>
+                <div class="btn-group btn-group-toggle">
+                    <label class="btn-primary accent" ngbButtonLabel>
+                      <input type="checkbox" ngbButton [(ngModel)]="model.voiceControl" (change)="onVoiceControlClicked($event)"> Voice Control
+                    </label>
+                </div>    
             </div>
             <div class="element">
                 <a href="{{selectedMeme.url}}" mat-icon-button color="warn" target="_blank">
@@ -45,6 +51,11 @@
             <div class="element" *ngIf="loggedIn">
                 <button mat-icon-button color="warn" aria-label="Upvote meme" (click)="vote(true)">
                     <mat-icon>thumb_up</mat-icon>
+                </button>
+            </div>
+            <div class="element">
+                <button mat-icon-button color="warn" aria-label="Read meme" (click)="sayMeme(selectedMeme)">
+                    <mat-icon>mic</mat-icon>
                 </button>
             </div>
             <div class="element">

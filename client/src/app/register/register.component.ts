@@ -24,6 +24,10 @@ export class RegisterComponent implements OnInit {
     ngOnInit(): void {
     }
 
+    /**
+     * Register the user 
+     * @param data formdata
+     */
     onClickSubmit(data) {
         this.userService.register(data.username, data.password).subscribe((res) => {
             console.log(res)
@@ -31,10 +35,18 @@ export class RegisterComponent implements OnInit {
         })
     }
 
+    /**
+     * Debug function to print the model binding
+     * @param $event 
+     */
     onValueChanged($event): void {
         console.log(this.model)
     }
 
+    /**
+     * Checks if the passwords fields match and updates the status
+     * @param $event 
+     */
     keyEvent($event): void {
         if(this.model.password == this.model.password_re){
             this.pw_match = true
