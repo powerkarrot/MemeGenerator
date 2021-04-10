@@ -184,6 +184,16 @@
                 formControlName="bottomColor">
         </div>
         <img style="background-color: #F4F4F7;" *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" id = "generatedImg"/>
+        
+        <div fxLayout="row" style="margin-top: 10px; text-align: center;">
+            <a href="{{meme.url}}" mat-icon-button color="warn" target="_blank" *ngIf="meme">
+                <mat-icon>download</mat-icon>
+            </a>
+            <button mat-icon-button color="warn" aria-label="Share" (click)="share()" *ngIf="meme">
+                <mat-icon>share</mat-icon>
+            </button>
+        </div>
+        
         <div fxLayout="row" style="margin-top: 10px">
             <button mat-raised-button color="primary" (click)="openDialog()" *ngIf="meme">
                 View/edit template
