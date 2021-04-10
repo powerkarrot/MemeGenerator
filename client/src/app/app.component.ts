@@ -1,11 +1,15 @@
 import {Component, Inject} from '@angular/core'
 import {LocalStorageService} from './localStorage.service'
-import {SpeechRecognitionService, SPEECH_SYNTHESIS_VOICES, isSaid} from '@ng-web-apis/speech'
+import {SpeechRecognitionService, SPEECH_SYNTHESIS_VOICES, isSaid, SpeechSynthesisUtteranceOptions} from '@ng-web-apis/speech'
 import {filter, mapTo, repeat, retry, share} from 'rxjs/operators'
-import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk'
+import {tuiPure} from '@taiga-ui/cdk'
 import {Observable} from 'rxjs'
 import {Router} from '@angular/router'
 
+/**
+ * The idea was to have a global trigger for the voice control on the page.
+ * This didnt work for some reason I couldnt figure out. So this feature has been disabled in the html file.
+ */
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -15,7 +19,9 @@ export class AppComponent {
     title = 'client'
     voiceControl = false
     text = ''
-
+    paused = false
+    voice = null
+    
     constructor(
         private localStorageService: LocalStorageService,
         @Inject(SPEECH_SYNTHESIS_VOICES)
@@ -53,5 +59,17 @@ export class AppComponent {
     @tuiPure
     private get result$(): Observable<SpeechRecognitionResult[]> {
         return this.recognition$.pipe(retry(), repeat(), share());
+    }
+
+    @tuiPure
+    private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
+        return {
+            lang: 'en-US',
+            voice,
+        };
+    }
+
+    get options(): SpeechSynthesisUtteranceOptions {
+        return this.getOptions(this.voice);
     }
 }

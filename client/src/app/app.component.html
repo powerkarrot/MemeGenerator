@@ -8,7 +8,7 @@
         <a class="py-2 d-none d-md-inline-block" routerLink="/">Nav 3</a>
         <app-meme-search class="py-2 d-none d-md-inline-block"></app-meme-search>
         <app-login-dropdown class="py-2 d-none d-md-inline-block"></app-login-dropdown>
-        <button mat-icon-button color="accent" aria-label="Enable voice control" (click)="toggleVoiceControl()" [ngClass]="{'voice-on': voiceControl,'voice-off': !voiceControl}">
+        <button mat-icon-button color="warn" aria-label="Record title" (click)="toggleVoiceControl()" [ngClass]="{'voice-on': voiceControl,'voice-off': !voiceControl}">
             <mat-icon>mic</mat-icon>
         </button>
     </nav>

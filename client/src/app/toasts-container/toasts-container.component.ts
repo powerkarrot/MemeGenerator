@@ -2,7 +2,9 @@
 import {Component, TemplateRef} from '@angular/core';
 import {ToastService} from '../toast-service';
 
-
+/**
+ * Container component for toast notification. Part of the material design library
+ */
 @Component({
 selector: 'app-toasts',
 template: `

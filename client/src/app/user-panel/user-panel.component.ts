@@ -32,6 +32,9 @@ export class UserPanelComponent implements OnInit {
         this.getDrafts()
     }
 
+    /**
+     * Calculates the total amount of votes the user has generated
+     */
     calcVotes(): void {
         if(this.userData && this.userData.memes.length > 0){
             // ToDo: broken
@@ -46,6 +49,9 @@ export class UserPanelComponent implements OnInit {
         }
     }
 
+    /**
+     * Gets the memes the user has created
+     */
     getMemes(){
         var memeids = []
         this.userData.memes.forEach(function(meme) {
@@ -61,6 +67,9 @@ export class UserPanelComponent implements OnInit {
         })
     }
 
+    /**
+     * Gets the memes a user has liked
+     */
     getLikedMemes() {
         var memeids = []
         this.userData.votes.forEach(function(meme) {
@@ -79,6 +88,9 @@ export class UserPanelComponent implements OnInit {
         })
     }
 
+    /**
+     * Gets the memes a user has disliked
+     */
     getDislikedMemes() {
         var memeids = []
         this.userData.votes.forEach(function(meme) {
@@ -97,6 +109,9 @@ export class UserPanelComponent implements OnInit {
         })
     }
 
+    /**
+     * Gets draft a user has created
+     */
     getDrafts(){
         var memeids = []
         if(this.userData.drafts){

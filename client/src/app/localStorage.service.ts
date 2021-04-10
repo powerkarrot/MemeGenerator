@@ -14,6 +14,9 @@ export interface Setting {
     value: any
 }
 
+/**
+ * This component is used to write data into the browsers local storage
+ */
 @Injectable()
 export class LocalStorageService {
 

@@ -120,6 +120,10 @@ export class MemeSingleviewComponent implements OnInit {
         this.loggedIn = this.isLoggedIn()
     }
 
+    /**
+     * Adds a tag to the tags array and uploads it to the server
+     * @param event 
+     */
     add(event: MatChipInputEvent): void {
         const input = event.input
         const value = event.value
@@ -143,6 +147,10 @@ export class MemeSingleviewComponent implements OnInit {
         
     }
 
+    /**
+     * Binds some voice commands to a button
+     * @param $event 
+     */
     onVoiceControlClicked($event): void {
         this.getVoiceCommand("Next meme").subscribe((res) => {
             if(this.nextMeme) {
@@ -169,27 +177,52 @@ export class MemeSingleviewComponent implements OnInit {
         })
 
         this.getVoiceCommand("Like meme").subscribe((res) => {
-            this.text = "Me likey this meme, yahyahyahyahyahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+            this.text = "You liked this meme!"
             this.vote(true)
         })
 
         this.getVoiceCommand("Dislike meme").subscribe((res) => {
-            this.text = "Yo asshole i dislike your mother"
+            this.text = "You disliked this meme!"
             this.vote(false)
         })
         
         
     }
 
+    
+    @tuiPure
+    private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
+        return {
+            lang: 'en-US',
+            voice,
+        };
+    }
+
+    get options(): SpeechSynthesisUtteranceOptions {
+        return this.getOptions(this.voice);
+    }
+
+    /**
+     * Helper function to listen to a certain word
+     * @param command Word that should be listened for
+     * @returns Observable to subscribe to
+     */
     getVoiceCommand(command: string): Observable<string> {
         return this.result$.pipe(filter(isSaid(command)), mapTo(command))
     }
 
+    /**
+     * Voice recognition result property used to build voice commands
+     */
     @tuiPure
     private get result$(): Observable<SpeechRecognitionResult[]> {
         return this.recognition$.pipe(retry(), repeat(), share());
     }
     
+    /**
+     * Removes a tag from the tags array
+     * @param tags 
+     */
     remove(tags: Tag): void {
         const index = this.tags.indexOf(tags);
     
@@ -232,6 +265,10 @@ export class MemeSingleviewComponent implements OnInit {
         this.router.navigate(['/stats/' + this.selectedMeme._id])
     }
 
+    /**
+     * Activates autoplay for memes
+     * @param $event 
+     */
     onAutoplayClicked($event): void {
         if (this.model.autoplay == true) {
             this.timer = interval(5000).subscribe((val) => {
@@ -253,6 +290,10 @@ export class MemeSingleviewComponent implements OnInit {
         }
     }
 
+    /**
+     * Voting function for memes
+     * @param positive Vote is positive or negative?
+     */
     vote(positive: boolean): void {
         this.memeService.voteMeme(this.selectedMeme._id, positive,
                                   this.userData._id, this.userData.username,
@@ -267,20 +308,34 @@ export class MemeSingleviewComponent implements OnInit {
         })
     }
 
+    /**
+     * Post comment on meme
+     * @param formdata the formdata
+     */
     commentMeme(formdata): void {
         this.memeService.commentMeme(this.selectedMeme._id, this.userData._id, this.userData.username, this.userData.api_cred, this.model.comment).subscribe((data) => {
         })
     }
 
+    /**
+     * Opens a share meme modal
+     */
     share(): void {
         const modalRef = this.modalService.open(NgbdModalContent)
         modalRef.componentInstance.url = this.selectedMeme.url
     }
 
+    /**
+     * Deconstructor
+     */
     ngOnDestroy() {
         if (this.timer != null) this.timer.unsubscribe();
     }
 
+    /**
+     * Check whenever a user is logged in
+     * @returns the login status
+     */
     isLoggedIn(): boolean {
         if(this.localStorageService.hasLocalStorage()){
             this.userData = <Userdata>this.localStorageService.getLocalStorage()
@@ -289,18 +344,30 @@ export class MemeSingleviewComponent implements OnInit {
         return false
     }
 
+    /**
+     * Function used to say a meme
+     * @param meme meme
+     */
     sayMeme(meme: Meme): void {
         this.paused = false
         this.text = this.describeMeme(meme)
         console.log("sayMeme: ", meme)
     }
 
+    /**
+     * On TTS end
+     */
     onEnd() {
         this.paused = !this.paused;
         // Re-trigger utterance pipe:
         this.text = this.paused ? this.text + ' ' : this.text;
     }
 
+    /**
+     * Gets a string representation of a meme for availability purposes
+     * @param meme 
+     * @returns 
+     */
     describeMeme(meme: Meme): string {
         let text = "The title of the meme is: " + meme.title + " and has a description stating: " + meme.description
         if(meme.topText) {
