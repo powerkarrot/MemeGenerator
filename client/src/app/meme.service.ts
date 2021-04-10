@@ -29,6 +29,15 @@ export class MemeService {
         )
     }
 
+    /**
+     * Votes for a meme
+     * @param id 
+     * @param isUpvote 
+     * @param userid 
+     * @param username 
+     * @param apicred 
+     * @returns 
+     */
     voteMeme(id: number, isUpvote : boolean, userid: number, username: string, apicred: number): Observable<any> {
         if (id !== null) {
             let url = environment.apiUrl + '/meme/vote/' + id
@@ -57,10 +66,9 @@ export class MemeService {
     
     /**
      * Upserts a template
-     * returns updated template
      * @param id 
      * @param data 
-     * @returns 
+     * @returns updated template
      */
        updateTemplate(data, generated:boolean, description:boolean): Observable<Object | Template> {
         let url = environment.apiUrl + '/template'
@@ -74,7 +82,6 @@ export class MemeService {
 
     /**
      * vote for template
-     * returns updated template
      * 
      * @param id 
      * @param isUpvote 
@@ -82,7 +89,7 @@ export class MemeService {
      * @param username 
      * @param apicred 
      * @param template 
-     * @returns 
+     * @returns  updated template
      */
     voteTemplate(id: number, isUpvote : boolean, userid: number, username: string, apicred: number, template): Observable<any> {
         if (id !== null) {
@@ -101,6 +108,15 @@ export class MemeService {
         }
     }
 
+    /**
+     * Posts a comment on a meme
+     * @param id 
+     * @param userid 
+     * @param username 
+     * @param apicred 
+     * @param comment 
+     * @returns 
+     */
     commentMeme(id: number, userid: number, username: string, apicred: number, comment: string): Observable<any> {
         if(id !== null) {
             let url = environment.apiUrl + '/meme/comment/' + id
@@ -169,6 +185,14 @@ export class MemeService {
         )
     }
 
+    /**
+     * Commits tags added in the singleview
+     * @param id 
+     * @param tags 
+     * @param userid 
+     * @param apicred 
+     * @returns 
+     */
     commitTags(id: number, tags: Tag, userid: number, apicred: number): Observable<Object | any> {
         let url = environment.apiUrl + '/meme/tag/' + id
         const data = {
@@ -185,6 +209,7 @@ export class MemeService {
         )
     }
 
+    // Todo: Remove
     test(): Observable<any> {
         if(true) {
             let url = environment.apiUrl + '/tag'
@@ -270,6 +295,11 @@ export class MemeService {
         )
     }
 
+    /**
+     * Gets statistics to a certain meme id
+     * @param id 
+     * @returns 
+     */
     getMemeStats(id): Observable<Object | Meme> {
         let url = environment.apiUrl + '/stats/' + id
 

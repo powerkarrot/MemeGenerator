@@ -30,6 +30,10 @@ export class LoginDropdownComponent implements OnInit {
         this.isLoggedIn = this.localStorageService.hasLocalStorage()
     }
 
+    /**
+     * Tries to authenticate the user (login)
+     * @param data formdata
+     */
     onClickSubmit(data): void {
         if(!this.isLoggedIn){
             this.userService.login(data.username, data.password).subscribe((res) => {
@@ -41,6 +45,9 @@ export class LoginDropdownComponent implements OnInit {
         }
     }
 
+    /**
+     * Logout the current user
+     */
     logout(): void {
         if(this.isLoggedIn) {
             this.userService.logout(this.userData._id, this.userData.api_cred).subscribe((res) => {

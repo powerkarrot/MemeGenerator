@@ -14,7 +14,7 @@ export class UserService {
     }
 
     /**
-     * Login
+     * Login user
      * @param username 
      * @param password 
      * @returns 
@@ -30,6 +30,12 @@ export class UserService {
         )
     }
 
+    /**
+     * Logout user
+     * @param userId 
+     * @param userCred 
+     * @returns 
+     */
     logout(userId, userCred): Observable<Object | any> {
         let url = environment.apiUrl + '/logout'
         const data = {
@@ -58,6 +64,12 @@ export class UserService {
         )
     }
 
+    /**
+     * Gets the userdata after a user has been loged in.
+     * @param userId 
+     * @param userCred 
+     * @returns 
+     */
     getUserdata(userId: number, userCred: number): Observable<Object | any> {
         let url = environment.apiUrl + '/userdata'
         const data = {

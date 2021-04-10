@@ -1,15 +1,22 @@
 <div style="padding: 10px;" class="wrapper center" *ngIf="isLoggedIn;else notLoggedIn">
-    <h2>Meme Generator</h2>
+    <h2>Meme Generator
+        <button mat-icon-button 
+            matTooltip="Active voice control. Example: Say 'Select title' and wait for comfirmation. Then say 'Begin Title', wait for confirmation and say your text. When your ready say 'Stop'"
+            color="warn" aria-label="Record title" (click)="activateVoiceControl()">
+            <mat-icon>record_voice_over</mat-icon>
+        </button>
+    </h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
-        <input matInput formControlName="_id" hidden>        
+        <input matInput formControlName="_id" hidden>
+        <input matInput formControlName="voiceAssistant" [(ngModel)]="text" [waTextToSpeech]="text | waUtterance: options" [waTextToSpeechPaused]="paused" (waTextToSpeechEnd)="onEnd()" hidden>        
         <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="loadTemplates()" mat-raised-button color="secondary">
+            <button (click)="loadTemplates()" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select Templates' then 'next template' or 'previous template' to select your template">
                 Uploaded templates
             </button>
         </div>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="imgFlipAPITemplates()" mat-raised-button color="secondary">
+            <button (click)="imgFlipAPITemplates()" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select image flip' then 'next template' or 'previous template' to select your template">
                 IMGFlip templates
             </button>
         </div>
@@ -42,7 +49,7 @@
         <br/>
         <p>or</p>
         <div fxLayout="row" fxLayoutAlign="start start">
-            <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary"> 
+            <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary" matTooltip="Voice Control: 'Use webcam' then 'Take snapshot' to make a selfie"> 
                 Webcam
             </button>
         </div>
@@ -176,18 +183,20 @@
             </button>
         </div>
         <div fxLayout="row" style="margin-top: 10px">
-            <button mat-raised-button color="accent" (click)="discardMeme()">
+            <button mat-raised-button color="accent" (click)="discardMeme()" matTooltip="Voice Control: 'Delete Draft'">
                 Delete Draft
             </button>
-            <button mat-raised-button color="primary" (click)="saveDraft()">
+            <button mat-raised-button color="primary" (click)="saveDraft()" matTooltip="Voice Control: 'Save Draft'">
                 Save Draft
             </button>
-            <button mat-raised-button color="primary" (click)="finishMeme()">
+            <button mat-raised-button color="primary" (click)="finishMeme()" matTooltip="Voice Control: 'Finish Meme'">
                 Finish Meme
             </button>
         </div>
     </form>
 </div>
+
+
 <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 <ng-template #notLoggedIn>
     <div class="wrapper center">

@@ -10,10 +10,13 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {MatInputModule} from '@angular/material/input'
 import {HttpClientModule} from '@angular/common/http'
 import {MemeOverviewComponent} from './meme-overview/meme-overview.component'
+// Infinite Scroll Module for the meme overview
 import {InfiniteScrollModule} from 'ngx-infinite-scroll'
 import {MemeSingleviewComponent} from './meme-singleview/meme-singleview.component'
 import {LoginDropdownComponent} from './login-dropdown/login-dropdown.component'
+// Bootstrap for better design
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
+// Material Module includes from the google material design library
 import {AngularMaterialModule} from './angular-material.module'
 import { FormsModule } from '@angular/forms';
 import { MemeSearchComponent } from './meme-search/meme-search.component'
@@ -23,14 +26,19 @@ import {StorageServiceModule} from 'ngx-webstorage-service'
 import {LocalStorageService} from './localStorage.service'
 import {UserPanelComponent} from './user-panel/user-panel.component'
 import {ToastsContainer} from './toasts-container/toasts-container.component'
+// Webcam Module for taking a image in the meme generation component
 import {WebcamModule} from 'ngx-webcam'
+// Color picker for changen the captions color
 import { ColorPickerModule } from 'ngx-color-picker'
 import {MatCheckboxModule} from "@angular/material/checkbox"
+// Plots for the statistics
 import { NgxChartsModule } from '@swimlane/ngx-charts'
 import {MatCardModule} from '@angular/material/card'
 import {MatDialogModule} from '@angular/material/dialog';
 import {TemplateViewerComponent} from './template-viewer/template-viewer.component' 
 import {MatExpansionModule} from '@angular/material/expansion'
+// Speech recognition and text to speech
+import {SpeechSynthesisModule} from '@ng-web-apis/speech'
 
 
 @NgModule({
@@ -66,6 +74,7 @@ import {MatExpansionModule} from '@angular/material/expansion'
         NgxChartsModule,
         MatCardModule,
         MatDialogModule,
+        SpeechSynthesisModule,
         MatExpansionModule
     ],
     providers: [LocalStorageService],

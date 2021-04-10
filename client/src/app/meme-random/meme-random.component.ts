@@ -18,16 +18,12 @@ export class MemeRandomComponent implements OnInit {
     constructor(private memeService: MemeService, private router: Router) {
     }
 
-    /**
-     * calculates loading limit using screen size and size of meme div
-     * loads the first amount of memes
-     */
     ngOnInit(): void {
         this.loadRandomMeme()
     }
 
     /**
-     * load memes considering limit and updates skip value
+     * loads a random meme and navigates to the single view
      */
     loadRandomMeme(): void {
         this.memeService.getRandomMeme().subscribe((data) => {
