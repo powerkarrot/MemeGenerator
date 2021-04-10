@@ -45,6 +45,12 @@ export class MemeService {
         }
     }
 
+    /**
+
+     * takes a screenshot from url link and returns the link to the generated image
+     * @param link 
+     * @returns 
+     */
     takeScreenshot(link) : Observable<any>{
         let url = environment.apiUrl + '/screenshot' 
         const data = {
@@ -62,7 +68,7 @@ export class MemeService {
      * @param data 
      * @returns 
      */
-       updateTemplate(data, generated:boolean, description:boolean): Observable<Object | Template> {
+    updateTemplate(data, generated:boolean, description:boolean): Observable<Object | Template> {
         let url = environment.apiUrl + '/template'
         if (generated) url = url + "/generated"
         else if (description) url = url + "/description"

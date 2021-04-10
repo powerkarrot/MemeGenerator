@@ -1,7 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { fromEvent } from "rxjs";
-import { switchMap, takeUntil, pairwise } from "rxjs/operators";
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-canvas',
@@ -11,32 +9,23 @@ import { switchMap, takeUntil, pairwise } from "rxjs/operators";
 
 export class CanvasComponent implements AfterViewInit {
 
-    testdata 
+    testdata
+    cx: CanvasRenderingContext2D
+    @ViewChild("canvas") public canvas: ElementRef
 
-    @ViewChild("canvas") public canvas: ElementRef;
-
-    @Input() public width = 400;
-    @Input() public height = 400;
-
-    private cx: CanvasRenderingContext2D;
+    @Input() public width = 800
+    @Input() public height = 800
 
     public ngAfterViewInit() {
-        const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-        this.cx = canvasEl.getContext("2d");
+        const canvasElem: HTMLCanvasElement = this.canvas.nativeElement;
 
-        canvasEl.width = this.width;
-        canvasEl.height = this.height;
+        canvasElem.width = this.width;
+        canvasElem.height = this.height;
 
-        this.cx.lineWidth = 3;
-        this.cx.lineCap = "round";
-        this.cx.strokeStyle = "#001";
-        this.cx.fillStyle = "#FFFFFF"
-       
-        this.captureEvents(canvasEl);
+        this.captureEvents(canvasElem)
     }
 
-
-    constructor(public dialogRef: MatDialogRef<CanvasComponent>) {}
+    constructor(public dialogRef: MatDialogRef<CanvasComponent>) { }
 
     /**
      * Closes Dialog and returns the Image
@@ -47,80 +36,66 @@ export class CanvasComponent implements AfterViewInit {
 
     /**
      * Converts canvas to Image
-     */
+    */
     convert() {
         const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
         var image = new Image();
-	    image.src = canvasEl.toDataURL("image/png");
-        image.id = "canvas_" + Math.floor((Math.random()*10000000)+1).toString() + ".png"
+        image.src = canvasEl.toDataURL("image/png");
+        image.id = "canvas_" + Math.floor((Math.random() * 10000000) + 1).toString() + ".png"
 
         this.testdata = image
     }
 
-
+    /**
+     * closes the dialog 
+     */
     onNoClick(): void {
         this.dialogRef.close();
     }
 
     /**
-     * Captures mouse events on canvas 
-     * Adapted from tutorial:
-     * https://medium.com/@tarik.nzl/creating-a-canvas-component-with-free-hand-drawing-with-rxjs-and-angular-61279f577415
+     * uses mouse events to draw on canvas
+     * on mouseup converts to image
      * 
-     * @param canvasEl 
+     * @param canvasElem 
      */
-    private captureEvents(canvasEl: HTMLCanvasElement) {
-        
-        fromEvent(canvasEl, "mousedown")
-            .pipe(
-                switchMap(e => {
-                    return fromEvent(canvasEl, "mousemove").pipe(
-                        takeUntil(fromEvent(canvasEl, "mouseup")),
-                        takeUntil(fromEvent(canvasEl, "mouseleave")),
-                        pairwise()
-                    );
-                })
-            )
-            .subscribe((res: [MouseEvent, MouseEvent]) => {
-                const rect = canvasEl.getBoundingClientRect();
-                const prevPos = {
-                    x: res[0].clientX - rect.left,
-                    y: res[0].clientY - rect.top
-                };
+    captureEvents(canvasElem: HTMLCanvasElement) {
 
-                const currentPos = {
-                    x: res[1].clientX - rect.left,
-                    y: res[1].clientY - rect.top
-                };
+        let draw = false
+        let self = this
+        let ctx = canvasElem.getContext('2d');
+        const rect = canvasElem.getBoundingClientRect()
+        ctx.lineWidth = 5
+        ctx.lineCap = "round"
+        ctx.strokeStyle = "#001"
+        ctx.fillStyle = "#FFFFFF"
 
-                this.drawOnCanvas(prevPos, currentPos);
-            });
-    }
-
-
-    /**
-     * Draws points from mouse event in canvas 
-     * converts Canvas to Image
-     * 
-     * @param prevPos 
-     * @param currentPos 
-     * @returns 
-     */
-    private drawOnCanvas(
-        prevPos: { x: number; y: number },
-        currentPos: { x: number; y: number }) {
-        if (!this.cx) {
-            return;
+        canvasElem.onmouseenter = (e1) => {
+            ctx.moveTo(e1.clientX - rect.left, e1.clientY - rect.top)
         }
 
-        this.cx.beginPath();
-
-        if (prevPos) {
-            this.cx.moveTo(prevPos.x, prevPos.y); 
-            this.cx.lineTo(currentPos.x, currentPos.y);
-            this.cx.stroke();
+        canvasElem.onmouseleave = () => {
+            draw = false
         }
 
-        this.convert()
+        canvasElem.onmouseup = (e1) => {
+            self.convert()
+
+            draw = false
+            ctx.moveTo(e1.clientX - rect.left, e1.clientY - rect.top)
+        }
+
+        canvasElem.onmousedown = (e1) => {
+            draw = true
+            ctx.moveTo(e1.clientX - rect.left, e1.clientY - rect.top)
+
+            canvasElem.onmousemove = (e) => {
+
+                if (draw) {
+                    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                    ctx.stroke();
+                }
+            }
+        }
     }
 }

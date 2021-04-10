@@ -298,7 +298,6 @@ export class MemeGeneratorComponent implements OnInit {
         // Manually restore focus to the menu trigger since the element that
         // opens the dialog won't be in the DOM any more when the dialog closes.
         dialogRef.afterClosed().subscribe(result => {
-            //this.selectTemplate(result.src)
 
             let file = this.dataurlToFile(result.src, result.id)
 
@@ -310,7 +309,6 @@ export class MemeGeneratorComponent implements OnInit {
             let name = result.id
             this.template.url = "http://localhost:3007/uploads/" + name
             this.selectTemplate(this.template.url)
-            //this.selectTemplate()
         });
       }
 
