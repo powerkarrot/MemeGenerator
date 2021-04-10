@@ -176,7 +176,7 @@
                 class="colorPicker"
                 formControlName="bottomColor">
         </div>
-        <img *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" />
+        <img style="background-color: #F4F4F7;" *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" id = "generatedImg"/>
         <div fxLayout="row" style="margin-top: 10px">
             <button mat-raised-button color="primary" (click)="openDialog()" *ngIf="meme">
                 View/edit template

@@ -21,7 +21,7 @@ export class MemeService {
      * @param id
      * @param data
      */
-    updateMeme(id, data): Observable<Object | Meme> {
+    updateMeme(id, data): Observable<any | Meme> {
         let url = environment.apiUrl + '/meme'
         if (id !== null) url += '/' + id
         return this._http.post(url, data).pipe(
