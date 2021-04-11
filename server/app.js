@@ -10,11 +10,13 @@ const ObjectID = require('mongodb').ObjectID
 const puppeteer = require('puppeteer'); 
 const memeLib = require('./meme-generator')
 const fs = require('fs')
+var ffmpeg = require('fluent-ffmpeg');
 var AdmZip = require("adm-zip");
 const dbUrl = process.env.MONGO_URI || 'mongodb://localhost:27017'
 const memeBaseUrl = 'http://localhost:3007/memes/'
 const app = express()
 const port = process.env.PORT || 3007
+
 
 /**
  * connects to DB
@@ -40,6 +42,8 @@ app.use(fileUpload())
 app.use('/memes', express.static(__dirname + '/memes'))
 app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use('/zips', express.static(__dirname + '/zips'))
+app.use('/videos', express.static(__dirname + '/videos'))
+
 
 
 /**
@@ -90,6 +94,60 @@ async function upload(files) {
     }
     return uploads
 }
+
+/**
+ * doesn't work with png 
+ */
+async function convertSingle(req) {
+
+    let saveTo = __dirname + '/videos/' + new ObjectID + 'test.mp4'
+    let imagePath = __dirname + '/uploads/' + 'test5.png'
+    let command = ffmpeg()
+    command
+    .input('http://localhost:3007/memes/test5.jpg')
+    .inputFPS(2)
+    .outputFPS(30)
+    .videoCodec('libx264')
+    .videoBitrate(1024)
+    .size('640x?')
+    .noAudio()
+    .save(saveTo)
+}
+
+app.get("/video", function (req, res) {
+
+    convertSingle(req)
+  
+    const range = req.headers.range;
+    if (!range) {
+      res.status(400).send("Requires Range header");
+    }
+
+    let p = __dirname + '/videos/' + 'videotest.mp4'
+    const videoPath = p;
+    const videoSize = fs.statSync(p).size;
+  
+    const CHUNK_SIZE = 10 ** 6; 
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+  
+    const contentLength = end - start + 1;
+    const headers = {
+      "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+      "Accept-Ranges": "bytes",
+      "Content-Length": contentLength,
+      "Content-Type": "video/mp4",
+    };
+  
+    res.writeHead(206, headers);
+  
+    const videoStream = fs.createReadStream(videoPath, { start, end });
+  
+    videoStream.pipe(res);
+
+  });
+
+
 
 /**
  * Handles screenshots

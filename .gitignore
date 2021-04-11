@@ -49,3 +49,6 @@ testem.log
 .DS_Store
 Thumbs.db
 *.png
+server/videos/test.mp4
+server/videos/6073509c13a68c24c26b1244test.mp4
+server/videos/6073509c13a68c24c26b1243test.mp4
