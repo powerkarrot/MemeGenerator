@@ -69,9 +69,13 @@ export class LocalStorageService {
         this.saveSetting({key: "VoiceControl", value: status})
     }
 
+    public deleteVoiceControlStatus(): void {
+        this.storage.remove("VoiceControl")
+    }
+
     public getVoiceControlStatus(): boolean {
-        let setting = this.getSetting({key: "VoiceControl", value: null})
-        return setting ? setting.value : false
+        let setting = this.getSetting({key: "VoiceControl", value: null})    
+        return setting.value ?? false
     }
 
     public updateLocalStorage(): boolean {

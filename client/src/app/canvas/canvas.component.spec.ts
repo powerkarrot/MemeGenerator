@@ -1,8 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {CanvasComponent} from './canvas.component';
 
-import {CanvasComponent} from './login-dropdown.component';
-
-describe('LoginDropdownComponent', () => {
+xdescribe('CanvasComponent', () => {
     let component: CanvasComponent;
     let fixture: ComponentFixture<CanvasComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MemeOverviewComponent } from './meme-overview.component';
 
-describe('MemeOverviewComponent', () => {
+xdescribe('MemeOverviewComponent', () => {
   let component: MemeOverviewComponent;
   let fixture: ComponentFixture<MemeOverviewComponent>;
 
