@@ -1,0 +1,22 @@
+version: "3"
+services:
+  client:
+    build:
+        dockerfile: Testing.Dockerfile
+    ports:
+        - "9876:9876"
+        - "4200:4200"
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+  server:
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+  dataimport:
+    build: 
+      context: ./datagenerator
+      dockerfile: Dockerfile
+    links:
+      - mongo
+  

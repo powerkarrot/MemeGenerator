@@ -1,10 +1,9 @@
 import {Component, OnInit, Input, Inject} from '@angular/core'
 import {Meme} from '../meme'
-import {HttpClient} from '@angular/common/http'
 import {ActivatedRoute} from '@angular/router'
 import {MemeService} from '../meme.service'
 import {Router} from '@angular/router'
-import {interval, Subscription} from 'rxjs'
+import {interval} from 'rxjs'
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import {LocalStorageService} from '../localStorage.service'
 import { Userdata } from '../userdata'
@@ -12,11 +11,10 @@ import {Tag} from '../tags'
 import {ToastService} from '../toast-service'
 import {COMMA, SEMICOLON} from '@angular/cdk/keycodes'
 import {MatChipInputEvent} from '@angular/material/chips'
-import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
-    SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech'
+import {isSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService, SpeechSynthesisUtteranceOptions} from '@ng-web-apis/speech'
 import {filter, mapTo, repeat, retry, share} from 'rxjs/operators'
-import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk'
-import {Subject, Observable, merge} from 'rxjs'
+import {tuiPure} from '@taiga-ui/cdk'
+import {Observable} from 'rxjs'
 
 @Component({
     selector: 'ngbd-modal-content',
@@ -86,7 +84,6 @@ export class MemeSingleviewComponent implements OnInit {
 
     /**
      * 
-     * @param _http 
      * @param _route 
      * @param memeService 
      * @param router 
@@ -96,8 +93,7 @@ export class MemeSingleviewComponent implements OnInit {
      * @param voices$ 
      * @param recognition$ 
      */
-    constructor(private _http: HttpClient,
-                private _route: ActivatedRoute, 
+    constructor(private _route: ActivatedRoute, 
                 private memeService: MemeService, 
                 private router: Router,
                 private modalService: NgbModal,

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TemplateViewerComponent } from './template-viewer.component';
 
-describe('TemplateViewerComponent', () => {
+xdescribe('TemplateViewerComponent', () => {
   let component: TemplateViewerComponent;
   let fixture: ComponentFixture<TemplateViewerComponent>;
 

@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {MemeGeneratorComponent} from './meme-generator.component';
 
-describe('MemeGeneratorComponent', () => {
+xdescribe('MemeGeneratorComponent', () => {
     let component: MemeGeneratorComponent;
     let fixture: ComponentFixture<MemeGeneratorComponent>;
 
