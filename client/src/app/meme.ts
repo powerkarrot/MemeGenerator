@@ -19,6 +19,13 @@ export interface Meme {
     bottomBold: boolean
     bottomItalic: boolean
     bottomColor: boolean
+    thirdText: string
+    thirdSize: number
+    thirdX: number
+    thirdY: number
+    thirdBold: boolean
+    thirdItalic: boolean
+    thirdColor: boolean
     url: string
     width: number
     height: number

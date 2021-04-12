@@ -75,6 +75,7 @@ MemeGenerator.prototype.setFontOptions = function (options) {
 MemeGenerator.prototype.setImageOptions = function (options) {
 	const {topText, topSize, topX, topY, topBold, topItalic, topColor,
 		bottomText, bottomSize, bottomX, bottomY, bottomBold, bottomItalic, bottomColor,
+		thirdText, thirdSize, thirdX, thirdY, thirdBold, thirdItalic, thirdColor,
 		url} = options
 
 	this.url = url
@@ -93,6 +94,14 @@ MemeGenerator.prototype.setImageOptions = function (options) {
 	this.bottomBold = bottomBold
 	this.bottomItalic = bottomItalic
 	this.bottomColor = bottomColor
+
+	this.thirdText = thirdText
+	this.thirdSize = thirdSize
+	this.thirdX = thirdX
+	this.thirdY = thirdY
+	this.thirdBold = thirdBold
+	this.thirdItalic = thirdItalic
+	this.thirdColor = thirdColor
 }
 
 /**
@@ -169,6 +178,13 @@ MemeGenerator.prototype.drawMeme = function () {
 		bottomBold,
 		bottomItalic,
 		bottomColor,
+		thirdText,
+		thirdSize,
+		thirdX,
+		thirdY,
+		thirdBold,
+		thirdItalic,
+		thirdColor,
 		fontSize,
 		fontFamily,
 		lineHeight,
@@ -179,10 +195,9 @@ MemeGenerator.prototype.drawMeme = function () {
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 	ctx.drawImage(canvasImg, 0, 0, memeWidth, memeHeight)
 
-	console.log(topSize)
-
 	let topFontSize = topSize ? topSize : fontSize
 	let bottomFontSize = bottomSize ? bottomSize : fontSize
+	let thirdFontSize = thirdSize ? thirdSize : fontSize
 
 	let x = memeWidth / 2
 	let y
@@ -202,6 +217,19 @@ MemeGenerator.prototype.drawMeme = function () {
 		if (bottomY) y = parseInt(bottomY)
 		this.ctx.textBaseline = 'bottom'
 		wrapText(ctx, bottomText, x, y, memeWidth, lineHeight, true, bottomFontSize, fontFamily, bottomBold, bottomItalic, bottomColor)
+	}
+
+	const third = {
+		Text: thirdText, Size: thirdSize, X: thirdX, Y: thirdY, Bold: thirdBold, Italic: thirdItalic, Color: thirdColor,
+	}
+
+	if(thirdText) {
+		y = memeHeight / 2
+		if(thirdX) x = parseInt(thirdX)
+		else if(bottomX && topX) x = memeWidth / 2
+		if(thirdY) y = parseInt(thirdY)
+		this.ctx.textBaseline = 'middle'
+		wrapText(ctx, thirdText, x, y, memeWidth, lineHeight, false, thirdFontSize, fontFamily, thirdBold, thirdItalic, thirdColor)
 	}
 }
 

@@ -53,3 +53,25 @@ mat-checkbox {
     color: white;
     margin-right: 10px;
 }
+
+.mat-expansion-panel {
+    background: #232323!important;
+    color: #fff!important;
+}
+
+.mat-expansion-panel-header-title {
+    color: #fff;
+}
+
+.mat-expansion-panel-body {
+    min-height: 300px;
+}
+
+.color-picker * {
+    position: absolute;
+    z-index: 2;
+}
+
+.element {
+    margin-left: 10px;
+}

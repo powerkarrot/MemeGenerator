@@ -500,8 +500,7 @@ app.post('/template/vote/:id', async function(req, res) {
     }
 })
 
-
-/**
+**
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {
@@ -555,6 +554,13 @@ app.post('/meme', async function (req, res) {
                 bottomBold: meme.bottomBold,
                 bottomItalic: meme.bottomItalic,
                 bottomColor: meme.bottomColor,
+                thirdText: meme.thirdText,
+                thirdSize: meme.thirdSize,
+                thirdX: meme.thirdX,
+                thirdY: meme.thirdY,
+                thirdBold: meme.thirdBold,
+                thirdItalic: meme.thirdItalic,
+                thirdColor: meme.thirdColor,
                 url: url
             }).then(function (data) {
                 fs.writeFile('./memes/' + fileName, data, async function (err, result) {
@@ -623,6 +629,7 @@ app.post('/meme', async function (req, res) {
         sendResponse(res, ResponseType.ERROR, "Could not create meme! Make sure to login.")
     }
 })
+
 
 app.post('/meme/comment/:id', async function(req, res) {
     const db = req.app.get('db')
@@ -859,9 +866,6 @@ app.post('/meme/:id', async function (req, res) {
             const fileEnd = fileName[fileName.length - 1]
             fileName = ObjectID(req.params.id) + "." + fileEnd
         }
-
-        
-
         memeGenerator.generateMeme({
             topText: meme.topText,
             topSize: meme.topSize,
@@ -877,6 +881,13 @@ app.post('/meme/:id', async function (req, res) {
             bottomBold: meme.bottomBold,
             bottomItalic: meme.bottomItalic,
             bottomColor: meme.bottomColor,
+            thirdText: meme.thirdText,
+            thirdSize: meme.thirdSize,
+            thirdX: meme.thirdX,
+            thirdY: meme.thirdY,
+            thirdBold: meme.thirdBold,
+            thirdItalic: meme.thirdItalic,
+            thirdColor: meme.thirdColor,
             url: url
         }).then(function (data) {
             fs.writeFile('./memes/' + fileName, data, async function (err, result) {

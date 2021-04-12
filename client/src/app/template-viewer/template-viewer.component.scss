@@ -35,14 +35,14 @@ img {
     margin-left: 10px;
 }
 
-::ng-deep .mat-dialog-container { 
+.mat-dialog-container { 
     background: rgb(243, 220, 209)!important;
 }
 
-::ng-deep .mat-expansion-panel-body { 
+.mat-expansion-panel-body { 
     background: rgb(243, 220, 209)!important;
 }
-::ng-deep .mat-expansion-panel-header { 
+.mat-expansion-panel-header { 
     background: rgb(243, 203, 184)!important;
 }
 
