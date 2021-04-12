@@ -10,11 +10,13 @@ const ObjectID = require('mongodb').ObjectID
 const puppeteer = require('puppeteer'); 
 const memeLib = require('./meme-generator')
 const fs = require('fs')
+var ffmpeg = require('fluent-ffmpeg');
 var AdmZip = require("adm-zip");
 const dbUrl = process.env.MONGO_URI || 'mongodb://localhost:27017'
 const memeBaseUrl = 'http://localhost:3007/memes/'
 const app = express()
 const port = process.env.PORT || 3007
+
 
 /**
  * connects to DB
@@ -40,6 +42,8 @@ app.use(fileUpload())
 app.use('/memes', express.static(__dirname + '/memes'))
 app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use('/zips', express.static(__dirname + '/zips'))
+app.use('/videos', express.static(__dirname + '/videos'))
+
 
 
 /**
@@ -92,16 +96,84 @@ async function upload(files) {
 }
 
 /**
+ * Converts single Image to a Video
+ * 
+ * @param {*} req 
+ */
+function convertSingle() {
+
+    let saveTo = __dirname + '/videos/' + new ObjectID() + '.mp4'
+    let command = ffmpeg()
+    command
+    .input('http://localhost:3007/memes/test5.jpg')
+    .inputFPS(2)
+    .outputFPS(30)
+    .videoCodec('libx264')
+    .videoBitrate(1024)
+    .size('640x?')
+    .loop(4)
+    .noAudio()
+    .save(saveTo)
+}
+
+/**
+ * Streams a video 
+ * Adapted from:
+ * https://dev.to/abdisalan_js/how-to-stream-video-from-mongodb-using-nodejs-4ibi
+ * 
+ */
+app.get("/video", function (req, res) {
+
+    // Check for range headers to find start time
+    const range = req.headers.range
+    if (!range) {
+      res.status(400).send("Requires Range header")
+    }
+
+     // converts single meme to video on connection start
+     if(range == 'bytes=0-') {
+        convertSingle()
+   }
+
+
+    //Streams a test video
+    const videoPath =  __dirname + '/videos/' + 'videotest.mp4'
+
+    // Create response headers
+    const videoSize = fs.statSync(videoPath).size
+    const CHUNK_SIZE = 10 ** 6; //  1MB chunks
+    const start = Number(range.replace(/\D/g, ""))
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1)
+  
+    const contentLength = end - start + 1;
+    const headers = {
+      "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+      "Accept-Ranges": "bytes",
+      "Content-Length": contentLength,
+      "Content-Type": "video/mp4",
+    }
+  
+    // HTTP Status 206 for Partial Content
+    res.writeHead(206, headers)
+   
+    const videoStream = fs.createReadStream(videoPath, { start, end })
+  
+    //Pipe video to response
+    videoStream.pipe(res)
+
+  })
+
+/**
  * Handles screenshots
  */
 app.post('/screenshot', async function (req, res) {
     
     url = req.body.url
 
-    let browser = await puppeteer.launch({ headless: true,  args: ['--no-sandbox']});
-    let page = await browser.newPage();
-    await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
-    await page.setViewport({ width: 1024, height: 800 });
+    let browser = await puppeteer.launch({ headless: true,  args: ['--no-sandbox']})
+    let page = await browser.newPage()
+    await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 })
+    await page.setViewport({ width: 1024, height: 800 })
     
     //let title = url.replace(/(^\w+:|^)\/\//, '')
     let title = JSON.stringify(new ObjectID())
@@ -113,7 +185,7 @@ app.post('/screenshot', async function (req, res) {
      path: filepathname,
      type: "jpeg",
      fullPage: true
-   });
+   })
    
    await page.close();
    await browser.close();
@@ -435,7 +507,6 @@ app.post('/template/vote/:id', async function(req, res) {
 app.post('/meme', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
-    //console.log("files req name " + JSON.stringify(req.files))
     const uploads = await upload(req.files)
     const userid = ObjectID(req.body.userid)
     const cred = req.body.cred

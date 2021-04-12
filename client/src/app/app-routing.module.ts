@@ -7,6 +7,7 @@ import {MemeSingleviewComponent} from './meme-singleview/meme-singleview.compone
 import {RegisterComponent} from './register/register.component'
 import { UserPanelComponent } from './user-panel/user-panel.component'
 import { MemeStatsComponent } from './meme-stats/meme-stats.component'
+import { VideoStreamComponent } from './videostream/videostream.component'
 
 const routes: Routes = [
     {path: 'user', component: UserPanelComponent},
@@ -16,6 +17,7 @@ const routes: Routes = [
     {path: 'meme-generator/:id', component: MemeGeneratorComponent},
     {path: 'meme/:id', component: MemeSingleviewComponent},
     {path: 'stats/:id', component: MemeStatsComponent},
+    {path: 'videostream', component: VideoStreamComponent},
     {path: 'memes', pathMatch: 'full', component: MemeOverviewComponent},
     {path: '', pathMatch: 'full', component: MemeOverviewComponent},
 ]

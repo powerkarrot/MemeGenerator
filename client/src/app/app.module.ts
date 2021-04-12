@@ -40,6 +40,7 @@ import {MatExpansionModule} from '@angular/material/expansion'
 import { CanvasComponent } from './canvas/canvas.component'
 // Speech recognition and text to speech
 import {SpeechSynthesisModule} from '@ng-web-apis/speech'
+import {VideoStreamComponent} from './videostream/videostream.component'
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import {SpeechSynthesisModule} from '@ng-web-apis/speech'
         ToastsContainer,   
         MemeStatsComponent,
         TemplateViewerComponent,
-        CanvasComponent
+        CanvasComponent,
+        VideoStreamComponent
     ],
     imports: [
         BrowserModule,
