@@ -500,8 +500,7 @@ app.post('/template/vote/:id', async function(req, res) {
     }
 })
 
-
-/**
+/*
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {
@@ -523,6 +522,8 @@ app.post('/meme', async function (req, res) {
     if(hasPermission) {
         const memeid = new ObjectID()
         const uploads = await upload(req.files)
+        let generateMeme = true
+        if (meme.url == undefined) generateMeme = false
         if (uploads.length > 0) {
             url = uploads[0].fullPath
             fileName = uploads[0].fileName.split('.')
@@ -530,100 +531,105 @@ app.post('/meme', async function (req, res) {
             fileName = memeid + "." + fileEnd
 
         } else {
-            url = meme.url
-            console.log("URL:", url)
-            fileName = url.split('.')
-            const fileEnd = fileName[fileName.length - 1]
-            fileName = memeid + "." + fileEnd
+            if (generateMeme) {
+                url = meme.url
+                fileName = url.split('.')
+                const fileEnd = fileName[fileName.length - 1]
+                fileName = memeid + "." + fileEnd
+            }
         }
-        memeGenerator.generateMeme({
-            topText: meme.topText,
-            topSize: meme.topSize,
-            topX: meme.topX,
-            topY: meme.topY,
-            topBold: meme.topBold,
-            topItalic: meme.topItalic,
-            topColor: meme.topColor,
-            bottomText: meme.bottomText,
-            bottomSize: meme.bottomSize,
-            bottomX: meme.bottomX,
-            bottomY: meme.bottomY,
-            bottomBold: meme.bottomBold,
-            bottomItalic: meme.bottomItalic,
-            bottomColor: meme.bottomColor,
-            thirdText: meme.thirdText,
-            thirdSize: meme.thirdSize,
-            thirdX: meme.thirdX,
-            thirdY: meme.thirdY,
-            thirdBold: meme.thirdBold,
-            thirdItalic: meme.thirdItalic,
-            thirdColor: meme.thirdColor,
-            url: url
-        }).then(function (data) {
-            fs.writeFile('./memes/' + fileName, data, async function (err, result) {
-                if (err) return res.status(400).json({error: err})
-                meme.url = memeBaseUrl + fileName
-                meme._id = memeid
-                meme.votes = 0
-                meme.views = 0
-                meme.comments = []
-                meme.createdBy = userdata
-                meme.dateAdded = new Date(Date.now()).toISOString()
+        if(generateMeme) {
+            memeGenerator.generateMeme({
+                topText: meme.topText,
+                topSize: meme.topSize,
+                topX: meme.topX,
+                topY: meme.topY,
+                topBold: meme.topBold,
+                topItalic: meme.topItalic,
+                topColor: meme.topColor,
+                bottomText: meme.bottomText,
+                bottomSize: meme.bottomSize,
+                bottomX: meme.bottomX,
+                bottomY: meme.bottomY,
+                bottomBold: meme.bottomBold,
+                bottomItalic: meme.bottomItalic,
+                bottomColor: meme.bottomColor,
+                thirdText: meme.thirdText,
+                thirdSize: meme.thirdSize,
+                thirdX: meme.thirdX,
+                thirdY: meme.thirdY,
+                thirdBold: meme.thirdBold,
+                thirdItalic: meme.thirdItalic,
+                thirdColor: meme.thirdColor,
+                url: url
+            }).then(function (data) {
+                fs.writeFile('./memes/' + fileName, data, async function (err, result) {
+                    if (err) return res.status(400).json({error: err})
+                    meme.url = memeBaseUrl + fileName
+                    meme._id = memeid
+                    meme.votes = 0
+                    meme.views = 0
+                    meme.comments = []
+                    meme.createdBy = userdata
+                    meme.dateAdded = new Date(Date.now()).toISOString()
 
-                let name = url.split("/").pop()
-                meme.template = "http://localhost:3007/uploads/" + name
-                //meme.template = url
-                meme.voteData = [{
-                    timestamp: new Date(Date.now()).toISOString(),
-                    votes: 0
-                }]
-                meme.viewData = [{
+                    let name = url.split("/").pop()
+                    meme.template = "http://localhost:3007/uploads/" + name
+                    //meme.template = url
+                    meme.voteData = [{
                         timestamp: new Date(Date.now()).toISOString(),
-                        views: 0
-                }]
+                        votes: 0
+                    }]
+                    meme.viewData = [{
+                            timestamp: new Date(Date.now()).toISOString(),
+                            views: 0
+                    }]
 
-                const data = {
-                    memeid: ObjectID(meme._id)
-                }
-
-                if(draft == "false") {
-
-                    const newValues = {
-                        $push: {
-                            memes: data
-                        }
-                    }
-                } else {
-
-                    const newValues = {
-                        $push: {
-                            drafts: data
-                        }
+                    const data = {
+                        memeid: ObjectID(meme._id)
                     }
 
-                    await db.collection('users').updateOne({_id: userid}, newValues).then(function(e, r) {
-                        
-                        delete meme.userid
-                        delete meme.username
-                        delete meme.cred
-                        delete meme.draft
+                    if(draft == "false") {
 
-                        db.collection('drafts').insertOne(meme, function (err, r) {
-                            if (err) return res.status(400).json({error: err})
-                            res.json({
-                                _id: meme._id,
-                                url: meme.url,
-                                template: meme.template
+                        const newValues = {
+                            $push: {
+                                memes: data
+                            }
+                        }
+                    } else {
+
+                        const newValues = {
+                            $push: {
+                                drafts: data
+                            }
+                        }
+
+                        await db.collection('users').updateOne({_id: userid}, newValues).then(function(e, r) {
+                            
+                            delete meme.userid
+                            delete meme.username
+                            delete meme.cred
+                            delete meme.draft
+
+                            db.collection('drafts').insertOne(meme, function (err, r) {
+                                if (err) return res.status(400).json({error: err})
+                                res.json({
+                                    _id: meme._id,
+                                    url: meme.url,
+                                    template: meme.template
+                                })
                             })
                         })
-                    })
-                }
+                    }
+                })
             })
-        })
+        }
+
     } else {
         sendResponse(res, ResponseType.ERROR, "Could not create meme! Make sure to login.")
     }
 })
+
 
 app.post('/meme/comment/:id', async function(req, res) {
     const db = req.app.get('db')

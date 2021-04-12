@@ -479,6 +479,7 @@ export class MemeGeneratorComponent implements OnInit {
 
     /**
      * watches meme for changes and updates it
+     * loads uploaded Templates
      */
     ngOnInit(): void {
 
@@ -494,10 +495,10 @@ export class MemeGeneratorComponent implements OnInit {
             .pipe(debounceTime(500))
             .subscribe(formData => {
                 this.updateMeme()
-            })       
+            }) 
+
+        this.loadUploads()   
     }
-
-
 
     add(event: MatChipInputEvent): void {
         const input = event.input;
@@ -535,11 +536,23 @@ export class MemeGeneratorComponent implements OnInit {
     }
 
     /**
-     * loads templates (uploaded images)
+     * shows templates (uploaded images)
      */
     loadTemplates(): void {
         this.toggleUploaded()
         if(this.showImgFlipTemplates) this.toggleImgFlip()
+        this._memeService.loadTemplates().subscribe((templates) => {
+            this.templates = templates
+            this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i)
+        })
+
+
+    }
+
+    /**
+     * loads templates on init
+     */
+    loadUploads() : void {
         this._memeService.loadTemplates().subscribe((templates) => {
             this.templates = templates
             this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i)
