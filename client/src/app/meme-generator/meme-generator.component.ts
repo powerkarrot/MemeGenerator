@@ -930,4 +930,24 @@ export class MemeGeneratorComponent implements OnInit {
         const modalRef = this.modalService.open(NgbdModalContent)
         modalRef.componentInstance.url = this.meme.url
     }
+
+    /**
+     * Selects next template
+     */
+    nextTemplate() {
+        if(this.templateIndex < this.templates.length) {
+            this.templateIndex++
+        }
+        this.selectTemplate(this.templates[this.templateIndex])
+    }
+
+    /**
+     * Selects previous template
+     */
+    prevTemplate() {
+        if(this.templateIndex > 0) {
+            this.templateIndex--
+        }
+        this.selectTemplate(this.templates[this.templateIndex])
+    }
 }
