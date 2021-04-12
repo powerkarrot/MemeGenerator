@@ -39,7 +39,7 @@ enum Command {
 @Component({
     selector: 'app-meme-generator',
     templateUrl: './meme-generator.component.html',
-    styleUrls: ['./meme-generator.component.css']
+    styleUrls: ['./meme-generator.component.scss']
 })
 export class MemeGeneratorComponent implements OnInit {
 
@@ -65,7 +65,8 @@ export class MemeGeneratorComponent implements OnInit {
     addOnBlur = true
     readonly separatorKeysCodes: number[] = [COMMA]
     tags: Tag[] = []
-    
+    panelOpenState = false
+    panelmemeOpenState = false
 
     // Used for voice recognition
     text = ""
@@ -349,6 +350,10 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }],
+            screenshotUrl: [{
+                value: null,
+                disabled: false
+            }],
             voiceAssistant: [{
                 value: null,
                 disabled: false
@@ -421,6 +426,36 @@ export class MemeGeneratorComponent implements OnInit {
                 value: null,
                 disabled: false
             }],
+
+            thirdText: [{
+                value: null,
+                disabled: false
+            }],
+            thirdSize: [{
+                value: null,
+                disabled: false
+            }],
+            thirdX: [{
+                value: null,
+                disabled: false
+            }],
+            thirdY: [{
+                value: null,
+                disabled: false
+            }],
+            thirdBold: [{
+                value: null,
+                disabled: false
+            }],
+            thirdItalic: [{
+                value: null,
+                disabled: false
+            }],
+            thirdColor: [{
+                value: null,
+                disabled: false
+            }],
+
             file: [{
                 value: null,
                 disabled: false
@@ -616,7 +651,8 @@ export class MemeGeneratorComponent implements OnInit {
             
             this.patchMemeData(this.meme.url, this.meme.title, this.meme.description, this.meme.topText, this.meme.topSize, this.meme.topX, this.meme.topY,
                 this.meme.topBold, this.meme.topItalic, this.meme.topColor, this.meme.bottomText, this.meme.bottomSize, this.meme.bottomX,
-                this.meme.bottomY, this.meme.bottomBold, this.meme.bottomItalic, this.meme.bottomColor, this.meme.visibility, this.meme.template)
+                this.meme.bottomY, this.meme.bottomBold, this.meme.bottomItalic, this.meme.bottomColor, this.meme.thirdText, this.meme.thirdSize, this.meme.thirdX,
+                this.meme.thirdY, this.meme.thirdBold, this.meme.thirdItalic, this.meme.thirdColor, this.meme.visibility, this.meme.template)
             this.id = this.meme._id
         })
     }
@@ -624,6 +660,7 @@ export class MemeGeneratorComponent implements OnInit {
     private patchMemeData(imgUrl: string, title: string, description: string,
         topText: string, topSize: string, topX: string, topY: string, topBold: string, topItalic: string, topColor: string,
         bottomText: string, bottomSize: string, bottomX: string, bottomY: string, bottomBold, bottomItalic: string,bottomColor: string,
+        thirdText: string, thirdSize: string, thirdX: string, thirdY: string, thirdBold, thirdItalic: string,thirdColor: string,
         visibility: string, template: string): void {
 
             if(imgUrl)
@@ -662,6 +699,20 @@ export class MemeGeneratorComponent implements OnInit {
                 this.memeForm.patchValue({bottomItalic: bottomItalic})
             if(bottomColor)
                 this.memeForm.patchValue({bottomColor: bottomColor})
+            if(thirdText)
+                this.memeForm.patchValue({thirdText: thirdText})
+            if(thirdSize)
+                this.memeForm.patchValue({thirdSize: thirdSize})
+            if(thirdX)
+                this.memeForm.patchValue({thirdX: thirdX})
+            if(thirdY)
+                this.memeForm.patchValue({thirdY: thirdY})
+            if(thirdBold)
+                this.memeForm.patchValue({thirdBold: thirdBold})
+            if(thirdItalic)
+                this.memeForm.patchValue({thirdItalic: thirdItalic})
+            if(thirdColor)
+                this.memeForm.patchValue({thirdColor: thirdColor})
             if(visibility)
                 this.memeForm.patchValue({visibility: visibility})
     }
@@ -728,7 +779,40 @@ export class MemeGeneratorComponent implements OnInit {
         if (topColor) {
             formData.append('topColor', topColor)
         }
+        const thirdText = this.memeForm.get('thirdText').value
+        if (thirdText) {
+            formData.append('thirdText', thirdText)
+        }
 
+        const thirdSize = this.memeForm.get('thirdSize').value
+        if (thirdSize) {
+            formData.append('thirdSize', thirdSize)
+        }
+
+        const thirdX = this.memeForm.get('thirdX').value
+        if (thirdX) {
+            formData.append('thirdX', thirdX)
+        }
+
+        const thirdY = this.memeForm.get('thirdY').value
+        if (thirdY) {
+            formData.append('thirdY', thirdX)
+        }
+
+        const thirdBold = this.memeForm.get('thirdBold').value
+        if (thirdBold) {
+            formData.append('thirdBold', thirdBold)
+        }
+
+        const thirdItalic = this.memeForm.get('thirdItalic').value
+        if (thirdItalic) {
+            formData.append('thirdItalic', thirdItalic)
+        }
+
+        const thirdColor = this.memeForm.get('thirdColor').value
+        if (thirdColor) {
+            formData.append('thirdColor', thirdColor)
+        }
         const bottomText = this.memeForm.get('bottomText').value
         if (bottomText) {
             formData.append('bottomText', bottomText)

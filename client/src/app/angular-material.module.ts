@@ -7,7 +7,8 @@ import {MatRadioModule} from '@angular/material/radio'
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
 import {MatFormFieldModule} from '@angular/material/form-field'
 import {MatChipsModule} from '@angular/material/chips'
-import {MatTooltipModule} from '@angular/material/tooltip' 
+import {MatTooltipModule} from '@angular/material/tooltip'
+import {MatExpansionModule} from '@angular/material/expansion' 
 
 const materialModules = [
     MatIconModule,
@@ -17,6 +18,7 @@ const materialModules = [
     MatRadioModule,
     MatFormFieldModule,
     MatTooltipModule,
+    MatExpansionModule,
     MatChipsModule
 ]
 

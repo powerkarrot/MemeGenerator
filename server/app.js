@@ -531,6 +531,7 @@ app.post('/meme', async function (req, res) {
 
         } else {
             url = meme.url
+            console.log("URL:", url)
             fileName = url.split('.')
             const fileEnd = fileName[fileName.length - 1]
             fileName = memeid + "." + fileEnd
@@ -550,6 +551,13 @@ app.post('/meme', async function (req, res) {
             bottomBold: meme.bottomBold,
             bottomItalic: meme.bottomItalic,
             bottomColor: meme.bottomColor,
+            thirdText: meme.thirdText,
+            thirdSize: meme.thirdSize,
+            thirdX: meme.thirdX,
+            thirdY: meme.thirdY,
+            thirdBold: meme.thirdBold,
+            thirdItalic: meme.thirdItalic,
+            thirdColor: meme.thirdColor,
             url: url
         }).then(function (data) {
             fs.writeFile('./memes/' + fileName, data, async function (err, result) {
@@ -852,9 +860,6 @@ app.post('/meme/:id', async function (req, res) {
             const fileEnd = fileName[fileName.length - 1]
             fileName = ObjectID(req.params.id) + "." + fileEnd
         }
-
-        
-
         memeGenerator.generateMeme({
             topText: meme.topText,
             topSize: meme.topSize,
@@ -870,6 +875,13 @@ app.post('/meme/:id', async function (req, res) {
             bottomBold: meme.bottomBold,
             bottomItalic: meme.bottomItalic,
             bottomColor: meme.bottomColor,
+            thirdText: meme.thirdText,
+            thirdSize: meme.thirdSize,
+            thirdX: meme.thirdX,
+            thirdY: meme.thirdY,
+            thirdBold: meme.thirdBold,
+            thirdItalic: meme.thirdItalic,
+            thirdColor: meme.thirdColor,
             url: url
         }).then(function (data) {
             fs.writeFile('./memes/' + fileName, data, async function (err, result) {
