@@ -459,9 +459,7 @@ export class MemeGeneratorComponent implements OnInit {
             .pipe(debounceTime(500))
             .subscribe(formData => {
                 this.updateMeme()
-            })
-        
-       
+            })       
     }
 
 
@@ -554,6 +552,7 @@ export class MemeGeneratorComponent implements OnInit {
 
     /**
      * opens dialog to view and edit the selected template
+     * sets current template 
     */
     openDialog(): void {
 

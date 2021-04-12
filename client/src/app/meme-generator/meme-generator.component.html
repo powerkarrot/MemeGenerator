@@ -184,9 +184,10 @@
                 formControlName="bottomColor">
         </div>
 
+        <img class="center" style="background-color: #F4F4F7;" src="{{meme.url}}" alt="{{meme.title}}"  *ngIf="meme"  (click) = "openDialog()" id = "generatedImg"/>
+        
         <div fxLayout="row" style="margin-top: 10px; text-align: center;" *ngIf="meme" >
-            <img style="background-color: #F4F4F7;" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" id = "generatedImg"/>
-            <button mat-icon-button color="warn" aria-label="Previous template" (click)="prevTemplate()">
+        <button mat-icon-button color="warn" aria-label="Previous template" (click)="prevTemplate()">
                 <mat-icon>arrow_back_ios</mat-icon>
             </button>
             <a href="{{meme.url}}" mat-icon-button color="warn" target="_blank" >
