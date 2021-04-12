@@ -7,113 +7,6 @@
         </button>
     </h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
-        <input matInput formControlName="_id" hidden>
-        <input matInput formControlName="voiceAssistant" [(ngModel)]="text" [waTextToSpeech]="text | waUtterance: options" [waTextToSpeechPaused]="paused" (waTextToSpeechEnd)="onEnd()" hidden>        
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="loadTemplates()" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select Templates' then 'next template' or 'previous template' to select your template">
-                Uploaded templates
-            </button>
-        </div>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="imgFlipAPITemplates()" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select image flip' then 'next template' or 'previous template' to select your template">
-                IMGFlip templates
-            </button>
-        </div>
-        <br/>
-        <div *ngIf="templates && (showImgFlipTemplates || showUploadedTemplates)  " id="templates">
-            <img *ngFor="let template of templates" src="{{template}}" alt="template"
-                 width="90" height="90" (click)="selectTemplate(template)"/>
-        </div>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="hiddenFileInput.click()" mat-raised-button color="secondary">
-                Upload image
-            </button>
-            <input
-                #hiddenFileInput
-                formControlName="file"
-                id="file"
-                type="file"
-                class="form-control"
-                style="display: none"
-                (change)="onFileChange($event)">
-            <input
-                #hiddenFileInput
-                formControlName="template"
-                id="template"
-                type="template"
-                class="form-control"
-                style="display: none">
-        </div>
-        <br/>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary" matTooltip="Voice Control: 'Use webcam' then 'Take snapshot' to make a selfie"> 
-                Webcam
-            </button>
-        </div>
-        <br/>
-        <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam">
-        </webcam>
-        <button class="actionBtn" mat-raised-button color="secondary" (click)="triggerSnapshot();" *ngIf="showWebcam" >
-            Take A Snapshot 
-        </button>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button class="actionBtn" (click)="toggleScreenshot();" mat-raised-button color="secondary"> 
-                Take Screenshot from URL
-            </button>
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-                <input class="wrapper" [(ngModel)]="screenhotURL" *ngIf="showScreenshot" [ngModelOptions]="{standalone: true}">
-            </div>
-            <button class="actionBtn" (click)="takeScreenshot();" mat-raised-button color="secondary"  *ngIf="showScreenshot"> 
-                Capture
-            </button>
-        </div>
-        <br/>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button class="actionBtn" (click)="openCanvas();" mat-raised-button color="secondary"> 
-                Canvas
-            </button>
-        </div>
-        <br/>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <mat-form-field>
-                <mat-label>Image URL</mat-label>
-                <input matInput formControlName="imgUrl" >
-            </mat-form-field>
-        </div>
-        <div fxLayout="row" style="margin-top: 10px">
-            <mat-form-field>
-                <mat-label>Title</mat-label>
-                <input matInput formControlName="title" required>
-                <mat-error>Title is required!</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Description</mat-label>
-                <input matInput formControlName="description" required>
-                <mat-error>Description is required!</mat-error>
-            </mat-form-field>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <mat-form-field>
-                <mat-label>Top text</mat-label>
-                <input matInput formControlName="topText" required>
-                <mat-error>Top text is required!</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Top x</mat-label>
-                <input matInput formControlName="topX">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Top y</mat-label>
-                <input matInput formControlName="topY">
-            </mat-form-field>
-            <mat-checkbox formControlName="topBold">Bold</mat-checkbox>
-            <mat-checkbox formControlName="topItalic">Italic</mat-checkbox>
 
         <mat-accordion>
             <mat-expansion-panel class="mat-expansion-panel-meme" hideToggle>
@@ -345,22 +238,15 @@
                 <mat-radio-button value="private"  style="color: #fff; margin-left: 10px;">Private</mat-radio-button>
             </mat-radio-group>
         </div>
-
-        <img class="center" style="background-color: #F4F4F7;" src="{{meme.url}}" alt="{{meme.title}}"  *ngIf="meme"  (click) = "openDialog()" id = "generatedImg"/>
+        <img style="background-color: #F4F4F7;" *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" id = "generatedImg"/>
         
-        <div fxLayout="row" style="margin-top: 10px; text-align: center;" *ngIf="meme" >
-        <button mat-icon-button color="warn" aria-label="Previous template" (click)="prevTemplate()">
-                <mat-icon>arrow_back_ios</mat-icon>
-            </button>
-            <a href="{{meme.url}}" mat-icon-button color="warn" target="_blank" >
+        <div fxLayout="row" style="margin-top: 10px; text-align: center;">
+            <a href="{{meme.url}}" mat-icon-button color="warn" target="_blank" *ngIf="meme">
                 <mat-icon>download</mat-icon>
             </a>
-            <button mat-icon-button color="warn" aria-label="Share" (click)="share()" >
+            <button mat-icon-button color="warn" aria-label="Share" (click)="share()" *ngIf="meme">
                 <mat-icon>share</mat-icon>
             </button>
-            <button mat-icon-button color="warn" aria-label="Next template" (click)="nextTemplate()" >
-                <mat-icon>arrow_forward_ios</mat-icon>
-            </button>   
         </div>
         
         <div fxLayout="row" style="margin-top: 10px">
