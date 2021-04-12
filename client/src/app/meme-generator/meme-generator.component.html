@@ -7,146 +7,212 @@
         </button>
     </h2>
     <form name="generateMemeForm" [formGroup]="memeForm">
-        <input matInput formControlName="_id" hidden>
-        <input matInput formControlName="voiceAssistant" [(ngModel)]="text" [waTextToSpeech]="text | waUtterance: options" [waTextToSpeechPaused]="paused" (waTextToSpeechEnd)="onEnd()" hidden>        
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="loadTemplates()" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select Templates' then 'next template' or 'previous template' to select your template">
-                Uploaded templates
-            </button>
-        </div>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="imgFlipAPITemplates()" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select image flip' then 'next template' or 'previous template' to select your template">
-                IMGFlip templates
-            </button>
-        </div>
-        <br/>
-        <div *ngIf="templates && (showImgFlipTemplates || showUploadedTemplates)" id="templates">
-            <img *ngFor="let template of templates" src="{{template}}" alt="template"
-                 width="90" height="90" (click)="selectTemplate(template)"/>
-        </div>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button (click)="hiddenFileInput.click()" mat-raised-button color="secondary">
-                Upload image
-            </button>
-            <input
-                #hiddenFileInput
-                formControlName="file"
-                id="file"
-                type="file"
-                class="form-control"
-                style="display: none"
-                (change)="onFileChange($event)">
-            <input
-                #hiddenFileInput
-                formControlName="template"
-                id="template"
-                type="template"
-                class="form-control"
-                style="display: none">
-        </div>
-        <br/>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary" matTooltip="Voice Control: 'Use webcam' then 'Take snapshot' to make a selfie"> 
-                Webcam
-            </button>
-        </div>
-        <br/>
-        <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam">
-        </webcam>
-        <button class="actionBtn" mat-raised-button color="secondary" (click)="triggerSnapshot();" *ngIf="showWebcam" >
-            Take A Snapshot 
-        </button>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button class="actionBtn" (click)="toggleScreenshot();" mat-raised-button color="secondary"> 
-                Take Screenshot from URL
-            </button>
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-                <input class="wrapper" [(ngModel)]="screenhotURL" *ngIf="showScreenshot" [ngModelOptions]="{standalone: true}">
+
+        <mat-accordion>
+            <mat-expansion-panel class="mat-expansion-panel-meme" hideToggle>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Select Template
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+                <input matInput formControlName="_id" hidden>
+                <input matInput formControlName="voiceAssistant" [(ngModel)]="text" [waTextToSpeech]="text | waUtterance: options" [waTextToSpeechPaused]="paused" (waTextToSpeechEnd)="onEnd()" hidden>        
+                <div fxLayout="row" fxLayoutAlign="start start">
+                    <button (click)="loadTemplates()" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select Templates' then 'next template' or 'previous template' to select your template">
+                        Uploaded templates
+                    </button>
+                    <button (click)="imgFlipAPITemplates()" class="element" mat-raised-button color="secondary" matTooltip="Voice Control: 'Select image flip' then 'next template' or 'previous template' to select your template">
+                        IMGFlip templates
+                    </button>
+                </div>
+                <div *ngIf="templates && (showImgFlipTemplates || showUploadedTemplates)" id="templates">
+                    <img *ngFor="let template of templates" src="{{template}}" alt="template"
+                        width="90" height="90" (click)="selectTemplate(template)"/>
+                </div>
+                <br/>
+                <p>or</p>
+                <div fxLayout="row" fxLayoutAlign="start start">
+                    <button (click)="hiddenFileInput.click()" mat-raised-button color="secondary">
+                        Upload image
+                    </button>
+                    <input
+                        #hiddenFileInput
+                        formControlName="file"
+                        id="file"
+                        type="file"
+                        class="form-control"
+                        style="display: none"
+                        (change)="onFileChange($event)">
+                    <input
+                        #hiddenFileInput
+                        formControlName="template"
+                        id="template"
+                        type="template"
+                        class="form-control"
+                        style="display: none">
+
+                    <button class="actionBtn" class="element" (click)="toggleScreenshot();" mat-raised-button color="secondary"> 
+                        Take Screenshot from URL
+                    </button>
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <input class="wrapper" [(ngModel)]="screenhotURL" *ngIf="showScreenshot" [ngModelOptions]="{standalone: true}">
+                        <button mat-raised-button color="accent" class="actionBtn"  (click)="takeScreenshot();" *ngIf="showScreenshot"> 
+                            Capture
+                        </button>
+                    </div>
+                    
+                </div>
+                <br/>
+                <p>or</p>
+                <div fxLayout="row" fxLayoutAlign="start start">
+                    <button class="actionBtn" (click)="toggleWebcam();" mat-raised-button color="secondary" matTooltip="Voice Control: 'Use webcam' then 'Take snapshot' to make a selfie"> 
+                        Webcam
+                    </button>
+                    <button class="actionBtn" class="element" mat-raised-button color="secondary" (click)="triggerSnapshot();" *ngIf="showWebcam" >
+                        Take A Snapshot 
+                    </button>
+                    <button class="actionBtn" class="element" (click)="openCanvas();" mat-raised-button color="secondary"> 
+                        Canvas
+                    </button>
+                </div>
+                <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"></webcam>
+                <br/>
+                <p>or</p>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-form-field>
+                        <mat-label>Image URL</mat-label>
+                        <input matInput formControlName="imgUrl" >
+                    </mat-form-field>
+                </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel (opened)="panelmemeOpenState = true"
+                                 (closed)="panelmemeOpenState = false"
+                                 class="mat-expansion-panel-meme">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Meme Settings
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <div fxLayout="row" style="margin-top: 10px">
+                <mat-form-field>
+                    <mat-label>Title</mat-label>
+                    <input matInput formControlName="title" required>
+                    <mat-error>Title is required!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <input matInput formControlName="description" required>
+                    <mat-error>Description is required!</mat-error>
+                </mat-form-field>
             </div>
-            <button class="actionBtn" (click)="takeScreenshot();" mat-raised-button color="secondary"  *ngIf="showScreenshot"> 
-                Capture
-            </button>
-        </div>
-        <br/>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="start start">
-            <button class="actionBtn" (click)="openCanvas();" mat-raised-button color="secondary"> 
-                Canvas
-            </button>
-        </div>
-        <br/>
-        <p>or</p>
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <mat-form-field>
-                <mat-label>Image URL</mat-label>
-                <input matInput formControlName="imgUrl" >
-            </mat-form-field>
-        </div>
-        <div fxLayout="row" style="margin-top: 10px">
-            <mat-form-field>
-                <mat-label>Title</mat-label>
-                <input matInput formControlName="title" required>
-                <mat-error>Title is required!</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Description</mat-label>
-                <input matInput formControlName="description" required>
-                <mat-error>Description is required!</mat-error>
-            </mat-form-field>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <mat-form-field>
-                <mat-label>Top text</mat-label>
-                <input matInput formControlName="topText" required>
-                <mat-error>Top text is required!</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Top x</mat-label>
-                <input matInput formControlName="topX">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Top y</mat-label>
-                <input matInput formControlName="topY">
-            </mat-form-field>
-            <mat-checkbox formControlName="topBold">Bold</mat-checkbox>
-            <mat-checkbox formControlName="topItalic">Italic</mat-checkbox>
-
-            <mat-form-field color="white">
-                <mat-label>Font size</mat-label>
-                <input formControlName="topSize" matInput type="number" min="10">
-            </mat-form-field>
-
-            <input
-                [value]="memeForm.get('topColor').value"
-                [colorPicker]="memeForm.get('topColor').value"
-                (colorPickerChange)="memeForm.get('topColor').setValue($event)"
-                [style.background]="memeForm.get('topColor').value"
-                class="colorPicker"
-                formControlName="topColor">
-        </div>
-
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-form-field>
+                    <mat-label>Top text</mat-label>
+                    <input matInput formControlName="topText" required>
+                    <mat-error>Top text is required!</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Top x</mat-label>
+                    <input matInput formControlName="topX">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Top y</mat-label>
+                    <input matInput formControlName="topY">
+                </mat-form-field>
+                <mat-checkbox formControlName="topBold">Bold</mat-checkbox>
+                <mat-checkbox formControlName="topItalic">Italic</mat-checkbox>
+    
+                <mat-form-field color="white">
+                    <mat-label>Font size</mat-label>
+                    <input formControlName="topSize" matInput type="number" min="10">
+                </mat-form-field>
+    
+                <input
+                    [value]="memeForm.get('topColor').value"
+                    [colorPicker]="memeForm.get('topColor').value"
+                    (colorPickerChange)="memeForm.get('topColor').setValue($event)"
+                    [style.background]="memeForm.get('topColor').value"
+                    class="colorPicker"
+                    formControlName="topColor">
+            </div>
+            <div fxLayout="row">
+                <mat-form-field>
+                    <mat-label>Bottom text</mat-label>
+                    <input matInput formControlName="bottomText">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Bottom x</mat-label>
+                    <input matInput formControlName="bottomX">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Bottom y</mat-label>
+                    <input matInput formControlName="bottomY">
+                </mat-form-field>
+                <mat-checkbox formControlName="bottomBold">Bold</mat-checkbox>
+                <mat-checkbox formControlName="bottomItalic">Italic</mat-checkbox>
+    
+                <mat-form-field color="white">
+                    <mat-label>Font size</mat-label>
+                    <input formControlName="bottomSize" matInput type="number" min="10">
+                </mat-form-field>
+    
+                <input
+                    [value]="memeForm.get('bottomColor').value"
+                    [colorPicker]="memeForm.get('bottomColor').value"
+                    (colorPickerChange)="memeForm.get('bottomColor').setValue($event)"
+                    [style.background]="memeForm.get('bottomColor').value"
+    
+                    class="colorPicker"
+                    formControlName="bottomColor">
+            </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        
         <div fxLayout="row">
-            <mat-form-field>
-                <mat-label>Bottom text</mat-label>
-                <input matInput formControlName="bottomText">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Bottom x</mat-label>
-                <input matInput formControlName="bottomX">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Bottom y</mat-label>
-                <input matInput formControlName="bottomY">
-            </mat-form-field>
-            <mat-radio-group formControlName="visibility">
-                <mat-radio-button value="public" style="color: #fff;" [checked]="true">Public</mat-radio-button>
-                <mat-radio-button color="warn" value="unlisted" style="color: #fff; margin-left: 10px;">Unlisted</mat-radio-button>
-                <mat-radio-button value="private"  style="color: #fff; margin-left: 10px;">Private</mat-radio-button>
-            </mat-radio-group>
+            <mat-accordion>
+                <mat-expansion-panel (opened)="panelOpenState = true"
+                                     (closed)="panelOpenState = false"
+                                     class="mat-expansion-panel-meme">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                        Third text box
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div fxLayout="row">
+                        <mat-form-field>
+                            <mat-label>Third text</mat-label>
+                            <input matInput formControlName="thirdText">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Third x</mat-label>
+                            <input matInput formControlName="thirdX">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Third y</mat-label>
+                            <input matInput formControlName="thirdY">
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row">
+                        <mat-checkbox formControlName="thirdBold">Bold</mat-checkbox>
+                        <mat-checkbox formControlName="thirdItalic">Italic</mat-checkbox>
+
+                        <mat-form-field color="white">
+                            <mat-label>Font size</mat-label>
+                            <input formControlName="thirdSize" matInput type="number" min="10">
+                        </mat-form-field>
+                    </div>
+                    <input
+                        [value]="memeForm.get('thirdColor').value"
+                        [colorPicker]="memeForm.get('thirdColor').value"
+                        (colorPickerChange)="memeForm.get('thirdColor').setValue($event)"
+                        [style.background]="memeForm.get('thirdColor').value"
+                        class="colorPicker"
+                        formControlName="thirdColor">
+                </mat-expansion-panel>
+            </mat-accordion>
+            
         </div>
         <div fxLayout="row">
             <mat-form-field class="chip-list">
@@ -166,22 +232,11 @@
             </mat-form-field>
         </div>
         <div fxLayout="row">
-            <mat-checkbox formControlName="bottomBold">Bold</mat-checkbox>
-            <mat-checkbox formControlName="bottomItalic">Italic</mat-checkbox>
-
-            <mat-form-field color="white">
-                <mat-label>Font size</mat-label>
-                <input formControlName="bottomSize" matInput type="number" min="10">
-            </mat-form-field>
-
-            <input
-                [value]="memeForm.get('bottomColor').value"
-                [colorPicker]="memeForm.get('bottomColor').value"
-                (colorPickerChange)="memeForm.get('bottomColor').setValue($event)"
-                [style.background]="memeForm.get('bottomColor').value"
-
-                class="colorPicker"
-                formControlName="bottomColor">
+            <mat-radio-group formControlName="visibility">
+                <mat-radio-button value="public" style="color: #fff;" [checked]="true">Public</mat-radio-button>
+                <mat-radio-button color="warn" value="unlisted" style="color: #fff; margin-left: 10px;">Unlisted</mat-radio-button>
+                <mat-radio-button value="private"  style="color: #fff; margin-left: 10px;">Private</mat-radio-button>
+            </mat-radio-group>
         </div>
         <img style="background-color: #F4F4F7;" *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" id = "generatedImg"/>
         
