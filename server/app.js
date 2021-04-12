@@ -96,12 +96,13 @@ async function upload(files) {
 }
 
 /**
- * doesn't work with png 
+ * Converts single Image to a Video
+ * 
+ * @param {*} req 
  */
-async function convertSingle(req) {
+function convertSingle() {
 
-    let saveTo = __dirname + '/videos/' + new ObjectID + 'test.mp4'
-    let imagePath = __dirname + '/uploads/' + 'test5.png'
+    let saveTo = __dirname + '/videos/' + new ObjectID() + '.mp4'
     let command = ffmpeg()
     command
     .input('http://localhost:3007/memes/test5.jpg')
@@ -110,26 +111,39 @@ async function convertSingle(req) {
     .videoCodec('libx264')
     .videoBitrate(1024)
     .size('640x?')
+    .loop(4)
     .noAudio()
     .save(saveTo)
 }
 
+/**
+ * Streams a video 
+ * Adapted from:
+ * https://dev.to/abdisalan_js/how-to-stream-video-from-mongodb-using-nodejs-4ibi
+ * 
+ */
 app.get("/video", function (req, res) {
 
-    convertSingle(req)
-  
-    const range = req.headers.range;
+    // Check for range headers to find start time
+    const range = req.headers.range
     if (!range) {
-      res.status(400).send("Requires Range header");
+      res.status(400).send("Requires Range header")
     }
 
-    let p = __dirname + '/videos/' + 'videotest.mp4'
-    const videoPath = p;
-    const videoSize = fs.statSync(p).size;
-  
-    const CHUNK_SIZE = 10 ** 6; 
-    const start = Number(range.replace(/\D/g, ""));
-    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+     // converts single meme to video on connection start
+     if(range == 'bytes=0-') {
+        convertSingle()
+   }
+
+
+    //Streams a test video
+    const videoPath =  __dirname + '/videos/' + 'videotest.mp4'
+
+    // Create response headers
+    const videoSize = fs.statSync(videoPath).size
+    const CHUNK_SIZE = 10 ** 6; //  1MB chunks
+    const start = Number(range.replace(/\D/g, ""))
+    const end = Math.min(start + CHUNK_SIZE, videoSize - 1)
   
     const contentLength = end - start + 1;
     const headers = {
@@ -137,17 +151,17 @@ app.get("/video", function (req, res) {
       "Accept-Ranges": "bytes",
       "Content-Length": contentLength,
       "Content-Type": "video/mp4",
-    };
+    }
   
-    res.writeHead(206, headers);
+    // HTTP Status 206 for Partial Content
+    res.writeHead(206, headers)
+   
+    const videoStream = fs.createReadStream(videoPath, { start, end })
   
-    const videoStream = fs.createReadStream(videoPath, { start, end });
-  
-    videoStream.pipe(res);
+    //Pipe video to response
+    videoStream.pipe(res)
 
-  });
-
-
+  })
 
 /**
  * Handles screenshots
@@ -156,10 +170,10 @@ app.post('/screenshot', async function (req, res) {
     
     url = req.body.url
 
-    let browser = await puppeteer.launch({ headless: true,  args: ['--no-sandbox']});
-    let page = await browser.newPage();
-    await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
-    await page.setViewport({ width: 1024, height: 800 });
+    let browser = await puppeteer.launch({ headless: true,  args: ['--no-sandbox']})
+    let page = await browser.newPage()
+    await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 })
+    await page.setViewport({ width: 1024, height: 800 })
     
     //let title = url.replace(/(^\w+:|^)\/\//, '')
     let title = JSON.stringify(new ObjectID())
@@ -171,7 +185,7 @@ app.post('/screenshot', async function (req, res) {
      path: filepathname,
      type: "jpeg",
      fullPage: true
-   });
+   })
    
    await page.close();
    await browser.close();
@@ -493,7 +507,6 @@ app.post('/template/vote/:id', async function(req, res) {
 app.post('/meme', async function (req, res) {
     const db = req.app.get('db')
     let meme = req.body, url, fileName
-    //console.log("files req name " + JSON.stringify(req.files))
     const uploads = await upload(req.files)
     const userid = ObjectID(req.body.userid)
     const cred = req.body.cred
