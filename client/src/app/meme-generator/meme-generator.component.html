@@ -238,15 +238,21 @@
                 <mat-radio-button value="private"  style="color: #fff; margin-left: 10px;">Private</mat-radio-button>
             </mat-radio-group>
         </div>
-        <img style="background-color: #F4F4F7;" *ngIf="meme" src="{{meme.url}}" alt="{{meme.title}}"  (click) = "openDialog()" id = "generatedImg"/>
         
-        <div fxLayout="row" style="margin-top: 10px; text-align: center;">
-            <a href="{{meme.url}}" mat-icon-button color="warn" target="_blank" *ngIf="meme">
+        <img class="center" style="background-color: #F4F4F7;" src="{{meme.url}}" alt="{{meme.title}}"  *ngIf="meme"  (click) = "openDialog()" id = "generatedImg"/>
+        <div fxLayout="row" style="margin-top: 10px; text-align: center;" *ngIf="meme" >
+            <button mat-icon-button color="warn" aria-label="Previous template" (click)="prevTemplate()">
+                <mat-icon>arrow_back_ios</mat-icon>
+            </button>
+            <a href="{{meme.url}}" mat-icon-button color="warn" target="_blank" >
                 <mat-icon>download</mat-icon>
             </a>
-            <button mat-icon-button color="warn" aria-label="Share" (click)="share()" *ngIf="meme">
+            <button mat-icon-button color="warn" aria-label="Share" (click)="share()" >
                 <mat-icon>share</mat-icon>
             </button>
+            <button mat-icon-button color="warn" aria-label="Next template" (click)="nextTemplate()" >
+                <mat-icon>arrow_forward_ios</mat-icon>
+            </button>   
         </div>
         
         <div fxLayout="row" style="margin-top: 10px">
