@@ -21,7 +21,7 @@
             </button>
         </div>
         <br/>
-        <div *ngIf="templates && (showImgFlipTemplates || showUploadedTemplates)" id="templates">
+        <div *ngIf="templates && (showImgFlipTemplates || showUploadedTemplates)  " id="templates">
             <img *ngFor="let template of templates" src="{{template}}" alt="template"
                  width="90" height="90" (click)="selectTemplate(template)"/>
         </div>
