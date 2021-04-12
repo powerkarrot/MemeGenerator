@@ -500,7 +500,7 @@ app.post('/template/vote/:id', async function(req, res) {
     }
 })
 
-**
+/*
  * creates a meme and gives it an id
  */
 app.post('/meme', async function (req, res) {
