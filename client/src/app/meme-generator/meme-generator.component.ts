@@ -637,8 +637,6 @@ export class MemeGeneratorComponent implements OnInit {
       openCanvas() {
         const dialogRef = this.dialog.open(CanvasComponent, {restoreFocus: false});
     
-        // Manually restore focus to the menu trigger since the element that
-        // opens the dialog won't be in the DOM any more when the dialog closes.
         dialogRef.afterClosed().subscribe(result => {
 
             let file = this.dataurlToFile(result.src, result.id)
@@ -661,16 +659,14 @@ export class MemeGeneratorComponent implements OnInit {
         if(!this.continueDraft) {
             
             const formData = this.generateMemeFormData()
-    
             this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
-                if(!(meme == null)){
+                if(meme != null){
                     this.meme = meme
                     // @ts-ignore
                     this.id = meme._id
-                    this.template = meme.template
                     let name = meme.template.split("/").pop()
-                    this.template.url = "http://localhost:3007/uploads/" + name
-                    this.updateTemplate(meme.template)
+                    let path = "http://localhost:3007/uploads/" + name
+                    //this.updateTemplate(path)
                 }
             })
         }
@@ -772,6 +768,8 @@ export class MemeGeneratorComponent implements OnInit {
     
         if (imgUrl) {
             formData.append('url', imgUrl)
+            this.updateTemplate(imgUrl)
+          
         }
 
         formData.append('title', this.memeForm.get('title').value)
@@ -909,6 +907,7 @@ export class MemeGeneratorComponent implements OnInit {
                 name: name,
                 imgUrl: null
             })
+            this.selectTemplate(file.name)
         }
     }
 

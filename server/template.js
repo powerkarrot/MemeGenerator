@@ -24,9 +24,15 @@ async function upsertTemplate(req, res) {
     const db = req.app.get('db')
     const template = req.body
     query = {url : JSON.stringify(req.body.url)}
+    let title
     
     //Regex adapted from :https://stackoverflow.com/a/55975214
-    const title = template.url.split(/[\\\/]/).pop().split(".").shift()
+    if(template.url.split(/[\\\/]/).pop().split(".") == null) {
+        title = new ObjectID() + ".jpg"
+    } else {
+        title = template.url.split(/[\\\/]/).pop().split(".").shift() 
+    }
+
     let date = new Date(Date.now()).toISOString()
     viewsInc = 1
     gen = 0
