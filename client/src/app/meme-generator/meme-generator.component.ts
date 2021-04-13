@@ -908,7 +908,7 @@ export class MemeGeneratorComponent implements OnInit {
                 name: name,
                 imgUrl: null
             })
-            this.selectTemplate(file.name)
+            this.selectTemplate("http://localhost:3007/uploads/" + file.name)
         }
     }
 
