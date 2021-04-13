@@ -29,6 +29,7 @@ export class TemplateViewerComponent implements OnInit {
   voteDataSeries: any[] = null
   viewDataSeries: any[] = null
   generatedDataSeries: any[] = null
+
   multi = [
     {
       "name": "Views",
@@ -44,6 +45,7 @@ export class TemplateViewerComponent implements OnInit {
     }
   ];
 
+
   // graph options
   legend: boolean = true
   showLabels: boolean = true
@@ -58,7 +60,6 @@ export class TemplateViewerComponent implements OnInit {
   gradient = true
   showGridLines = true
   legendTitle = "Chart"
-
   colorScheme = {
     domain: ['#5AA454', '#E44D25', '#7aa3e5']
   }

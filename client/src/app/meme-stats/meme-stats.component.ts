@@ -1,10 +1,6 @@
 import {Component, OnInit} from '@angular/core'
-import {Router} from '@angular/router'
 import {MemeService} from '../meme.service'
 import {LocalStorageService} from '../localStorage.service'
-import {MatChipInputEvent} from '@angular/material/chips';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { multi } from './data'
 import { viewsSingle } from './pieData';
 import { votesSingle } from './votesDataPie';
 
@@ -30,8 +26,9 @@ export class MemeStatsComponent implements OnInit {
     numComments = 0
     units: string = 'comments'
     previousValue = 0
+    multi = []
 
-    multi: any[]
+    //: any[]
     viewsSingle: any[]
     votesSingle: any[]
 
@@ -89,11 +86,23 @@ export class MemeStatsComponent implements OnInit {
         private _route: ActivatedRoute, 
         private lss: LocalStorageService
     ){
+
+    this.multi = [
+        {
+            "name": "Views",
+            "series": []   
+        },
+        {
+            "name": "Votes",
+            "series": []
+        }]
+
         this.subscription = this._route.params.subscribe(params => {
             this.memeID = params['id']
         })
         this.isLoggedIn = lss.hasLocalStorage()
         this.initCharts()
+
     }
     
     /**
@@ -107,10 +116,11 @@ export class MemeStatsComponent implements OnInit {
      * Initializes graph and charts
      */
     initCharts() {
+
        
         const id = this.memeID
-        multi[0].name = "Views"
-        multi[1].name = "Votes"
+        this.multi[0].name = "Views"
+        this.multi[1].name = "Votes"
 
         this._memeService.getMeme(id).subscribe((data) => {
 
@@ -127,38 +137,32 @@ export class MemeStatsComponent implements OnInit {
                 votes : voteDataSeries[voteDataSeries.length-1].votes
             })
 
-            //let maxVotes = Math.max.apply(Math, voteDataSeries.map(function(o) { return o.votes; }))
-            //let minVotes = Math.min.apply(Math, voteDataSeries.map(function(o) { return o.votes; }))
-
             //comment chart data
             this.numComments = this.currentMeme.comments.length
 
             //Graph data
             for (var i = 0; i < viewDataSeries.length; i++) {
 
-                multi[0].series.push(
+                this.multi[0].series.push(
                     {
                         "name": viewDataSeries[i].timestamp,
                         "value": <Number> viewDataSeries[i].views, 
-                        // "min" : 0,
-                        // "max" : 0
                     }   
                 )
             }
 
             for (var i = 0; i < voteDataSeries.length; i++) {
                     
-                multi[1].series.push(
+                this.multi[1].series.push(
                     {
                         "name": voteDataSeries[i].timestamp,
                         "value": <Number> voteDataSeries[i].votes, 
-                        // "min" : minVotes,
-                        // "max" : maxVotes
                     }
                 )
             }
 
-            Object.assign(this, {multi});
+            //assign object
+            this.multi = [...this.multi]
 
             //Pie chart data
             let options = {}
