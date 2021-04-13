@@ -611,6 +611,7 @@ export class MemeGeneratorComponent implements OnInit {
         {     
             this.template = t
             this.template.url = url
+
         })      
     }
 

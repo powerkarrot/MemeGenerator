@@ -131,7 +131,8 @@ async function createMeme(req, res) {
 
                         const newValues = {
                             $push: {
-                                drafts: data
+                                drafts: data,
+                                memes: data
                             }
                         }
 

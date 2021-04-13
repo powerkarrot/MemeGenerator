@@ -316,6 +316,7 @@ export class MemeSingleviewComponent implements OnInit {
      */
     commentMeme(formdata): void {
         this.memeService.commentMeme(this.selectedMeme._id, this.userData._id, this.userData.username, this.userData.api_cred, this.model.comment).subscribe((data) => {
+            this.getMemes()
         })
     }
 
