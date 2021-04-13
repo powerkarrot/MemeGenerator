@@ -28,11 +28,14 @@ enum Command {
     TITLE = 1,
     TOP_TEXT,
     BOTTOM_TEXT,
+    THIRD_TEXT,
     DESCRIPTION,
     TOP_X,
     TOP_Y,
     BOTTOM_X,
     BOTTOM_Y,
+    THIRD_X,
+    THIRD_Y,
     STOP
 }
 
@@ -141,8 +144,16 @@ export class MemeGeneratorComponent implements OnInit {
         this.getVoiceCommand("Top bold").subscribe((res) => {
             const topBold = this.memeForm.get('topBold').value
             if (topBold) {
-                this.speakText("Making bottom text bold")
+                this.speakText("Making top text bold")
                 this.memeForm.patchValue({topBold: !topBold})
+            }
+        })
+
+        this.getVoiceCommand("Third bold").subscribe((res) => {
+            const thirdBold = this.memeForm.get('thirdBold').value
+            if (thirdBold) {
+                this.speakText("Making third text bold")
+                this.memeForm.patchValue({thirdBold: !thirdBold})
             }
         })
 
@@ -177,20 +188,13 @@ export class MemeGeneratorComponent implements OnInit {
         })
 
         this.getVoiceCommand("Next template").subscribe((res) => {
-            if(this.templateIndex < this.templates.length) {
-                this.templateIndex++
-            }
+            this.nextTemplate()
             this.speakText("Next template")
-            this.selectTemplate(this.templates[this.templateIndex])
-            
         })
 
         this.getVoiceCommand("Previous template").subscribe((res) => {
-            if(this.templateIndex > 0) {
-                this.templateIndex--
-            }
+            this.prevTemplate()
             this.speakText("Previous template")
-            this.selectTemplate(this.templates[this.templateIndex])
         })
 
         this.command$.subscribe((command) => {
@@ -242,6 +246,18 @@ export class MemeGeneratorComponent implements OnInit {
                             }
                             case Command.BOTTOM_Y: {
                                 this.memeForm.patchValue({bottomY: text[0].transcript})
+                                break
+                            }
+                            case Command.THIRD_TEXT: {
+                                this.memeForm.patchValue({thirdText: text[0].transcript})
+                                break
+                            }
+                            case Command.THIRD_X: {
+                                this.memeForm.patchValue({thirdX: text[0].transcript})
+                                break
+                            }
+                            case Command.THIRD_Y: {
+                                this.memeForm.patchValue({thirdY: text[0].transcript})
                                 break
                             }
                         }
