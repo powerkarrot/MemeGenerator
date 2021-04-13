@@ -663,12 +663,15 @@ export class MemeGeneratorComponent implements OnInit {
             const formData = this.generateMemeFormData()
     
             this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
-                this.meme = meme
-                // @ts-ignore
-                this.id = meme._id
-                //let name = meme.template.split("/").pop()
-                //this.template.url = "http://localhost:3007/uploads/" + name
-                this.updateTemplate(meme.template)
+                if(!(meme == null)){
+                    this.meme = meme
+                    // @ts-ignore
+                    this.id = meme._id
+                    this.template = meme.template
+                    let name = meme.template.split("/").pop()
+                    this.template.url = "http://localhost:3007/uploads/" + name
+                    this.updateTemplate(meme.template)
+                }
             })
         }
         this.continueDraft = false
