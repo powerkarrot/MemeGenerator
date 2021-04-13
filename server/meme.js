@@ -277,6 +277,11 @@ async function updateMeme(req, res) {
     }
 }
 
+/**
+ * Post a comment on a meme
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function commentMeme(req, res) {
     const db = req.app.get('db')
     const query = {_id: ObjectID(req.params.id)}
@@ -326,6 +331,11 @@ async function commentMeme(req, res) {
 
 }
 
+/**
+ * Add tags to a meme
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function tagMeme(req, res) {
     const db = req.app.get('db')
     const tags = req.body.tags
@@ -351,6 +361,11 @@ async function tagMeme(req, res) {
     }
 }
 
+/**
+ * Vote for a meme
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function voteMeme(req, res) {
     const db = req.app.get('db')
     const votes = req.body.vote < 0 ? -1 : 1

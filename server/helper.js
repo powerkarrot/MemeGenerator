@@ -4,6 +4,13 @@ const ResponseType = {
     ERROR: 1
 }
 
+/**
+ * Helper function to send a JSON response
+ * @param {*} response 
+ * @param {*} type 
+ * @param {*} message 
+ * @param {*} data 
+ */
 async function sendResponse(response, type = 0, message = "" , data = []) {
     switch(type) {
         case 0: // Data response

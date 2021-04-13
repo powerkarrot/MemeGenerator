@@ -66,24 +66,26 @@ app.post('/template/vote/:id', template.updateVote)
 /*
 * Meme routes
 */
-app.post('/meme', meme.createMeme)
-app.post('/meme/comment/:id', meme.commentMeme)
-app.post('/meme/tag/:id', meme.tagMeme)
-app.post('/meme/vote/:id', meme.voteMeme)
-app.post('/meme/:id', meme.updateMeme)
 app.get('/meme', meme.getMeme)
 app.get('/meme/random', meme.getRandomMeme)
 app.get('/meme/:id', meme.getMemeByID)
-app.delete('/meme/:id', meme.deleteMemeByID)
-app.post('/draft/delete/:id', meme.deleteDraftByID)
 app.get('/draft/user', meme.getDraftForUser)
-app.delete('/draft', meme.deleteAllDrafts)
 app.get('/downloads', meme.getMemesAsZip)
 app.get('/drafts', meme.getDrafts)
-app.post('/createMemes', meme.createMultipleMemes)
-app.post('/screenshot', meme.createScreenshot)
 app.get('/draft', meme.getAllDrafts)
 app.get("/video", meme.streamVideo)
+
+app.post('/meme', meme.createMeme)
+app.post('/meme/:id', meme.updateMeme)
+app.post('/meme/comment/:id', meme.commentMeme)
+app.post('/meme/tag/:id', meme.tagMeme)
+app.post('/meme/vote/:id', meme.voteMeme)
+app.post('/draft/delete/:id', meme.deleteDraftByID)
+app.post('/createMemes', meme.createMultipleMemes)
+app.post('/screenshot', meme.createScreenshot)
+
+app.delete('/meme/:id', meme.deleteMemeByID)
+app.delete('/draft', meme.deleteAllDrafts)
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
