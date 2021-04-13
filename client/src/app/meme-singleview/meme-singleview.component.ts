@@ -145,8 +145,6 @@ export class MemeSingleviewComponent implements OnInit {
         if (input) {
             input.value = ''
         }
-
-        
     }
 
     /**
@@ -191,7 +189,11 @@ export class MemeSingleviewComponent implements OnInit {
         
     }
 
-    
+    /**
+     * Configure options for voice detecting
+     * @param voice 
+     * @returns 
+     */
     @tuiPure
     private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
         return {
@@ -200,6 +202,9 @@ export class MemeSingleviewComponent implements OnInit {
         };
     }
 
+    /**
+     * Function the get the voice recognition results
+     */
     get options(): SpeechSynthesisUtteranceOptions {
         return this.getOptions(this.voice);
     }

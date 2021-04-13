@@ -48,8 +48,6 @@ export class MemeOverviewComponent implements OnInit {
      * handles possible search/filter/sort parameters in url
      * loads the first amount of memes
      */
-
-    //TODO: search und sort in q dingsen bsp "title": type search / votes: type sort / png: type filter
     ngOnInit(): void {
         this.limit = Math.ceil(window.innerWidth / 250) * Math.ceil(window.innerHeight / 250)
 
@@ -78,6 +76,11 @@ export class MemeOverviewComponent implements OnInit {
         this.paused = !this.localStorageService.getVoiceControlStatus()
     }
 
+    /**
+     * Configure options for voice detecting
+     * @param voice 
+     * @returns 
+     */
     @tuiPure
     private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
         return {
@@ -86,6 +89,9 @@ export class MemeOverviewComponent implements OnInit {
         };
     }
 
+    /**
+     * Function the get the voice recognition results
+     */
     get options(): SpeechSynthesisUtteranceOptions {
         return this.getOptions(this.voice);
     }

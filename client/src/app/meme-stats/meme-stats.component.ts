@@ -3,7 +3,6 @@ import {MemeService} from '../meme.service'
 import {LocalStorageService} from '../localStorage.service'
 import { viewsSingle } from './pieData';
 import { votesSingle } from './votesDataPie';
-
 import {Meme} from '../meme'
 import {ActivatedRoute} from '@angular/router'
 
@@ -15,8 +14,6 @@ import {ActivatedRoute} from '@angular/router'
     styleUrls: ['./meme-stats.component.scss']
 })
 export class MemeStatsComponent implements OnInit {
-    
-
     isLoggedIn = false
     subscription: any
     currentMeme: Meme
@@ -56,7 +53,6 @@ export class MemeStatsComponent implements OnInit {
     showLegend: boolean = true
     isDoughnut: boolean = false
     legendPosition: string = 'below'
-
 
     colorScheme = {
         domain: ['#5AA454', '#E44D25']
@@ -102,7 +98,6 @@ export class MemeStatsComponent implements OnInit {
         })
         this.isLoggedIn = lss.hasLocalStorage()
         this.initCharts()
-
     }
     
     /**

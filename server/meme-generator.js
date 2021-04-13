@@ -144,7 +144,7 @@ MemeGenerator.prototype.generateMeme = function (imageOptions) {
 }
 
 /**
- *
+ * Calculates the canvas size 
  */
 MemeGenerator.prototype.calculateCanvasSize = function () {
 	const {canvas, canvasImg} = this
@@ -233,6 +233,14 @@ MemeGenerator.prototype.drawMeme = function () {
 	}
 }
 
+/**
+ * Generates a font string
+ * @param {*} fontSize 
+ * @param {*} fontFamily 
+ * @param {*} bold 
+ * @param {*} italic 
+ * @returns 
+ */
 function buildFont(fontSize, fontFamily, bold, italic) {
 	let fontString = `${fontSize}pt ${fontFamily}`
 
@@ -248,7 +256,7 @@ function buildFont(fontSize, fontFamily, bold, italic) {
 }
 
 /**
- *
+ * Writes text on canvas
  * @param context
  * @param text
  * @param x
