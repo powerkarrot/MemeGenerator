@@ -46,6 +46,9 @@ export class UserPanelComponent implements OnInit {
             })
             this.votes = vo
             this.views = vi
+        } else {
+            this.votes = 0
+            this.views = 0
         }
     }
 

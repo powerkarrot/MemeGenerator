@@ -1,25 +1,27 @@
-import {Component, OnInit, Inject} from '@angular/core'
-import {FormBuilder, Validators} from '@angular/forms'
-import {Router} from '@angular/router'
-import {debounceTime} from 'rxjs/operators'
-import {MemeService} from '../meme.service'
-import {WebcamImage} from 'ngx-webcam'
-import {Subject, Observable, merge} from 'rxjs'
-import {LocalStorageService} from '../localStorage.service'
-import {ActivatedRoute} from '@angular/router'
-import {COMMA, SEMICOLON} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {Tag} from '../tags'
-import {Meme} from '../meme'
-import {Template} from '../template'
-import {ToastService} from '../toast-service'
-import { TemplateViewerComponent } from '../template-viewer/template-viewer.component' 
+import { Component, OnInit, Inject } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { debounceTime } from 'rxjs/operators'
+import { MemeService } from '../meme.service'
+import { WebcamImage } from 'ngx-webcam'
+import { Subject, Observable, merge } from 'rxjs'
+import { LocalStorageService } from '../localStorage.service'
+import { ActivatedRoute } from '@angular/router'
+import { COMMA, SEMICOLON } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { Tag } from '../tags'
+import { Meme } from '../meme'
+import { Template } from '../template'
+import { ToastService } from '../toast-service'
+import { TemplateViewerComponent } from '../template-viewer/template-viewer.component'
 import { CanvasComponent } from '../canvas/canvas.component'
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog'
-import {continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
-    SpeechSynthesisUtteranceOptions, takeUntilSaid, final} from '@ng-web-apis/speech';
-import {filter, mapTo, repeat, retry, share} from 'rxjs/operators';
-import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import {
+    continuous, isSaid, skipUntilSaid, SPEECH_SYNTHESIS_VOICES, SpeechRecognitionService,
+    SpeechSynthesisUtteranceOptions, takeUntilSaid, final
+} from '@ng-web-apis/speech';
+import { filter, mapTo, repeat, retry, share } from 'rxjs/operators';
+import { TuiContextWithImplicit, tuiPure } from '@taiga-ui/cdk';
 import { NgbdModalContent } from '../meme-singleview/meme-singleview.component'
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap'
 
@@ -76,9 +78,9 @@ export class MemeGeneratorComponent implements OnInit {
     paused = true
     voice = null
     result: Observable<SpeechRecognitionResult[]>
-    currentCommand : Command
+    currentCommand: Command
     templateIndex = -1
-    
+
     readonly nameExtractor = ({
         $implicit,
     }: TuiContextWithImplicit<SpeechSynthesisVoice>) => $implicit.name;
@@ -87,8 +89,9 @@ export class MemeGeneratorComponent implements OnInit {
         console.log('Speech synthesis ended');
     }
 
+    
     getCommandText(command: Command): string {
-        switch(command) {
+        switch (command) {
             case Command.TITLE:
                 return "Title"
             case Command.DESCRIPTION:
@@ -105,15 +108,28 @@ export class MemeGeneratorComponent implements OnInit {
                 return "Bottom X"
             case Command.BOTTOM_Y:
                 return "Bottom Y"
+            case Command.THIRD_TEXT:
+                return "Third text"
+            case Command.THIRD_X:
+                return "Third X"
+            case Command.THIRD_Y:
+                return "Third Y"
         }
     }
 
+    /**
+     * TTS for a certain text
+     * @param text 
+     */
     speakText(text: string): void {
         // Re-trigger utterance pipe:
         this.text = ''
         this.text = text
     }
 
+    /**
+     * Initiallizes all voice features
+     */
     activateVoiceControl() {
         this.paused = false
         this.getVoiceCommand("Show all memes").subscribe((res) => {
@@ -145,7 +161,7 @@ export class MemeGeneratorComponent implements OnInit {
             const topBold = this.memeForm.get('topBold').value
             if (topBold) {
                 this.speakText("Making top text bold")
-                this.memeForm.patchValue({topBold: !topBold})
+                this.memeForm.patchValue({ topBold: !topBold })
             }
         })
 
@@ -153,30 +169,30 @@ export class MemeGeneratorComponent implements OnInit {
             const thirdBold = this.memeForm.get('thirdBold').value
             if (thirdBold) {
                 this.speakText("Making third text bold")
-                this.memeForm.patchValue({thirdBold: !thirdBold})
+                this.memeForm.patchValue({ thirdBold: !thirdBold })
             }
         })
 
         this.getVoiceCommand("Make private").subscribe((res) => {
             this.speakText("Meme is now private")
-            this.memeForm.patchValue({visibility: 'private'})
+            this.memeForm.patchValue({ visibility: 'private' })
         })
 
         this.getVoiceCommand("Make public").subscribe((res) => {
             this.speakText("Meme is now public")
-            this.memeForm.patchValue({visibility: 'public'})
+            this.memeForm.patchValue({ visibility: 'public' })
         })
 
         this.getVoiceCommand("Make unlisted").subscribe((res) => {
             this.speakText("Meme is now unlisted")
-            this.memeForm.patchValue({visibility: 'unlisted'})
+            this.memeForm.patchValue({ visibility: 'unlisted' })
         })
 
         this.getVoiceCommand("Delete Draft").subscribe((res) => {
             this.speakText("Deleting Draft")
             this.discardMeme()
         })
-        
+
         this.getVoiceCommand("Save Draft").subscribe((res) => {
             this.speakText("Saving Draft")
             this.saveDraft()
@@ -202,62 +218,62 @@ export class MemeGeneratorComponent implements OnInit {
 
             this.text = this.getCommandText(command) + " selected"
 
-            if(command != Command.STOP) {
+            if (command != Command.STOP) {
                 this.getVoiceCommand("Begin " + this.getCommandText(command)).subscribe((res) => {
                     this.text = res
-                }) 
+                })
 
                 this.getVoiceCommand("Stop").subscribe((res) => {
                     this.text = res + " " + this.getCommandText(command)
-                }) 
+                })
 
-                this.result$.pipe(skipUntilSaid("Begin " + this.getCommandText(command)) ,takeUntilSaid('Stop'), repeat(), continuous()).subscribe((res) =>{
+                this.result$.pipe(skipUntilSaid("Begin " + this.getCommandText(command)), takeUntilSaid('Stop'), repeat(), continuous()).subscribe((res) => {
                     let text = res.pop()
-                    if(text && text.isFinal) {
-             
-                        switch(command){
+                    if (text && text.isFinal) {
+
+                        switch (command) {
                             case Command.TITLE: {
-                                this.memeForm.patchValue({title: text[0].transcript})
+                                this.memeForm.patchValue({ title: text[0].transcript })
                                 break
                             }
                             case Command.DESCRIPTION: {
-                                this.memeForm.patchValue({description: text[0].transcript})
+                                this.memeForm.patchValue({ description: text[0].transcript })
                                 break
                             }
                             case Command.TOP_TEXT: {
-                                this.memeForm.patchValue({topText: text[0].transcript})
+                                this.memeForm.patchValue({ topText: text[0].transcript })
                                 break
                             }
                             case Command.TOP_X: {
-                                this.memeForm.patchValue({topX: text[0].transcript})
+                                this.memeForm.patchValue({ topX: text[0].transcript })
                                 break
                             }
                             case Command.TOP_Y: {
-                                this.memeForm.patchValue({topY: text[0].transcript})
+                                this.memeForm.patchValue({ topY: text[0].transcript })
                                 break
                             }
                             case Command.BOTTOM_TEXT: {
-                                this.memeForm.patchValue({bottomText: text[0].transcript})
+                                this.memeForm.patchValue({ bottomText: text[0].transcript })
                                 break
                             }
                             case Command.BOTTOM_X: {
-                                this.memeForm.patchValue({bottomX: text[0].transcript})
+                                this.memeForm.patchValue({ bottomX: text[0].transcript })
                                 break
                             }
                             case Command.BOTTOM_Y: {
-                                this.memeForm.patchValue({bottomY: text[0].transcript})
+                                this.memeForm.patchValue({ bottomY: text[0].transcript })
                                 break
                             }
                             case Command.THIRD_TEXT: {
-                                this.memeForm.patchValue({thirdText: text[0].transcript})
+                                this.memeForm.patchValue({ thirdText: text[0].transcript })
                                 break
                             }
                             case Command.THIRD_X: {
-                                this.memeForm.patchValue({thirdX: text[0].transcript})
+                                this.memeForm.patchValue({ thirdX: text[0].transcript })
                                 break
                             }
                             case Command.THIRD_Y: {
-                                this.memeForm.patchValue({thirdY: text[0].transcript})
+                                this.memeForm.patchValue({ thirdY: text[0].transcript })
                                 break
                             }
                         }
@@ -267,10 +283,18 @@ export class MemeGeneratorComponent implements OnInit {
         })
     }
 
+    /**
+     * Helper function to listen for a certain text during voice recognition
+     * @param command 
+     * @returns 
+     */
     getVoiceCommand(command: string): Observable<string> {
         return this.result$.pipe(filter(isSaid(command)), mapTo(command))
     }
 
+    /**
+     * Implements commands for selecting the form fields by voice
+     */
     @tuiPure
     get command$(): Observable<Command> {
         return merge(
@@ -278,28 +302,46 @@ export class MemeGeneratorComponent implements OnInit {
             this.result$.pipe(filter(isSaid('Select description')), mapTo(Command.DESCRIPTION)),
             this.result$.pipe(filter(isSaid('Select top text')), mapTo(Command.TOP_TEXT)),
             this.result$.pipe(filter(isSaid('Select bottom text')), mapTo(Command.BOTTOM_TEXT)),
+            this.result$.pipe(filter(isSaid('Select third text')), mapTo(Command.THIRD_TEXT)),
             this.result$.pipe(filter(isSaid('Select top x')), mapTo(Command.TOP_X)),
             this.result$.pipe(filter(isSaid('Select top y')), mapTo(Command.TOP_Y)),
             this.result$.pipe(filter(isSaid('Select bottom x')), mapTo(Command.BOTTOM_X)),
             this.result$.pipe(filter(isSaid('Select bottom y')), mapTo(Command.BOTTOM_Y)),
+            this.result$.pipe(filter(isSaid('Select third x')), mapTo(Command.THIRD_X)),
+            this.result$.pipe(filter(isSaid('Select third y')), mapTo(Command.THIRD_Y)),
             this.result$.pipe(filter(isSaid('Stop listening')), mapTo(Command.STOP)),
         );
     }
 
+    /**
+     * Starts/Stops the tts
+     */
     onClick() {
         this.paused = !this.paused;
         // Re-trigger utterance pipe:
         this.text = this.paused ? this.text + ' ' : this.text;
     }
 
-    voiceByName(_: number, {name}: SpeechSynthesisVoice): string {
+    /**
+     * Gets voice by name.
+     * @param _ 
+     * @param param1 
+     * @returns 
+     */
+    voiceByName(_: number, { name }: SpeechSynthesisVoice): string {
         return name;
     }
 
+    /**
+     * Function the get the voice recognition results
+     */
     get options(): SpeechSynthesisUtteranceOptions {
         return this.getOptions(this.voice);
     }
 
+    /**
+     * Record voice line. Listens for start and stop command
+     */
     @tuiPure
     get record$(): Observable<SpeechRecognitionResult[]> {
         return this.result$.pipe(
@@ -310,21 +352,21 @@ export class MemeGeneratorComponent implements OnInit {
         );
     }
 
-    @tuiPure
-    get open$(): Observable<boolean> {
-        return merge(
-            this.result$.pipe(filter(isSaid('Show sidebar')), mapTo(true)),
-            this.result$.pipe(filter(isSaid('Hide sidebar')), mapTo(false)),
-        );
-    }
-
+    /**
+     * Get voice recognition result
+     */
     @tuiPure
     private get result$(): Observable<SpeechRecognitionResult[]> {
         return this.recognition$.pipe(retry(), repeat(), share());
     }
 
+    /**
+     * Configure options for voice detecting
+     * @param voice 
+     * @returns 
+     */
     @tuiPure
-    private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
+    private getOptions(voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
         return {
             lang: 'en-US',
             voice,
@@ -488,7 +530,7 @@ export class MemeGeneratorComponent implements OnInit {
         this.isLoggedIn = lss.hasLocalStorage()
 
         this.currentCommand = Command.STOP
-        if(this.lss.getVoiceControlStatus()) {
+        if (this.lss.getVoiceControlStatus()) {
             this.activateVoiceControl()
         }
     }
@@ -500,7 +542,7 @@ export class MemeGeneratorComponent implements OnInit {
     ngOnInit(): void {
 
         this._route.params.subscribe(params => {
-            if(params.id) {
+            if (params.id) {
                 const id = params['id']
                 this.continueDraft = true
                 this.getDraft(id)
@@ -511,27 +553,35 @@ export class MemeGeneratorComponent implements OnInit {
             .pipe(debounceTime(500))
             .subscribe(formData => {
                 this.updateMeme()
-            }) 
+            })
 
-        this.loadUploads()   
+        this.loadUploads()
     }
 
+    /**
+     * Add Tags
+     * @param event 
+     */
     add(event: MatChipInputEvent): void {
         const input = event.input;
         const value = event.value;
-    
+
         if ((value || '').trim()) {
-            this.tags.push({name: value.trim()});
+            this.tags.push({ name: value.trim() });
         }
-    
+
         if (input) {
             input.value = '';
         }
     }
-    
+
+    /**
+     * Removes tags
+     * @param tags 
+     */
     remove(tags: Tag): void {
         const index = this.tags.indexOf(tags);
-    
+
         if (index >= 0) {
             this.tags.splice(index, 1);
         }
@@ -556,7 +606,7 @@ export class MemeGeneratorComponent implements OnInit {
      */
     loadTemplates(): void {
         this.toggleUploaded()
-        if(this.showImgFlipTemplates) this.toggleImgFlip()
+        if (this.showImgFlipTemplates) this.toggleImgFlip()
         this._memeService.loadTemplates().subscribe((templates) => {
             this.templates = templates
             this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i)
@@ -568,7 +618,7 @@ export class MemeGeneratorComponent implements OnInit {
     /**
      * loads templates on init
      */
-    loadUploads() : void {
+    loadUploads(): void {
         this._memeService.loadTemplates().subscribe((templates) => {
             this.templates = templates
             this.templates = this.templates.map(i => 'http://localhost:3007/uploads/' + i)
@@ -578,9 +628,9 @@ export class MemeGeneratorComponent implements OnInit {
     /**
      * Loads templates (downloaded from ImgFlip API)
      */
-    imgFlipAPITemplates() : void {
+    imgFlipAPITemplates(): void {
         this.toggleImgFlip()
-        if(this.showUploadedTemplates) this.toggleUploaded()
+        if (this.showUploadedTemplates) this.toggleUploaded()
         this._memeService.getImgAPITemplates().subscribe((res) => {
             this.templates = []
             res.data.memes.forEach(i => this.templates.push(i.url))
@@ -607,11 +657,11 @@ export class MemeGeneratorComponent implements OnInit {
     updateTemplate(url) {
         this.template.url = url
 
-        this._memeService.updateTemplate(this.template, false, false).subscribe((t) =>
-        {     
+        this._memeService.updateTemplate(this.template, false, false).subscribe((t) => {
             this.template = t
             this.template.url = url
-        })      
+
+        })
     }
 
     /**
@@ -621,24 +671,25 @@ export class MemeGeneratorComponent implements OnInit {
     openDialog(): void {
 
         const dialogRef = this.dialog.open(TemplateViewerComponent, {
-          width: '40%',
-          data: {template : this.template}
+            width: '40%',
+            data: { template: this.template }
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if(result !== undefined) {
+            if (result !== undefined) {
                 this.template = result;
                 this._memeService.updateTemplate(this.template, false, true).subscribe((template) => {
                 })
             }
         });
-      }
+    }
 
-      openCanvas() {
-        const dialogRef = this.dialog.open(CanvasComponent, {restoreFocus: false});
-    
-        // Manually restore focus to the menu trigger since the element that
-        // opens the dialog won't be in the DOM any more when the dialog closes.
+    /**
+     * Opens the canvas for mouse drawing
+     */
+    openCanvas() {
+        const dialogRef = this.dialog.open(CanvasComponent, { restoreFocus: false });
+
         dialogRef.afterClosed().subscribe(result => {
 
             let file = this.dataurlToFile(result.src, result.id)
@@ -652,32 +703,37 @@ export class MemeGeneratorComponent implements OnInit {
             this.template.url = "http://localhost:3007/uploads/" + name
             this.selectTemplate(this.template.url)
         });
-      }
+    }
 
     /**
      * updates the meme
      */
     updateMeme(): void {
-        if(!this.continueDraft) {
-            
+        if (!this.continueDraft) {
+
             const formData = this.generateMemeFormData()
-    
             this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
-                this.meme = meme
-                // @ts-ignore
-                this.id = meme._id
-                //let name = meme.template.split("/").pop()
-                //this.template.url = "http://localhost:3007/uploads/" + name
-                this.updateTemplate(meme.template)
+                if (meme != null) {
+                    this.meme = meme
+                    // @ts-ignore
+                    this.id = meme._id
+                    let name = meme.template.split("/").pop()
+                    let path = "http://localhost:3007/uploads/" + name
+                    //this.updateTemplate(path)
+                }
             })
         }
         this.continueDraft = false
     }
 
+    /**
+     * Gets draft
+     * @param id 
+     */
     getDraft(id): void {
-        this._memeService.getDrafts({_id: id}).subscribe((draft) => {
+        this._memeService.getDrafts({ _id: id }).subscribe((draft) => {
             this.meme = draft[0]
-            
+
             this.patchMemeData(this.meme.url, this.meme.title, this.meme.description, this.meme.topText, this.meme.topSize, this.meme.topX, this.meme.topY,
                 this.meme.topBold, this.meme.topItalic, this.meme.topColor, this.meme.bottomText, this.meme.bottomSize, this.meme.bottomX,
                 this.meme.bottomY, this.meme.bottomBold, this.meme.bottomItalic, this.meme.bottomColor, this.meme.thirdText, this.meme.thirdSize, this.meme.thirdX,
@@ -686,64 +742,93 @@ export class MemeGeneratorComponent implements OnInit {
         })
     }
 
+    /**
+     * Patches the form data with custom values
+     * @param imgUrl 
+     * @param title 
+     * @param description 
+     * @param topText 
+     * @param topSize 
+     * @param topX 
+     * @param topY 
+     * @param topBold 
+     * @param topItalic 
+     * @param topColor 
+     * @param bottomText 
+     * @param bottomSize 
+     * @param bottomX 
+     * @param bottomY 
+     * @param bottomBold 
+     * @param bottomItalic 
+     * @param bottomColor 
+     * @param thirdText 
+     * @param thirdSize 
+     * @param thirdX 
+     * @param thirdY 
+     * @param thirdBold 
+     * @param thirdItalic 
+     * @param thirdColor 
+     * @param visibility 
+     * @param template 
+     */
     private patchMemeData(imgUrl: string, title: string, description: string,
         topText: string, topSize: string, topX: string, topY: string, topBold: string, topItalic: string, topColor: string,
-        bottomText: string, bottomSize: string, bottomX: string, bottomY: string, bottomBold, bottomItalic: string,bottomColor: string,
-        thirdText: string, thirdSize: string, thirdX: string, thirdY: string, thirdBold, thirdItalic: string,thirdColor: string,
+        bottomText: string, bottomSize: string, bottomX: string, bottomY: string, bottomBold, bottomItalic: string, bottomColor: string,
+        thirdText: string, thirdSize: string, thirdX: string, thirdY: string, thirdBold, thirdItalic: string, thirdColor: string,
         visibility: string, template: string): void {
 
-            if(imgUrl)
-                this.memeForm.patchValue({imgUrl: imgUrl})
-            if(template)
-                this.memeForm.patchValue({template: template})
-            if(title)
-                this.memeForm.patchValue({title: title})
-            if(description)
-                this.memeForm.patchValue({description: description})
-            if(topText)
-                this.memeForm.patchValue({topText: topText})
-            if(topSize)
-                this.memeForm.patchValue({topSize: topSize})
-            if(topX)
-                this.memeForm.patchValue({topX: topX})
-            if(topY)
-                this.memeForm.patchValue({topY: topY})
-            if(topBold)
-                this.memeForm.patchValue({topBold: topBold})
-            if(topItalic)
-                this.memeForm.patchValue({topItalic: topItalic})
-            if(topColor)
-                this.memeForm.patchValue({topColor: topColor})
-            if(bottomText)
-                this.memeForm.patchValue({bottomText: bottomText})
-            if(bottomSize)
-                this.memeForm.patchValue({bottomSize: bottomSize})
-            if(bottomX)
-                this.memeForm.patchValue({bottomX: bottomX})
-            if(bottomY)
-                this.memeForm.patchValue({bottomY: bottomY})
-            if(bottomBold)
-                this.memeForm.patchValue({bottomBold: bottomBold})
-            if(bottomItalic)
-                this.memeForm.patchValue({bottomItalic: bottomItalic})
-            if(bottomColor)
-                this.memeForm.patchValue({bottomColor: bottomColor})
-            if(thirdText)
-                this.memeForm.patchValue({thirdText: thirdText})
-            if(thirdSize)
-                this.memeForm.patchValue({thirdSize: thirdSize})
-            if(thirdX)
-                this.memeForm.patchValue({thirdX: thirdX})
-            if(thirdY)
-                this.memeForm.patchValue({thirdY: thirdY})
-            if(thirdBold)
-                this.memeForm.patchValue({thirdBold: thirdBold})
-            if(thirdItalic)
-                this.memeForm.patchValue({thirdItalic: thirdItalic})
-            if(thirdColor)
-                this.memeForm.patchValue({thirdColor: thirdColor})
-            if(visibility)
-                this.memeForm.patchValue({visibility: visibility})
+        if (imgUrl)
+            this.memeForm.patchValue({ imgUrl: imgUrl })
+        if (template)
+            this.memeForm.patchValue({ template: template })
+        if (title)
+            this.memeForm.patchValue({ title: title })
+        if (description)
+            this.memeForm.patchValue({ description: description })
+        if (topText)
+            this.memeForm.patchValue({ topText: topText })
+        if (topSize)
+            this.memeForm.patchValue({ topSize: topSize })
+        if (topX)
+            this.memeForm.patchValue({ topX: topX })
+        if (topY)
+            this.memeForm.patchValue({ topY: topY })
+        if (topBold)
+            this.memeForm.patchValue({ topBold: topBold })
+        if (topItalic)
+            this.memeForm.patchValue({ topItalic: topItalic })
+        if (topColor)
+            this.memeForm.patchValue({ topColor: topColor })
+        if (bottomText)
+            this.memeForm.patchValue({ bottomText: bottomText })
+        if (bottomSize)
+            this.memeForm.patchValue({ bottomSize: bottomSize })
+        if (bottomX)
+            this.memeForm.patchValue({ bottomX: bottomX })
+        if (bottomY)
+            this.memeForm.patchValue({ bottomY: bottomY })
+        if (bottomBold)
+            this.memeForm.patchValue({ bottomBold: bottomBold })
+        if (bottomItalic)
+            this.memeForm.patchValue({ bottomItalic: bottomItalic })
+        if (bottomColor)
+            this.memeForm.patchValue({ bottomColor: bottomColor })
+        if (thirdText)
+            this.memeForm.patchValue({ thirdText: thirdText })
+        if (thirdSize)
+            this.memeForm.patchValue({ thirdSize: thirdSize })
+        if (thirdX)
+            this.memeForm.patchValue({ thirdX: thirdX })
+        if (thirdY)
+            this.memeForm.patchValue({ thirdY: thirdY })
+        if (thirdBold)
+            this.memeForm.patchValue({ thirdBold: thirdBold })
+        if (thirdItalic)
+            this.memeForm.patchValue({ thirdItalic: thirdItalic })
+        if (thirdColor)
+            this.memeForm.patchValue({ thirdColor: thirdColor })
+        if (visibility)
+            this.memeForm.patchValue({ visibility: visibility })
     }
 
     /**
@@ -761,14 +846,16 @@ export class MemeGeneratorComponent implements OnInit {
         }
 
         const template = this.memeForm.get('template').value
-        if(template) {
+        if (template) {
             formData.append('template', template)
         }
 
         let imgUrl = this.memeForm.get('imgUrl').value
-    
+
         if (imgUrl) {
             formData.append('url', imgUrl)
+            this.updateTemplate(imgUrl)
+
         }
 
         formData.append('title', this.memeForm.get('title').value)
@@ -862,7 +949,7 @@ export class MemeGeneratorComponent implements OnInit {
             formData.append('bottomY', bottomY)
         }
         const visibility = this.memeForm.get("visibility").value
-        if(visibility) {
+        if (visibility) {
             formData.append('visibility', visibility)
         } else {
             formData.append('visibility', "public")
@@ -906,6 +993,7 @@ export class MemeGeneratorComponent implements OnInit {
                 name: name,
                 imgUrl: null
             })
+            this.selectTemplate("http://localhost:3007/uploads/" + file.name)
         }
     }
 
@@ -914,8 +1002,7 @@ export class MemeGeneratorComponent implements OnInit {
      */
     discardMeme(): void {
         this._memeService.deleteDraft(this.id, this.lss.getUserID(), this.lss.getApiKey()).subscribe((res) => {
-            if(res.status == "ERROR")
-            {
+            if (res.status == "ERROR") {
                 this.toastService.showDanger(res.text)
             } else {
                 this._router.navigate(['/memes'])
@@ -931,10 +1018,10 @@ export class MemeGeneratorComponent implements OnInit {
         this.isDraft = false
         const formData = this.generateMemeFormData()
 
-        this._memeService.updateTemplate(this.template, true, false).subscribe((template) => { 
+        this._memeService.updateTemplate(this.template, true, false).subscribe((template) => {
             this.template = template
         })
-              
+
         this._memeService.updateMeme(this.id, formData).subscribe((meme) => {
             this.meme = <Meme>meme
             this.id = this.meme._id
@@ -974,7 +1061,7 @@ export class MemeGeneratorComponent implements OnInit {
     /**
      * Toggles webcam visibility
      */
-     public toggleScreenshot(): void {
+    public toggleScreenshot(): void {
         this.showScreenshot = !this.showScreenshot;
     }
 
@@ -995,9 +1082,9 @@ export class MemeGeneratorComponent implements OnInit {
      */
     handleImage(webcamImage: WebcamImage): void {
 
-        this.webcamImage = webcamImage  
+        this.webcamImage = webcamImage
         //let filename =  "webcamImage.jpeg"
-        let filename = "webcamImage_" + Math.floor((Math.random()*10000000)+1).toString() + ".jpeg"
+        let filename = "webcamImage_" + Math.floor((Math.random() * 10000000) + 1).toString() + ".jpeg"
 
         this.memeForm.patchValue({
             fileSource: this.dataurlToFile(webcamImage.imageAsDataUrl, filename),
@@ -1023,10 +1110,10 @@ export class MemeGeneratorComponent implements OnInit {
 
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--){
+        while (n--) {
             u8arr[n] = bstr.charCodeAt(n);
         }
-        let blob =  new Blob([u8arr], {type:mime});
+        let blob = new Blob([u8arr], { type: mime });
 
         var b: any = blob;
         b.lastModifiedDate = new Date();
@@ -1035,10 +1122,10 @@ export class MemeGeneratorComponent implements OnInit {
         return <File>b;
     }
 
-      /**
-     * Opens a share meme modal
-     */
-       share(): void {
+    /**
+   * Opens a share meme modal
+   */
+    share(): void {
         const modalRef = this.modalService.open(NgbdModalContent)
         modalRef.componentInstance.url = this.meme.url
     }
@@ -1047,7 +1134,7 @@ export class MemeGeneratorComponent implements OnInit {
      * Selects next template
      */
     nextTemplate() {
-        if(this.templateIndex < this.templates.length) {
+        if (this.templateIndex < this.templates.length) {
             this.templateIndex++
         }
         this.selectTemplate(this.templates[this.templateIndex])
@@ -1057,7 +1144,7 @@ export class MemeGeneratorComponent implements OnInit {
      * Selects previous template
      */
     prevTemplate() {
-        if(this.templateIndex > 0) {
+        if (this.templateIndex > 0) {
             this.templateIndex--
         }
         this.selectTemplate(this.templates[this.templateIndex])

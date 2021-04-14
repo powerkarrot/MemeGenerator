@@ -19,7 +19,6 @@ export interface DialogData {
 })
 export class TemplateViewerComponent implements OnInit {
 
-
   loggedIn = false
   userData: Userdata
   url
@@ -92,9 +91,6 @@ export class TemplateViewerComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  /**
-   * 
-   */
   ngOnInit(): void {
     this.loggedIn = this.isLoggedIn()
   }
@@ -129,6 +125,10 @@ export class TemplateViewerComponent implements OnInit {
       })
   }
 
+  /**
+   * Checks if user is logged in
+   * @returns 
+   */
   isLoggedIn(): boolean {
     if (this.localStorageService.hasLocalStorage()) {
       this.userData = <Userdata>this.localStorageService.getLocalStorage()

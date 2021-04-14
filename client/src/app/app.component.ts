@@ -32,13 +32,18 @@ export class AppComponent {
     ){
         this.localStorageService.setVoiceControlStatus(this.voiceControl)
     }
-
+    /**
+     * Toggles voice control globally
+     */
     toggleVoiceControl(): void {
         this.voiceControl = !this.voiceControl
         this.localStorageService.setVoiceControlStatus(this.voiceControl)
         this.text = this.voiceControl ? "Voice control activated!" : "Voice control deactivated"
     }
 
+    /**
+     * Set voice control routes for navigating
+     */
     getVoiceControlPermission(): void {
         this.getVoiceCommand("New Meme").subscribe((res) => {
             this.text = "Create new meme"
@@ -52,15 +57,28 @@ export class AppComponent {
         })
     }
 
+    /**
+     * Listens for certain text during voice recognition
+     * @param command 
+     * @returns 
+     */
     getVoiceCommand(command: string): Observable<string> {
         return this.result$.pipe(filter(isSaid(command)), mapTo(command))
     }
 
+    /**
+     * Voice recognition result property used to build voice commands
+     */
     @tuiPure
     private get result$(): Observable<SpeechRecognitionResult[]> {
         return this.recognition$.pipe(retry(), repeat(), share());
     }
 
+    /**
+     * Configure options for voice detecting
+     * @param voice 
+     * @returns 
+     */
     @tuiPure
     private getOptions( voice: SpeechSynthesisVoice | null,): SpeechSynthesisUtteranceOptions {
         return {
@@ -69,6 +87,9 @@ export class AppComponent {
         };
     }
 
+    /**
+     * Function the get the voice recognition results
+     */
     get options(): SpeechSynthesisUtteranceOptions {
         return this.getOptions(this.voice);
     }
